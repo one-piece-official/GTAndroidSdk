@@ -1,0 +1,3 @@
+[submodule "GTAndroidShare"]
+	path = GTAndroidShare
+	url = git@github.com:one-piece-official/GTAndroidShare.git
