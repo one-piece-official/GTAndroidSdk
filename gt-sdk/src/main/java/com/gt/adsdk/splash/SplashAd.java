@@ -37,7 +37,7 @@ public class SplashAd extends GtBaseAd implements SplashAdListener, AdLifecycleM
 
     public boolean loadAd() {
 
-        if (!loadAdFilter()) {
+        if (!loadAdFilter()) {//过滤无效请求
             return false;
         }
 
@@ -125,11 +125,6 @@ public class SplashAd extends GtBaseAd implements SplashAdListener, AdLifecycleM
 
     @Override
     public void onSplashAdClose(String placementId) {
-
-    }
-
-    @Override
-    public void onSplashAdSkip(String placementId) {
 
     }
 
