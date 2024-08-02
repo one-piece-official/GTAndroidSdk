@@ -105,37 +105,7 @@
             android:layout_marginRight="10dp"
             android:gravity="center"
             android:text="DeviceInfo" />
-
-        <Button
-            android:id="@+id/setting_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center"
-            android:text="SdkSetting" />
-
-        <Button
-            android:id="@+id/setting_id_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center"
-            android:text="PlacementSetting" />
-
-        <Button
-            android:id="@+id/init_setting_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center"
-            android:text="SdkInitSetting" />
-
+        
         <Button
             android:id="@+id/configuration_button"
             android:layout_width="match_parent"

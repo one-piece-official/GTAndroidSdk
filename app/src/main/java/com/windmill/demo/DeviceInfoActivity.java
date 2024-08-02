@@ -20,7 +20,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
 
     private Map<String, String> mAdVersions = new LinkedHashMap<>();
 
-    private String[] mAdNames = {"IMEI", "GAID", "OAID", "UID", "WindMill", "SigMob", "Vungle", "OneWay", "Mtg", "Tapjoy", "Unity", "头条", "快手", "广点通"};
+    private String[] mAdNames = {"IMEI", "GAID", "OAID", "UID", "WindMill", "SigMob"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,110 +176,6 @@ public class DeviceInfoActivity extends AppCompatActivity {
                     try {
                         Class aClass = Class.forName("com.windmill.sdk.WindMillAd");
                         Method method = aClass.getMethod("getVersion");
-                        method.setAccessible(true);
-                        String invoke = (String) method.invoke(aClass);
-                        mAdVersions.put(mAdName, invoke);
-                    } catch (Exception e) {
-                        mAdVersions.put(mAdName, "NoChannel");
-                        e.printStackTrace();
-                    }
-                    break;
-                case "Vungle":
-                    try {
-                        Class cls = Class.forName("com.vungle.warren.BuildConfig");
-                        Object obj = cls.newInstance();
-                        Field f = cls.getDeclaredField("VERSION_NAME");
-                        f.setAccessible(true);
-                        String o = (String) f.get(obj);
-                        mAdVersions.put(mAdName, o);
-                    } catch (Exception e) {
-                        mAdVersions.put(mAdName, "NoChannel");
-                        e.printStackTrace();
-                    }
-                    break;
-                case "OneWay":
-                    try {
-                        Class aClass = Class.forName("mobi.oneway.export.Ad.OnewaySdk");
-                        Method method = aClass.getMethod("getVersion");
-                        method.setAccessible(true);
-                        String invoke = (String) method.invoke(aClass);
-                        mAdVersions.put(mAdName, invoke);
-                    } catch (Exception e) {
-                        mAdVersions.put(mAdName, "NoChannel");
-                        e.printStackTrace();
-                    }
-                    break;
-                case "Mtg":
-                    try {
-                        Class cls = Class.forName("com.mbridge.msdk.out.MBConfiguration");
-                        Object obj = cls.newInstance();
-                        Field f = cls.getDeclaredField("SDK_VERSION");
-                        f.setAccessible(true);
-                        String o = (String) f.get(obj);
-                        mAdVersions.put(mAdName, o);
-                    } catch (Exception e) {
-                        mAdVersions.put(mAdName, "NoChannel");
-                        e.printStackTrace();
-                    }
-                    break;
-                case "Tapjoy":
-                    try {
-                        Class cls = Class.forName("com.tapjoy.BuildConfig");
-                        Object obj = cls.newInstance();
-                        Field f = cls.getDeclaredField("VERSION_NAME");
-                        f.setAccessible(true);
-                        String o = (String) f.get(obj);
-                        mAdVersions.put(mAdName, o);
-                    } catch (Exception e) {
-                        mAdVersions.put(mAdName, "NoChannel");
-                        e.printStackTrace();
-                    }
-                    break;
-                case "Unity":
-                    try {
-                        Class cls = Class.forName("com.unity3d.ads.BuildConfig");
-                        Object obj = cls.newInstance();
-                        Field f = cls.getDeclaredField("VERSION_NAME");
-                        f.setAccessible(true);
-                        String o = (String) f.get(obj);
-                        mAdVersions.put(mAdName, o);
-                    } catch (Exception e) {
-                        mAdVersions.put(mAdName, "NoChannel");
-                        e.printStackTrace();
-                    }
-                    break;
-                case "头条":
-                    try {
-                        Class ttAdSdk = Class.forName("com.bytedance.sdk.openadsdk.TTAdSdk");
-                        Method getAdManager = ttAdSdk.getMethod("getAdManager");
-                        getAdManager.setAccessible(true);
-                        Object ttAdManager = getAdManager.invoke(ttAdSdk);
-                        Class<?> aClass = ttAdManager.getClass();
-                        Method getSDKVersion = aClass.getMethod("getSDKVersion");
-                        getSDKVersion.setAccessible(true);
-                        String invoke = (String) getSDKVersion.invoke(ttAdManager);
-                        mAdVersions.put(mAdName, invoke);
-                    } catch (Exception e) {
-                        mAdVersions.put(mAdName, "NoChannel");
-                        e.printStackTrace();
-                    }
-                    break;
-                case "快手":
-                    try {
-                        Class aClass = Class.forName("com.kwad.sdk.api.KsAdSDK");
-                        Method method = aClass.getMethod("getSDKVersion");
-                        method.setAccessible(true);
-                        String invoke = (String) method.invoke(aClass);
-                        mAdVersions.put(mAdName, invoke);
-                    } catch (Exception e) {
-                        mAdVersions.put(mAdName, "NoChannel");
-                        e.printStackTrace();
-                    }
-                    break;
-                case "广点通":
-                    try {
-                        Class aClass = Class.forName("com.qq.e.comm.managers.status.SDKStatus");
-                        Method method = aClass.getMethod("getIntegrationSDKVersion");
                         method.setAccessible(true);
                         String invoke = (String) method.invoke(aClass);
                         mAdVersions.put(mAdName, invoke);

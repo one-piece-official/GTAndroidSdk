@@ -37,88 +37,11 @@ public class MainActivity extends AppCompatActivity {
 
         WindMillAd.requestPermission(this);
 
-//        showDialog();
-
 //        testJavaCrash();
     }
 
     public void testJavaCrash() {
         throw new SecurityException("SigMob test Crash from lance!");
-    }
-
-    private void showDialog() {
-        try {
-
-            URL url = new URL("http://www.baidu.com");
-            form = new WindAdConsentForm.Builder(this, "1282", url).withListener(new ConsentFormListener() {
-                @Override
-                public void onConsentFormLoaded() {
-                    super.onConsentFormLoaded();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), " onConsentFormLoaded ", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    form.show();
-
-                }
-
-                @Override
-                public void onConsentFormError(final String reason) {
-                    super.onConsentFormError(reason);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), " onConsentFormError " + reason, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-
-                @Override
-                public void onConsentFormOpened() {
-                    super.onConsentFormOpened();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), " onConsentFormLoaded ", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-
-                @Override
-                public void onConsentFormClosed(final ConsentStatus consentStatus, final Boolean userPrefersAdFree) {
-                    super.onConsentFormClosed(consentStatus, userPrefersAdFree);
-                    WindMillAd ads = WindMillAd.sharedAds();
-
-                    switch (consentStatus) {
-                        case ACCEPT: {
-                            ads.setUserGDPRConsentStatus(WindMillConsentStatus.ACCEPT);
-                        }
-                        break;
-                        case DENIED: {
-                            ads.setUserGDPRConsentStatus(WindMillConsentStatus.DENIED);
-                        }
-                        break;
-                        case UNKNOWN: {
-                            ads.setUserGDPRConsentStatus(WindMillConsentStatus.UNKNOWN);
-                        }
-                        break;
-                    }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), "choose ConsentStatus " + consentStatus.toString() + " userPrefersAdFree " + userPrefersAdFree, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }).withAdFreeOption(true).withNonPersonalizedAdsOption(true).withPersonalizedAdsOption(true).build();
-
-            form.load();
-
-        } catch (Throwable e) {
-
-        }
     }
 
     @Override

@@ -274,9 +274,6 @@ public class MainFragment extends Fragment implements WMSplashAdListener {
         bindButton(R.id.native_button, NativeAdActivity.class);
         bindButton(R.id.banner_button, BannerActivity.class);
         bindButton(R.id.device_info, DeviceInfoActivity.class);
-        bindButton(R.id.setting_button, SettingActivity.class);
-        bindButton(R.id.setting_id_button, SettingIDActivity.class);
-        bindButton(R.id.init_setting_button, InitSettingActivity.class);
 
         Button configurationBtn = getView().findViewById(R.id.configuration_button);
         Button cleanLogBtn = getView().findViewById(R.id.cleanLog_button);
