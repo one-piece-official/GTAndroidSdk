@@ -8,8 +8,6 @@ public class Constants {
 
     public static final String CONF_SDK_RELEASE = "conf_sdk_release";
 
-    public static final String CONF_HALF_SPLASH = "conf_half_splash";
-    public static final String CONF_SELF_LOGO = "conf_self_logo";
     public static final String CONF_PLAYING_LOAD = "conf_playing_load";
     public static final String CONF_NEW_INSTANCE = "conf_new_instance";
 

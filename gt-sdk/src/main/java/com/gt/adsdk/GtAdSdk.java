@@ -83,4 +83,8 @@ public class GtAdSdk {
 
         return sHasInit.get();
     }
+
+    public static void setPersonalRecommend(boolean recommend) {
+
+    }
 }
