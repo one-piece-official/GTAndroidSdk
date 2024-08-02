@@ -18,6 +18,30 @@ public class SdkConfig {
 
     public GtInitCallback gtInitCallback;
 
+    public String getAppId() {
+        return appId;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public boolean isShowNotification() {
+        return showNotification;
+    }
+
+    public GtCustomController getGtCustomController() {
+        return gtCustomController;
+    }
+
+    public GtInitCallback getGtInitCallback() {
+        return gtInitCallback;
+    }
+
+    public boolean isEnableDebug() {
+        return enableDebug;
+    }
+
     private SdkConfig(Builder var1) {
         this.enableDebug = var1.enableDebug;
         this.appId = var1.appId;

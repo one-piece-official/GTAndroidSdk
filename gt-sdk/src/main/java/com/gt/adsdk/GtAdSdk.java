@@ -72,12 +72,12 @@ public class GtAdSdk {
             mSdkConfig = config;
 
             sHasInit.set(true);
-            if (mSdkConfig.gtInitCallback != null) {
-                mSdkConfig.gtInitCallback.onSuccess();
+            if (mSdkConfig.getGtInitCallback() != null) {
+                mSdkConfig.getGtInitCallback().onSuccess();
             }
         } catch (Throwable throwable) {
-            if (mSdkConfig.gtInitCallback != null) {
-                mSdkConfig.gtInitCallback.onFail(0, throwable.getMessage());
+            if (mSdkConfig.getGtInitCallback() != null) {
+                mSdkConfig.getGtInitCallback().onFail(0, throwable.getMessage());
             }
         }
 
@@ -86,5 +86,12 @@ public class GtAdSdk {
 
     public static void setPersonalRecommend(boolean recommend) {
 
+    }
+
+    public String getAppId() {
+        if (mSdkConfig != null) {
+            return mSdkConfig.getAppId();
+        }
+        return "";
     }
 }

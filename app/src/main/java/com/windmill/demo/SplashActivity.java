@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
@@ -14,24 +13,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.gt.adsdk.AdRequest;
+import com.gt.adsdk.GtAdSdk;
 import com.gt.adsdk.api.SplashAdListener;
 import com.gt.adsdk.splash.SplashAd;
 import com.sigmob.windad.WindAdError;
-import com.windmill.demo.splash.SplashEyeAdHolder;
-import com.windmill.demo.splash.SplashZoomOutManager;
 import com.windmill.demo.utils.PxUtils;
-import com.windmill.sdk.WMConstants;
-import com.windmill.sdk.WindMillAd;
-import com.windmill.sdk.WindMillError;
-import com.windmill.sdk.models.AdInfo;
-import com.windmill.sdk.splash.IWMSplashEyeAd;
-import com.windmill.sdk.splash.WMSplashAd;
-import com.windmill.sdk.splash.WMSplashAdListener;
-import com.windmill.sdk.splash.WMSplashAdRequest;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +33,6 @@ public class SplashActivity extends AppCompatActivity implements SplashAdListene
     private SplashAd splashAd;
     private ArrayList<String> logs;
     private ViewGroup mViewGroup;
-    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +41,12 @@ public class SplashActivity extends AppCompatActivity implements SplashAdListene
 
         mViewGroup = findViewById(R.id.splash_container);
 
+        logs = new ArrayList<>();
+        logs.add("init SDK appId :" + GtAdSdk.sharedAds().getAppId());
+
         SharedPreferences sharedPreferences = getSharedPreferences("setting", 0);
 
-        userID = sharedPreferences.getString(Constants.CONF_USER_ID, "");
+        String userID = sharedPreferences.getString(Constants.CONF_USER_ID, "");
 
         Map<String, String> options = new HashMap<>();
         options.put("user_id", userID);
@@ -67,7 +56,8 @@ public class SplashActivity extends AppCompatActivity implements SplashAdListene
                 .setUserID(userID)
                 .setWidth(PxUtils.getRealMetrics(this).widthPixels)
                 .setHeight(PxUtils.getRealMetrics(this).heightPixels - dipsToIntPixels(100, this))
-                .setExtOption(options).build();
+                .setExtOption(options)
+                .build();
 
         splashAd = new SplashAd(adRequest, this);
         splashAd.loadAd();
@@ -127,6 +117,10 @@ public class SplashActivity extends AppCompatActivity implements SplashAdListene
         Log.d("lance", "----------onSplashAdLoadSuccess----------" + splashAd.isReady() + ":" + placementId);
         Toast.makeText(this, "onSplashAdLoadSuccess:" + splashAd.isReady(), Toast.LENGTH_SHORT).show();
         logs.add("onSplashAdLoadSuccess:" + splashAd.isReady());
+
+        if (splashAd != null && splashAd.isReady()) {
+            splashAd.show(mViewGroup);
+        }
     }
 
     @Override
