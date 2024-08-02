@@ -9,13 +9,11 @@ def gitVersionCode() {
 def mVersionCode = 100
 def mVersionName = "3.6.0" + "-SNAPSHOT"
 
-if (project.hasProperty("buildVersion"))
-    mVersionName = "${project.buildVersion}"
+if (project.hasProperty("buildVersion")) mVersionName = "${project.buildVersion}"
 
 
 def mArtifactId = "wind-sdk"
-if (project.hasProperty("artifactId"))
-    mArtifactId = "${project.artifactId}"
+if (project.hasProperty("artifactId")) mArtifactId = "${project.artifactId}"
 
 
 android {
@@ -51,7 +49,7 @@ dependencies {
 //    compileOnly fileTree(include: ['common-*.aar'], dir: '../app/libs')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0'
-    
+
     compileOnly 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     //noinspection GradleCompatible
     compileOnly 'androidx.legacy:legacy-support-v4:1.0.0'

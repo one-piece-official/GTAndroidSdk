@@ -116,8 +116,8 @@ dependencies {
 //    implementation "com.google.android.material:material:1.0.0"
 
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android:+'
+    implementation project(':gt-sdk')
 
-    implementation project(':sigmob-sdk')
 
     implementation project(':common')
     implementation project(':wire')
