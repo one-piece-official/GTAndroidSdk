@@ -1,0 +1,186 @@
+apply plugin: 'com.android.application'
+apply plugin: 'io.sentry.android.gradle'
+
+def gitVersionCode() {
+    def cmd = 'git rev-list HEAD --first-parent --count'
+    cmd.execute([], project.rootDir).text.trim().toInteger()
+}
+
+def mVersionCode = 100
+def mVersionName = "2.14.6"
+
+if (project.hasProperty("buildVersion"))
+    mVersionName = "${project.buildVersion}"
+
+android {
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    signingConfigs {
+        sign {
+            keyAlias 'key'
+            keyPassword 'fengyun'
+            storeFile file('../key/signKey')
+            storePassword 'fengyun'
+        }
+    }
+    compileSdkVersion 33
+    defaultConfig {
+
+        applicationId 'com.sigmob.androidcn'
+        minSdkVersion 21
+        targetSdkVersion 33
+        versionCode mVersionCode
+        versionName mVersionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters 'armeabi-v7a', 'x86', 'arm64-v8a', 'x86_64', 'armeabi'
+        }
+//        javaCompileOptions {
+//            annotationProcessorOptions {
+//                includeCompileClasspath true
+//            }
+//        }
+        packagingOptions {
+            doNotStrip "*/armeabi-v7a/*.so"
+            doNotStrip "*/x86/*.so"
+            doNotStrip "*/arm64-v8a/*.so"
+            doNotStrip "*/x86_64/*.so"
+            doNotStrip "armeabi.so"
+        }
+
+        multiDexEnabled true
+    }
+    useLibrary 'org.apache.http.legacy'
+
+    lintOptions {
+        abortOnError false
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.sign
+        }
+        debug {
+            minifyEnabled false
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    // namespace 'com.wind.demo'
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
+//    }
+
+}
+
+android.applicationVariants.all { variant ->
+    task "listDependencies${variant.name.capitalize()}"() {
+        outputs.upToDateWhen { false }
+        doLast {
+            println "Depdencies for ${variant.name.capitalize()}\n"
+            configurations.getByName("${variant.name}RuntimeClasspath").getResolvedConfiguration().getResolvedArtifacts().each {
+                artifact ->
+                    def id = artifact.moduleVersion.id
+                    def targetName = "${id.group}"
+                    if (targetName.contains("com.sigmob.sdk")) {
+                        copy {
+                            from artifact.file
+                            into "libs"
+                        }
+                    }
+            }
+        }
+    }
+}
+
+repositories {
+
+}
+
+configurations.all {
+    // 每隔24小时检查远程依赖是否存在更新，针对xxx:xxx:1.1之类的静态版本
+    resolutionStrategy.cacheChangingModulesFor 24, 'hours'
+    // 每隔10分钟..
+    // resolutionStrategy.cacheChangingModulesFor 0, 'minutes'
+    // 采用动态版本声明的依赖缓存10分钟，针对xxx:xxx:1.1.+之类的动态版本
+    // resolutionStrategy.cacheDynamicVersionsFor 10*60, 'seconds'
+}
+
+
+dependencies {
+
+    implementation fileTree(include: ["msa_mdid*.aar"], dir: 'libs')
+    implementation fileTree(include: ["Wind-Consent.aar"], dir: 'libs')
+    implementation fileTree(include: ["oaid_sdk*.aar"], dir: 'libs')
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation "com.google.android.material:material:1.6.0"
+
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
+
+    testImplementation 'junit:junit:4.12'
+
+    implementation 'com.android.support:multidex:1.0.3'
+
+//    implementation fileTree(include: ["*.aar"], dir: 'libs')
+
+    implementation project(':sigmob-sdk')
+    implementation 'com.squareup.okhttp3:okhttp:3.14.9'
+//    implementation fileTree(include: ["common-release.aar"], dir: 'libs')
+//    implementation fileTree(include: ["sigmob-sdk-release.aar"], dir: 'libs')
+
+    implementation project(':common')
+    implementation project(':wire')
+    implementation project(':volley')
+    implementation project(':logger')
+    implementation project(':deviceHelper')
+    implementation project(':lib-aar-local')
+
+    implementation 'com.tencent.bugly:crashreport:latest.release'
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+
+
+//    debugImplementation 'io.github.didi.dokit:dokitx:3.5.0.1'
+//    releaseImplementation 'io.github.didi.dokit:dokitx-no-op:3.5.0.1'
+    implementation 'io.sentry:sentry-android:6.22.0'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
+
+    // NEW: LeakCanary for releases!
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-release:2.14'
+    // Optional: detect retained objects. This helps but is not required.
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-object-watcher-android:2.14'
+
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android:+'
+
+    //noinspection GradleCompatible
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    //noinspection GradleCompatible
+    implementation 'com.android.support:support-v4:23.0.+'
+}
+
+task buildZip(type: Zip) {
+    from '../'
+    exclude 'WindAd/.gradle'
+    exclude 'WindAd/.idea'
+    include 'WindAd/'
+    include 'AAR/'
+    include 'xml/'
+    include 'README.md'
+
+    destinationDirectory = file('../OutZip/')
+    archiveBaseName = 'Sigmob'
+    archiveAppendix = 'android'
+    version mVersionName
+    archiveExtension = 'zip'
+}
+
+
+

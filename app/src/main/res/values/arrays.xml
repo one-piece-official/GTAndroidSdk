@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <array name="part_adapter">
+        <item>1:sigmob</item>
+        <item>2:穿山甲</item>
+        <item>3:腾讯广告</item>
+        <item>4:快手</item>
+        <item>5:百度</item>
+        <item>6:mtg</item>
+        <item>7:vungle</item>
+        <item>8:facebook</item>
+        <item>10001:其他</item>
+    </array>
+
+    <string-array name="part_id_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>10001</item>
+    </string-array>
+
+    <array name="bz_adapter">
+        <item>CNY</item>
+        <item>USD</item>
+    </array>
+
+    <array name="sb_adapter">
+        <item>2:出价过低</item>
+        <item>2000:返回超时</item>
+        <item>2001:广告素材格式错误</item>
+    </array>
+
+    <string-array name="sb_id_value">
+        <item>2</item>
+        <item>2000</item>
+        <item>2001</item>
+    </string-array>
+
+</resources>

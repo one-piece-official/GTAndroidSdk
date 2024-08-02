@@ -1,0 +1,221 @@
+syntax = "proto3";
+
+package sigmob;
+option java_multiple_files = true;
+option java_package = "com.sigmob.sdk.common.models";
+option go_package = "sigmob.com/common/entry/sigmob";
+option objc_class_prefix = "Sigmob";
+option optimize_for = LITE_RUNTIME;
+
+
+message Version {
+  uint32 major = 1;       // 主版本号, 必填！
+  uint32 minor = 2;       // 副版本号, 必填！
+  uint32 micro = 3;       // 子版本号, 必填！
+  string version_str = 4; //字符串表示的版本号,在客户端无法解析出三段式数字版本号信息时，用此字段表示
+}
+
+message App {
+  string          app_id = 1;                      // 应用ID
+  Version         app_version = 2;                // 必填！应用版本
+  string          app_package = 3;                 // 必填！应用包名。IOS设备为bundle id
+  uint32          orientation = 4;                  // app方向：0: MaskAll、1:portrait、2:landspace
+  string          name = 5;                        // app名称
+  string          idfv = 6;                        // Vindor标示符，适用于对内：例如分析用户在应用内的行为等。
+  string          channel_id = 7;                  // 应用商店的渠道标识。字典同yomob的渠道字典，当前也只有yomob需要
+  string          product_id = 8;                  // 媒体在投放系统中的apple id（iOS） 或 package name（Android）
+  bool            support_http = 9;                  // app是否支持http
+  repeated string ad_network_ids = 10;    // 媒体在info.plist中配置的SKAdNetworkId列表
+  string          support_sk_version = 11;         // 如果为空，则不支持sk，填写当前支持的最大版本目前取值：1.0/2.0
+  repeated uint32 sdk_ext_cap = 12;       // 当前SDK版本所支持的扩展的功能1: overlay(仅iOS)；2:storekit(仅iOS)
+  int64 install_time = 15;               // 媒体应用安装时间，单位为秒
+  Version mraid1_version = 17;            // 必填！mraid1.x协议版本号
+  Version mraid2_version = 18;            // 必填！mraid2.x协议版本号
+}
+
+message Geo {
+  float  lat = 1;             // 纬度
+  float  lon = 2;             // 经度
+  string language = 3;       // 语言（大写）
+  string timeZone = 4;       // 时区
+  uint64 city_code = 5;      // 地域编码
+  string country = 6;        // 国家
+  string region_code = 7;    // ip库中识别出来的编码，可能是市级编码、省级编码
+  string secondsFromGMT = 8; // 当前时区距离隔离的秒数
+  double accuracy = 9;       // 经纬度半径，单位：米
+};
+
+message Device {
+  uint32   device_type = 1;             // 设备类型。0:unknown、1:iPhone、2:iPad、3:iPod、4:Android phone、5:Android pad
+  uint32   os_type = 2;                 // 操作系统类型. 1=IOS；2=Android
+  Version  os_version = 3;             // 必填！操作系统版本
+  string   vendor = 4;                  // 必填！设备厂商名称，中文需要UTF-8编码
+  string   model = 5;                   // 必填！设备型号，中文需要UTF-8编码
+  DeviceId did = 6;                   // 必填！唯一设备标识，必需按要求填写
+  Size     screen_size = 7;               // 必填！设备屏幕宽高
+  Geo      geo = 8;                        // 地理信息
+  uint32   dpi = 9;                     // 屏幕密度
+  bool     is_root = 10;                  // 是否越狱（true：越狱）
+  uint64   disk_size = 11;              // 磁盘大小（单位Byte）【已废弃】
+  uint32   battery_state = 13;          // 电池充电的状态（0=UnKnow、1=Unplugged、2=Charging、3=Full）
+  float    battery_level = 14;           // 电池电量百分比
+  bool     battery_save_enabled = 15;     // 是否开启低电量模式
+  string   device_name = 16;            // 设备名称
+  int64    start_timestamp = 17;         // 设备启动时间,unix时间戳 (10 位，从1970开始的时间戳)
+  uint32   android_api_level = 18;      // Android API level
+  uint64   mem_size = 19;        // 系统内存大小，安卓必填（单位Byte）
+  uint64   total_disk_size = 20;          // 手机磁盘总大小（单位Byte）
+  uint64   free_disk_size = 21;           // 手机磁盘剩余大小（单位Byte）
+  uint64   sd_total_disk_size = 22;       // 设备SD磁盘总大小（单位Byte）
+  uint64   sd_free_disk_size = 23;        // 设备SD磁盘剩余大小（单位Byte）
+  Size     resolution = 24;                 // 设备分辨率（单位px）
+  string   system_update_time = 25;     // 系统更新的时间
+  string   internal_name = 26;          // 手机mode编码
+  string   boot_mark = 27;              // 手机重启时间
+  string   update_mark = 28;            // 手机系统更新时间
+  string   rom_name = 32;               //厂商定制化系统ROM名称(MIUI,EMUI等)
+  Version  rom_version = 33;            //厂商定制化系统系统ROM版本号（非Android 版本号）
+  int32    market_version = 34;            //厂商应用市场market 版本号
+
+  int32    hms_version = 35;                //华为Hms Core VersionCode
+}
+
+// 唯一用户标识，优先使用明文，必需按要求填写，具体填写指导详见接口说明文档
+message DeviceId {
+  string idfa = 1;                // [必填]iOS设备的IDFA，格式要求[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}
+  string udid = 2;                // 内部生成
+  string user_id = 3;             // 用户id
+  string imei = 4;                // [必填]设备IMEI，IOS设备填空
+  string android_id = 5;          // [必填]android设备的android_id，ios设备填空
+  string android_uuid = 6;        // Android系统为开发者提供的用于标识手机设备的串号,会根据不同的手机设备返回IMEI，MEID或者ESN码
+  string imsi = 7;                // Sim Serial Number
+  string gaid = 8;                // 在Android设备上找到Google advertising ID (GAID)
+  string uid = 9;                 // 用户在sigmob的唯一标识。
+  string brand = 10;              // 手机品牌名称，安卓专属
+  string imei1 = 11;              // imei1
+  string imei2 = 12;              // imei2
+  string oaid = 13;               // msa 联盟 oaid 匿名设备标识符(Open Anonymous Device Identifier)最长64位
+  string vaid = 14;               // msa 联盟 vaid 开发者匿名设备标识符(Vender Anonymous Device Identifier)最长64位
+  string aaid = 15;               // msa 联盟 aaid 应用匿名设备标识符(Application Anonymous Device Identifier)最长64位
+  string msa_udid = 16;           // msa 联盟 udid
+  string idfa_md5 = 17;           // iOS设备的IDFA MD5值
+  string imei_md5 = 18;           // Android设备IMEI MD5值，iOS设备填空
+  string android_id_md5 = 19;     // Android设备的android_id MD5值，iOS设备填空
+  string gaid_md5 = 20;           // Android设备Google advertising ID (GAID) MD5值
+  string oaid_md5 = 21;           // msa 联盟 oaid 匿名设备标识符(Open Anonymous Device Identifier) MD5值
+  string imei1_md5 = 22;          // Android设备IMEI1 MD5值
+  string imei2_md5 = 23;          // Android设备IMEI2 MD5值
+  bool is_custom_imei = 24;       // false ：SDK 主动获取的设备id  true ：开发者设置的设备id
+  bool is_custom_oaid = 25;
+  bool is_custom_idfa = 26;
+  bool is_custom_android_id = 27;
+  string idfa_sha1 = 28;          // idfa sha1，为了海外adx添加
+  string imei_sha1 = 29;          // imei sha1, 为了海外adx添加
+  string android_id_sha1 = 30;    // androidId sha1, 为了海外adx添加
+  string oaid_api = 32;           // 用api方式获取的oaid
+}
+
+
+// 网络环境信息
+message Network {
+  string              ipv4 = 1;                // 必填！用户设备的公网IPv4地址，格式要求：255.255.255.255
+  uint32              connection_type = 2;     // 必填！网络连接类型，用于判断网速。0=无法探测当前网络状态; 1=蜂窝数据接入，未知网络类型; 2=2G; 3=3G; 4=4G; 5=5G; 100=Wi-Fi网络接入; 101=以太网接入
+  uint32              operator_type = 3;       // 必填！移动运营商类型，用于运营商定向广告。0=未知的运营商；1=中国移动；2=中国联通；3=中国电信；
+  string              ua = 4;                  // 浏览器ua
+  string              operator = 5;            // 必填！移动运营商类型（将来会废弃operator_type）46011
+  string              mac = 6;                 // 设备的mac地址
+  string              wifi_mac = 7;            // wifi路由器的mac地址
+  string              wifi_id = 8;             // wifi ssid
+  map<string, string> ips = 9;    // 设备各种ip取值集合（仅iOS使用）
+  string              carrier_name = 10;       // 运营商名称
+}
+
+
+message Privacy {
+  uint32 gdpr_consent = 1;        // gdpr 授权状态
+  uint32 child_protection = 2;    //儿童保护
+  uint32 age = 3;                 //用户年龄
+}
+
+message HeaderBidding {
+  string              bid_token = 1; //竞价获取广告标识
+  uint32              channel_id = 2;                  // 聚合渠道id
+  map<string, string> options = 3;        // 外部渠道媒体属性
+  string              p_id = 4;                        // 竞价广告位
+  string              cur = 5;                         // 请求价格币种 CNY, USD
+}
+
+message User {
+  uint32          yob = 1;                     // 生日年份，例：1995
+  string          gender = 2;                  // 性别，M-男；F-女；O-未知
+  repeated string app_list = 3;       // 用户已安装应用列表
+  repeated string user_strategy = 4;  // 用户属性id，如：3342，表示改用户安装了com.weibo应用；1111，表示该用户是体育运动爱好者
+  Version         app_market_version = 5;     // 设备应用市场版本号
+  bool            is_minor = 7;                  // 是否未成年人，false-否；true-是
+  bool            disable_personalized_recommendation = 8;  //是否禁止个性化推荐，false-不禁止；true-禁止
+  bool            change_recommendation_state = 9; // disable_personalized_recommendation 个性化状态（实时状态）与sdk初始化个性化推荐状态是否一致。false-一致；true-不一致
+}
+
+
+// 广告位信息
+message AdSlot {
+  string               adslot_id = 1;                           // 必填！广告位ID
+  Size                 adslot_size = 2;                           // 必填！广告位尺寸。暂不填写，后续产品确定策略有再议
+  repeated uint32      adslot_type = 3;                // 选填！支持的广告位类型（目前只支持一种）。 1=通用奖励视频 2=开屏
+  uint32               bidfloor = 4;                            // 底价
+  string               vid = 5;                                 // 曝光ID，该广告位此次请求曝光唯一ID。可用requestid + adslot序列号生成
+  string               latest_camp_id = 6;                      // 上一次播放的campaign id
+  string               latest_crid = 7;                         // 上一次播放的Creative id
+  repeated uint32      material_type = 8;              // 媒体支持的素材格式列表。激励视频广告先填空。（素材的子类型，比如开屏的图片类型）
+  uint32               sdk_strategy_index = 9;                  // sdk聚合策略位置。从1开始
+  uint32               api_strategy_index = 10;                 // api聚合策略位置。从1开始
+  map<string, string>  sdk_cached_ads = 11;        // sdk已经缓存的广告，key：Creative Id，value：Campaign Id
+  repeated uint32      creative_type = 12;             // 媒体支持的创意类型，与reponse中MaterialMeta的creative_type一致（sdk从2.10开始补传开屏支持的创意类型3和8）
+  uint32               algorithm_floor = 13;                    // 期望价格，对应【算法 eCPM Floor】
+  map<string, string>  ext = 14;                   // key:template_type,表示模版类型，0表示没有伴随条；key:animate_type,表示动画类型，0表示没有伴随条
+  map<string, AdCache> ad_caches = 15;            // key:广告位id
+  Video                video = 16;                               // 视频素材请求参数
+  uint32               expected_floor = 17;                     // 流量售卖底价, 根据Supply端多重价格考虑因素计算得出
+  uint32               settlement_mode = 19;                    // (将废弃，改用settlement_setting)结算方式：0-固定价格或分成，1-按竞价成交价格累计计费，2-开发者自设floor累计计费
+  uint32               alg_bid_type = 20;                       // 0-代表走正常floor, 1-算法侧按target调节
+  uint32               ecpm_target = 21;                        // 平台计算出的ecpm target，单位：分
+  uint32               settlement_setting = 22;                 // 平台设置的结算模式，1:分成结算，2:固定eRPM结算，3:竞价计算，4:eCPM底价结算
+  uint32               commer_ecpm = 23;                        // 商务ecpm，单位：分
+  uint32               adx_ecpm = 24;                           // 程序化ecpm,固定erpm计算模式下且商务ecpm>0的情况下，expected_price=adx_ecpm, 单位：分
+  uint32               commer_ecpm_state = 25;                  // 固定erpm结算模式状态：0、关闭，1:开启
+  uint32               ad_count = 28;                           // 请求的广告数
+  repeated uint32 support_template_id = 46;               //sdk支持的原生模版ID列表
+  bool disable_mraid2 = 48;                               // 禁用mraid2.0模版广告。false-不禁用； true-禁用
+  uint32 media_request_count = 52;                        // 上一轮开发者请求量
+  uint32 media_ready_count = 53;                          // 上一轮给开发者的填充量
+  int64 pre_req_time = 54;                                // 上一轮请求时间(unix时间戳，毫秒)
+  int32 req_interval_time = 55;                           // 配置间隔时间
+  uint32 cached_ad_size = 56;                             // 缓存的广告数量
+
+}
+
+// 二维尺寸信息
+message Size {
+  uint32 width = 1;  // 宽度, 必填！
+  uint32 height = 2;  // 高度, 必填！
+}
+
+message AdCache {
+  int32           ad_type = 1;            //广告类型
+  repeated string crids = 2;    //缓存的创意列表
+}
+
+message Video {
+  uint32 max_duration = 1; //视频最大时长
+  uint32 min_duration = 2; //视频最小时长
+}
+
+message WXProgramReq {
+  int32  wx_api_ver = 1; //用户微信内SDK版本
+  string opensdk_ver = 2; //微信openSDK版本
+  bool   wx_installed = 3; //用户是否已安装微信
+}
+
+
+
+

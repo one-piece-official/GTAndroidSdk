@@ -1,0 +1,92 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center">
+
+    <ImageView
+        android:id="@+id/sig_endCard_image"
+        android:layout_width="match_parent"
+        android:scaleType="centerCrop"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:layout_width="30dp"
+        android:id="@+id/sig_ad_rl_close"
+        android:layout_alignParentEnd="true"
+        android:layout_height="30dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp">
+
+        <ImageView
+            android:id="@+id/sig_ad_close"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <com.sigmob.sdk.base.views.CircleImageView
+            android:id="@+id/sig_app_icon"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:scaleType="fitXY"
+            android:layout_centerHorizontal="true"
+            android:radius="10dp" />
+
+        <TextView
+            android:id="@+id/sig_ad_title"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:layout_below="@+id/sig_app_icon"
+            android:layout_marginTop="30dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/sig_ad_desc"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_below="@+id/sig_ad_title"
+            android:layout_marginTop="11dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textSize="14sp"
+            android:textStyle="normal" />
+
+        <Button
+            android:id="@+id/sig_cta_button"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/sig_ad_desc"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/sig_interstitial_cta_bg"
+            android:text="立即下载"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+
+    </RelativeLayout>
+
+
+    <com.sigmob.sdk.newInterstitial.SigAdPrivacyInfoView
+        android:id="@+id/sig_ad_privacy_info"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="15dp">
+
+    </com.sigmob.sdk.newInterstitial.SigAdPrivacyInfoView>
+
+
+</RelativeLayout>

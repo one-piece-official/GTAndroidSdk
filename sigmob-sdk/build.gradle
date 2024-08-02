@@ -1,0 +1,120 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.kezong.fat-aar'
+
+def gitVersionCode() {
+    def cmd = 'git rev-list HEAD --first-parent --count'
+    cmd.execute([], project.rootDir).text.trim().toInteger()
+}
+
+def mVersionCode = 100
+def mVersionName = "3.6.0" + "-SNAPSHOT"
+
+if (project.hasProperty("buildVersion"))
+    mVersionName = "${project.buildVersion}"
+
+
+def mArtifactId = "wind-sdk"
+if (project.hasProperty("artifactId"))
+    mArtifactId = "${project.artifactId}"
+
+
+android {
+    compileSdkVersion 33
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    defaultConfig {
+        minSdkVersion 18
+        targetSdkVersion 33
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+
+    }
+    // namespace "com.sigmob.sdk"
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.compose.ui:ui-text-android:1.0.0-alpha06'
+    compileOnly fileTree(include: ['msa*.aar'], dir: '../app/libs')
+    compileOnly fileTree(include: ['Wind-Consent.aar'], dir: '../app/libs')
+//    compileOnly fileTree(include: ['common-*.aar'], dir: '../app/libs')
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    
+    compileOnly 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    //noinspection GradleCompatible
+    compileOnly 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    compileOnly project(':common')
+    compileOnly project(':wire')
+    compileOnly project(':volley')
+    compileOnly project(':logger')
+    compileOnly project(':deviceHelper')
+    compileOnly project(path: ':lib-aar-local')
+
+    compileOnly 'com.squareup.okhttp3:okhttp:3.14.9'
+
+    //noinspection GradleCompatible
+    compileOnly 'com.android.support:support-v4:23.0.+'
+
+}
+task copyAAR {
+    doLast {
+        copy {
+            from "build/outputs/aar"
+            include "sigmob-sdk-release.aar"
+            into '../output/AAR/'
+            rename "sigmob-sdk-release.aar", "wind-sdk-" + mVersionName + ".aar"
+
+            println "copy aar " + "wind-sdk-" + mVersionName + ".aar"
+
+        }
+    }
+}
+
+task copyAARX {
+    doLast {
+        copy {
+
+            from "build/outputs/aar"
+            include "wind-sdk-release.aar"
+            into '../output/AAR/'
+            rename "wind-sdk-release.aar", "wind-sdk-" + mVersionName + ".aar"
+
+        }
+    }
+}
+
+//apply plugin: 'maven'
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            repository(url: 'https://packages.aliyun.com/maven/repository/2154005-release-k0onJU/') {
+//                authentication(
+//                        userName: '60484b57e1a7ccc7cc5cb818',
+//                        password: 'h[kPvS)un[t_'
+//                )
+//            }
+//            snapshotRepository(url: 'https://packages.aliyun.com/maven/repository/2154005-snapshot-JYlibY/') {
+//                authentication(
+//                        userName: '60484b57e1a7ccc7cc5cb818',
+//                        password: 'h[kPvS)un[t_'
+//                )
+//            }
+//            pom.version = mVersionName
+//            pom.artifactId = mArtifactId
+//            pom.groupId = 'com.sigmob.sdk'
+//        }
+//    }
+//}

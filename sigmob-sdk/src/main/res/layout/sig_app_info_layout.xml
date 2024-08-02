@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/sig_app_info_ver_rl"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp">
+
+        <TextView
+            android:id="@+id/sig_app_info_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:text="名称"
+            android:textColor="@android:color/white"
+            android:singleLine="true"
+            android:textSize="8sp" />
+
+        <TextView
+            android:id="@+id/sig_app_info_ver"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/sig_app_info_name"
+            android:text="版本"
+            android:textColor="@android:color/white"
+            android:textSize="8sp" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:layout_toRightOf="@+id/sig_app_info_ver_rl"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
+
+        <TextView
+            android:id="@+id/sig_app_info_dev"
+            android:layout_width="wrap_content"
+            android:layout_height="13dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/sig_app_info_permissions"
+            android:text="开发者"
+            android:textColor="@android:color/white"
+            android:textSize="8sp" />
+
+
+        <TextView
+            android:id="@+id/sig_app_info_permissions"
+            android:layout_width="wrap_content"
+            android:layout_height="13dp"
+            android:gravity="right"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/sig_app_info_privacy"
+            android:text="权限"
+            android:textColor="@android:color/white"
+            android:textSize="8sp" />
+
+        <TextView
+            android:id="@+id/sig_app_info_privacy"
+            android:layout_width="wrap_content"
+            android:layout_height="13dp"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/sig_app_info_product"
+            android:gravity="right"
+            android:text="隐私协议"
+            android:textColor="@android:color/white"
+            android:textSize="8sp" />
+
+        <TextView
+            android:id="@+id/sig_app_info_product"
+            android:layout_width="wrap_content"
+            android:layout_height="13dp"
+            android:gravity="right"
+            android:text="介绍"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:textColor="@android:color/white"
+            android:textSize="8sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package sigmob;
+option java_multiple_files = true;
+option java_package = "com.sigmob.sigdsp.pb";
+option objc_class_prefix = "SMToken";
+
+message Request {
+  App      app         = 1;                        // app信息
+  Device   device      = 2;                  // 设备信息
+  DeviceId device_id   = 3;             // 设备ID
+  Geo      geo         = 4;                        // 地理位置信息
+  Privacy  privacy     = 5;                // 隐私状态相关
+  string   sdk_version = 7;             // sdk version
+  int64    timestamp   = 8;                // 生成token的本地时间戳,以毫秒为单位
+}
+
+message App {
+  string app_version  = 1;           // 必填！应用版本
+  string package_name = 2;          // 必填！应用包名。IOS设备为bundle id
+  string app_name     = 3;              // app名称
+  bool   support_http = 4;            // app是否支持http
+}
+
+message Device {
+  uint32 device_type     = 1;             // 设备类型。1-phone，2-tablet
+  string brand           = 2;                   // 设备品牌
+  string vendor          = 3;                  // 设备制造商
+  string model           = 4;                   // 设备型号
+  uint32 os              = 5;                      // 设备操作系统.1-iOS，2-android
+  string os_version      = 6;              // 操作系统版本号
+  uint32 screen_height   = 7;           // 设备屏幕高度	单位为 pixels
+  uint32 screen_width    = 8;            // 设备屏幕宽度	单位为 pixels
+  string language        = 9;                // 设备语言	例如“ZH”
+  string mccmnc          = 10;                 // 移动运营商，采用mcc-mnc串接成的代码	例如”46001”，无卡用户，可不传。
+  uint32 connection_type = 11;         // 网络类型	0-未知；1-移动网络；2-2G；3-3G；4-4G；5-5G；100-WIFI；101-ethernet（以太网接入）
+  string timezone        = 12;               // 设备时区设置
+  string boot_mark       = 13;              // 开机时间
+  string update_mark     = 14;            // 系统更新时间
+  string ua              = 15;                     // 设备的ua信息
+  uint64 mem_size        = 17;               // 系统内存大小，安卓必填（单位Byte）
+  uint64 total_disk_size = 18;        // 手机磁盘总大小（单位Byte）
+  string carrier_name    = 20;           // 运营商名称
+  string device_name     = 21;            // 设备名称
+}
+
+message DeviceId {
+  string udid       = 1;                    // sdk 生成的 udid
+  string uid        = 2;                     // ssp下发的uid
+  string idfa       = 3;                    // iOS 设备的idfa
+  string idfv       = 4;                    // iOS 设备的idfv
+  string imei1      = 5;                   // 安卓设备的 IMEI1
+  string imei2      = 6;                   // 安卓设备的 IMEI2
+  string oaid       = 7;                    // 安卓设备的 OAID,仅安卓10+ 需要传输
+  string android_id = 8;              // 安卓设备的 安卓id
+  string apk_sha1   = 9;                // apk的SHA1值	仅安卓
+
+}
+
+message Geo {
+  float  lat      = 1;                      // 纬度
+  float  lon      = 2;                      // 经度
+  double accuracy = 3;                // 经纬度半径，单位：米
+  string country  = 4;                 // 国家
+};
+
+message Privacy {
+  uint32 is_minor          = 1;                // 是否未成年 0: 成年人； 1: 未成年人；默认是 0
+  uint32 is_unpersonalized = 2;       //是否开启个性化推荐。0: 开启个性化推荐；1: 关闭个性化推荐；默认是 0
+}

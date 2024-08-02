@@ -1,0 +1,365 @@
+/**
+@description sigmob程序化交易竞价协议
+@author jie.pu
+//modifyby kai.huang
+    add click_type                  //点击类型
+    add version.version_str         //字符串版本号
+    add device.mem_size             //硬件内存大小
+    //eo kai.huang
+@版本: 2.6.1
+**/
+
+syntax = "proto3";
+import "sigmob_common.proto";
+
+package sigmob;
+option java_multiple_files = true;
+option java_package = "com.sigmob.sdk.base.models.rtb";
+option go_package = "sigmob.com/common/entry/sigmob";
+option objc_class_prefix = "Sigmob";
+option optimize_for = LITE_RUNTIME;
+
+
+message BidResponse {
+  string          request_id = 1;              // 对应请的request_id(内部生成的)
+  repeated Ad     ads = 2;                // 广告信息
+  uint64          error_code = 3;              // 请求出错时的错误码，用于问题排查
+  uint64          process_time_ms_dsp = 4;     // 投放系统广告检索时长，ms
+  uint64          process_time_ms_ssp = 5;     // ssp聚合平台广告检索时长，ms
+  uint32          pctr_valid_check = 6;        // 预估人群是否有效. 0：未查到预估数据；1：使用；2：过期；3：未过期，但无交集【v2.5.2版本开始只有0:未使用预估，4:在线预估】
+  string          pctr_version = 7;            // 预估版本【v2.5.2开始弃用】
+  string          uid = 8;                     // 用户在sigmob的唯一标识。
+  uint32          expiration_time = 9;         // 广告有效截止日期。Unix时间戳，单位秒。
+  string          ad_ua = 10;                  // 广告使用ua，优先从pb中取，当pb中ua为空时从请求header中取user-agent
+  SlotAdSetting   slot_ad_setting = 11; // 广告位上广告相关设置，对返回所有广告生效（sdk 3.4.0开始生效）
+  string          error_message = 12;
+  Template        scene = 13;        // 当前的主入口，若主入口为空，直接使用ads[0].materials[0].main_template
+  BiddingResponse bidding_response = 14;// c-s 返回的出价以及url
+  string rv_callback_url = 15; // 激励回调rv
+  string adx_id = 16; // adx渠道ID
+
+}
+
+message WXProgramRes {
+  string wx_app_id = 1; //微信开放平台媒体id
+  string wx_universal_link = 2; //微信开放平台媒体UniversalLink（仅iOS需要）
+  string wx_app_username = 3; //小程序原始id
+  string wx_app_path = 4; //拉起小程序页面的可带参路径
+}
+
+message BiddingResponse {
+  string win_url = 1;             // 竞价成功url
+  string lose_url = 2;            // 竞价失败url
+  uint32 ecpm = 3;                // 出价
+}
+
+// 广告信息
+message Ad {
+  string                adslot_id = 1;                       // 对应请求时填写的广告位ID
+  string                vid = 2;                             // 广告曝光id.
+  string                cust_id = 3;                         // 客户ID
+  string                camp_id = 4;                         // 推广计划ID
+  string                crid = 5;                            // 创意ID
+  repeated MaterialMeta materials = 6;        // 物料元数据组(素材)，目前只有一个
+  repeated Tracking     ad_tracking = 7;          // 广告监控信息
+  uint32                bid_price = 8;                       // 最高竞价，单位cpm分
+  string                product_id = 9;                      // 下载类广告时，为product在app store的id
+  string                settlement_price_enc = 10;           // 媒体和投放平台的结算价格密文
+  uint32                is_override = 11;                    // 0:没有；1：有
+  string                ad_source_logo = 12;                 // 广告来源方的logo小图标地址
+  string                ad_source_channel = 13;              // 广告来源编码
+  uint32                ad_type = 14;                        // 广告类型：1=奖励视频广告, 2=开屏
+  map<string, string>   options = 15;           // 保留扩展字段
+  uint32                expired_time = 16;                   // 广告过期时间 单位为秒
+  bool                  forbiden_parse_landingpage = 17;       // 禁止解析落地页
+  uint32                display_orientation = 18;            // 广告播放方向：0 自动 默认， 1.竖屏，2.横屏，3. 横竖屏
+  AdSetting             ad_setting = 19;                  // 广告设置；sdk 3.4.0版本开始为独立广告设置；
+  uint32                bid_type = 20;                       // 投放平台的竞价类型: 1 cpm, 2 cpc, 3 cpa
+  string                attribution_id = 21;                 // 广告的归因id
+  map<string, string>   ad_track_macro = 24;    // 广告新监测链接宏
+  WXProgramRes          wx_program_res = 27;
+  BiddingResponse bidding_response = 29;      // c-s 返回的出价以及url
+
+}
+
+message AndroidMarket {
+  string market_url = 1;                         //market跳转Url
+  string app_package_name = 2;                  //下载的应用包名
+  string appstore_package_name = 3;             //指定的应用市场包名
+  uint32 type = 4;                              //商店下载类型:0 普通商店下载，1. 小米直投2.0 下载;
+}
+
+
+// 广告物料元数据信息
+message MaterialMeta {
+  uint32                 creative_type = 1;                       // 创意类型：1=奖励视频广告的资源包形式(endcard为tgz包)，一般由video、endcard资源包构成；3=纯静态图片广告，一般由单张image_src构成;4=video+html源代码的模式;5=预留;6=video定帧+htmlsrc;7=video+landingpage(相当于在线endcard)；8单个视频；9 MRAID(The Mobile Rich Media Ad Interface Definitions system)
+  uint32                 interaction_type = 2;                    // 广告交互类型。1=使用浏览器打开；2=下载应用;3=deeplink唤醒失败，执行下载
+  string                 landing_page = 3;                        // 广告目标地址
+  string                 video_url = 4;                           // 视频物料地址
+  uint32                 video_duration = 5;                      // 视频物料时长
+  Size                   video_size = 6;                          // 视频尺寸
+  bytes                  html_snippet = 7;                         // HTML片段，中文需要UTF-8编码. 激励视频广告时,存放Endcard的H5代码.
+  string                 endcard_url = 8;                         // Endcard地址，sigmob为资源包的方式
+  string                 video_md5 = 9;                           // 视频的md5
+  string                 endcard_md5 = 10;                        // Endcard的md5
+  string                 deeplink_url = 11;                       // deeplink url
+  string                 image_src = 12;                          // 广告图片地址
+  Size                   image_size = 13;                         // 广告图片尺寸
+  string                 image_md5 = 14;                          // 图片的md5值
+  uint32                 image_type = 15;                         // 图片素材的格式编码，0:unknown 1:jpeg,jpg 2:png 3:gif
+  uint32                 click_type = 16;                         // 点击类型，1=按钮点击，2=全屏点击
+  bool                   has_companion_endcard = 17;                // 是否包含伴随广告的素材
+  CompanionEndcard       companion = 18;                // 伴随广告的素材对象
+  WebEventHandle         web_event_handle = 19;            // html事件交互定义与sdk的事件交互对象
+  uint32                 template_type = 20;                     // 开屏:{1:跳过+广告合一+logo模版,2:跳过+广告模版}, 激励视频:{1:星级模版,2:描述模版}
+  int32                  video_reciprocal_millisecond = 21;        // 视频播放结束后，停留的倒数（99999999:首帧；-99999999:尾帧；正数：正数第几毫秒；负数：倒数第几毫秒；0:取默认值）
+  string                 html_url = 22;                           // html素材地址(表单类投放可使用html_url+按钮点击+landing_page为空)
+  bool                   enable_collapse_tool_bar = 23;             // 是否允许收起\展开工具条（通过单击视频)，false不允许，true允许
+  uint32                 open_market_mode = 24;                   // 打开应用市场的模式， 0:appstore半屏打开，1:全屏打开（目前仅ios使用）
+  uint32                 play_mode = 25;                          // 播放模式，0:预加载模式，1:在线流媒体播放模式
+  uint32                 sub_interaction_type = 26;               // 子交互类型，0:无效, 1:广点通下载类型
+  string                 title = 27;                              // 广告标题(ssp v3.4.0开始加入)
+  string                 desc = 28;                               // 广告描述(ssp v3.4.0开始加入)
+  string                 icon_url = 29;                           // 广告icon图片(ssp v3.4.0开始加入，未来CompanionEndcard中字段将废弃)
+  float                  score = 30;                               // 下载类app的星级，小数，例如4.5表示4星半（目前用在伴随广告），score大于等于1才有效(ssp v3.4.0开始加入，未来CompanionEndcard中字段将废弃)
+  uint32                 template_id = 31;                       // 模板id
+  bool                   disable_auto_deeplink = 32;                // 是否禁止deeplink自动唤起
+  bytes                  closecard_html_snippet = 33;              // 关闭页推荐HTML片段
+  string                 app_name = 34;                           // 广告应用名称
+  string                 button_text = 35;                        // 广告按钮文案
+  AdPrivacy              ad_privacy = 36;                      // 广告隐私信息
+  uint32                 video_byte_size = 37;                    // 视频大小，单位：字节
+  string                 html_src = 38;                           // html代码片段
+  ResponseNativeAd       native_ad = 39;                // 原生广告
+  bool                   download_dialog = 40;                      // 下载需要先弹四要素，默认false 下载不弹四要素，true为下载弹四要素弹框
+  AndroidMarket          android_market = 41;              //应用市场跳转
+  Template               main_template = 42;                    // 当前广告的主模版
+  Template               sub_template = 43;                    // 当前广告的字模版
+  repeated ResponseAsset asset = 44;              // 素材资源
+  uint32                 theme_data = 45;                         // 0: 主题非半透明；1: 主题半透明
+  bool in_app = 46;                               // 是否在应用内打开landing_page true:是
+  string endcard_image_src = 47;                  // endcard图片（暂时用于插屏兜底原生模版）
+  string creative_title = 48;                     // 创意标题
+  bool has_endcard = 49;                          // 是否有endcard
+  Color button_color = 50;                        // 按钮颜色
+  repeated Widget Widget_list = 51;               // 挂件列表
+  string apk_md5 = 52;   //apk下载文件的md5值
+}
+
+message Widget{
+  uint64 widget_id = 1;   // 挂件id
+}
+
+message InterstitialSetting {
+  // 广告是否静音（0:静音、1:非静音。default=0）
+  uint32 if_mute = 1;
+  // 倒计时/跳过按钮 倒计时出现时间输入值，默认是0 s
+  uint32 show_skip_seconds = 2;
+  // 点击跳过时，是否直接关闭广告（默认false）
+  bool skip_close_ad = 3;
+  // 跳过按钮+同页面的关闭按钮位置，左上：1，左下：2，右上（默认）：3，右下：4
+  uint32 skip_position = 4;
+  // endcard关闭按钮位置，左上：1, 左下：2，右上（默认）：3，右下：4，
+  uint32 endcard_close_position = 5;
+  // 静音按钮位置， 左上：1(默认），左下：2，右上：3，右下：4，
+  uint32 mute_position = 6;
+  // 用户摇一摇的力度 1:低 2:中 3:高
+  uint32 shake_level = 7;
+  // 视频素材的结算点的打点时间 默认 5s，取值范围[0,30]
+  uint32 charge_time = 8;
+  //关闭广告播放中的自动加载逻辑
+  bool disable_auto_load = 9; //关闭广告播放中的自动加载逻辑
+}
+
+message Template {
+  uint32 type = 1;            // 1: 在线加载URL方式；2: html source方式；3: tgz压缩包，加载根目录endcard.html包方式
+  bytes  context = 2;          // 中文需要UTF-8编码，存放对应的html内容或者URL
+}
+
+message CompanionEndcard {
+  string icon_url = 1;                  // 下载类app的icon（目前用在伴随广告）
+  string title = 2;            // 广告标题（目前用在伴随广告，即将废弃。移入ad中）
+  float  score = 3;            // 下载类app的星际，小数，例如4.5表示4星半（目前用在伴随广告），score大于等于1才有效
+  string button_text = 4;               // 伴随广告的button的文字（目前用在伴随广告）
+  Color  button_color = 5;               // 按钮颜色（目前用在伴随广告）,color对象
+  Color  button_text_color = 6;      // 按钮字体的颜色（目前用在伴随广告）,color对象
+  uint32 click_type = 7;                // 点击类型，1=按钮点击，2=伴随条点击
+  Color  bar_color = 8;                  // 伴随条的颜色,color对象
+  string desc = 9;                      // 应用描述
+  uint32 animate_type = 10;             // 动画类型,1：中心缩放+弹簧；2：自下而上;3:无动画；
+  uint32 show_delay_secs = 11;          // 伴随条延迟出现的秒数
+}
+
+message Color {
+  uint32 red = 1;          //红色值，整数 0-255
+  uint32 green = 2;     //绿色值，整数 0-255
+  uint32 blue = 3;     //蓝色值，整数 0-255
+  float  alpha = 4;         //透明度，小数 0.0-1.0
+}
+
+// 广告效果跟踪信息
+message Tracking {
+  string          tracking_event_type = 1;         // track事件类型。事件类型见字典
+  repeated string tracking_url = 2;       // track事件URL
+}
+
+message WebEventHandle {
+  uint32            handle_type = 1;        //1)postmesage body handle 2)postmesage name handle
+  repeated string   handle_name = 2;        //sdk用来注册监听的handle的名称，
+  repeated WebEvent events = 3;  //事件数组
+}
+
+message WebEvent {
+  string event_type = 1;   // close,loaded,click
+  string event_name = 2;   // 各个dsp的html事件的具体名称
+}
+
+message AdSetting {
+  RvAdSetting           rv_setting = 1; //激励视频相关广告设置
+  SplashAdSetting       splash_setting = 2; //开屏广告相关配置
+  int32                 retry_count = 3; //重试次数（0:不重试）
+  SingleNativeAdSetting single_native_setting = 4; // 原生广告相关设置
+  bool                  in_app = 5; //是否在应用内打开landing_page
+  bool                  disable_download_listener = 7; //是否禁止webView下载监听，当开关开启时，webView的下载和安装监听全部取消。
+  repeated string       scheme_white_list = 8;// 允许模版跳转的白名单（各app的协议头），*表示通配符
+  uint32 sensitivity = 9;                           // 互动灵敏度，1-低，2-中，3-高
+}
+
+message SlotAdSetting {
+  RvAdSetting     rv_setting = 1; //激励视频相关广告设置
+  SplashAdSetting splash_setting = 2; //开屏广告相关配置
+  NativeAdSetting native_setting = 3; // 原生广告相关设置
+  int32           retry_count = 4; //重试次数（0:不重试）
+  bool            disable_x_requested_with = 5; //禁止WebView携带x-requested-with请求头，默认false不禁止，true为禁止
+  InterstitialSetting interstitial_setting = 6; //新插屏的相关配置
+  uint32             apk_download_type = 7; //apk 下载类型，0: 系统下载, 1 自定义下载器单任务单线下载, 2: 自定义下载器单任务多线程下载
+  bool               resumable_download = 8; //支持断点续传下载, 默认false不使用，true为使用
+  bool               use_downloaded_apk = 9; //使用已经下载完成的apk, 默认false不使用，true为使用
+}
+
+message RvAdSetting {
+  //是否静音，负值表示未设置，由sdk决定，0、有声音，1、静音
+  int32            if_mute = 1;
+  //播放完成比例定义，从0到1的小数
+  float            finished = 2;
+  //视频关闭按钮位置，左上：1，右上：3
+  int32            video_close_position = 3;
+  //endcard关闭按钮位置，左上：1，左下：2，右上：3，右下：4，
+  int32            endcard_close_position = 4;
+  //静音按钮位置， 左上：1，左下：2，右上：3，右下：4，
+  int32            mute_postion = 5;
+  //跳过按钮，根据视频播放进度的百分比显示，取值范围[0,100]，取0表示一开始就可条，取30，表示播放到30%时显示跳过按钮
+  int32            skip_percent = 6;
+  //小于零表示此项不生效，大于等于零表示经过的指定的秒数后显示跳过按钮，如果次项配置大于等于零，则skipPercent配置项自动失效
+  int32            skip_seconds = 7;
+  //是否允许关闭视频时直接退出广告，而不再显示endcard
+  bool             enable_exit_on_video_close = 8;
+  //视频全屏点击开关
+  bool             full_click_on_video = 9;
+  //点击区域配置
+  ClickAreaSetting click_setting = 10;
+  //是否不显示广告字样
+  bool             invisible_ad_label = 11;
+  //视频播放结束时间（t>0）
+  int32            end_time = 12;
+  //endcard close按钮图片配置：0: 使用老图片；1: 使用新图片 default = 0
+  int32            endcard_close_image = 13;
+  int32            end_impression_time = 14; //针对view-through-ad
+  bool             disable_auto_load = 15; //关闭广告播放中的自动加载逻辑
+    // 有效播放，>=0生效，正数第x秒触发
+    int32 charge_seconds = 16;
+    // 有效播放，>=0生效，播放百分比触
+    int32 charge_percent = 17;
+    // 触达奖励，>=0生效，正数第x秒触发
+    int32 reward_seconds = 18;
+    // 触达奖励，>=0生效，播放百分比触发
+    int32 reward_percent = 19;
+    // 广告在跳过时且未达到奖励条件时，是否弹窗挽留；0 or 1: 弹窗、2: 不弹窗
+    int32 confirm_dialog = 20;
+    // 奖励等待样式 0: 无； 1: 长驻提示
+    int32 reward_style = 21;
+}
+
+message SplashAdSetting {
+  int32  show_duration = 1;              //开屏倒计时时间,负值表示为定义，由sdk默认值决定（目前默认值是3）
+  bool   enable_close_on_click = 2;    //开屏点击关闭开关，（false 关闭，true 不关闭，默认值 false)
+  bool   enable_full_click = 5;         //是否开启全屏点击，default=false
+  bool   invisible_ad_label = 6;        //是否不显示广告字样
+  bool   use_floating_btn = 7;          //模版是否使用浮窗按钮（除摇一摇模版外）
+
+}
+
+// 广告位原生广告配置
+message NativeAdSetting {
+  uint32 video_auto_play = 1; // 播放器自动控制：0-总是；1-wifi；2-不自动
+  uint32 preview_page_video_mute = 2; // 预览页播放器静音控制：0-静音；1-不静音
+  uint32 detail_page_video_mute = 3; // 详情页播放器静音控制：0-不静音；1-静音
+  uint32 impression_percent = 4; // 广告有效曝光定义-曝光像素百分比
+  uint32 impression_time = 5; // 广告有效曝光定义-曝光持续时间
+  int32  end_impression_time = 6; //针对view-through-ad
+  int32  req_interval_time = 7;   // 配置间隔时间
+  int32  ad_pool_size = 8;        // 缓存的广告数量
+  uint32 media_expected_floor = 9; // 媒体请求底价
+  uint32 log_interval_time = 10; // 日志上报间隔
+}
+
+// 单个原生广告配置
+message SingleNativeAdSetting {
+  bool use_na_video_component = 1; // 详情页是否使用NA视频组件
+}
+
+
+
+message AdPrivacy {
+  string              privacy_info_url = 1;                   // 下载广告隐私四要素信息页面地址，直接使用无需宏替换；当此字段存在忽略privacy_template_url和privacy_template_info
+  string              privacy_template_url = 2;               // 下载广告隐私四要素信息页面模版地址，使用privacy_template_info中键值对进行宏替换
+  map<string, string> privacy_template_info = 3; // 下载广告隐私四要素信息页面模版信息；K: 宏名，V: 值
+}
+
+message ClickAreaSetting {
+  float top = 1;      //上边距百分比[0, 1)
+  float left = 2;     //左边距百分比[0, 1)
+  float bottom = 3;   //下边距百分比[0, 1)
+  float right = 4;    //右边距百分比[0, 1)
+}
+
+message SKAdNetwork {
+  string version = 1;         //广告网络的版本1.0 or 2.0
+  string ad_network_id = 2;   //广告网络的id
+  int32  campaign_id = 3;      //广告网络确定其自己的广告系列标识符，该标识符必须为1到100之间的整数
+  string itunes_id = 4;       //广告主媒体的iTunes ID
+  string source_app_id = 5;   //媒体的itunes id
+  string nonce = 6;           //唯一曝光id
+  uint64 timestamp = 7;       //时间戳 (ms)
+  string sign = 8;            //广告网络创建用于签名广告的加密签名
+  uint32 fidelity_type = 9;   //2.2版本及更高版本的签名所需。对于view-through广告fidelity_type=0；storekit类型广告fidelity_type=1
+}
+
+message ResponseNativeAd {
+  repeated ResponseAsset assets = 1;   // native 对象不为空则必填，元素对象
+  uint32                 type = 2;                     // 1: 单视频、2: 单图、3: 多图(指3张图片)
+}
+
+message ResponseAsset {
+  uint32             index = 1;              // 原生元素id，通常从0开始递增
+  ResponseAssetVideo video = 2;  // 视频元素
+  ResponseAssetImage image = 3;  // 图片元素
+  ResponseAssetText  text = 4;   // 文字元素
+}
+
+message ResponseAssetVideo {
+  string url = 1;                // 视频url
+  uint32 w = 2;                  // 视频素材宽度，原生广告，该字段必填
+  uint32 h = 3;                  // 视频素材高度，原生广告，该字段必填
+  uint32 duration = 4;           // 视频时长
+}
+
+message ResponseAssetImage {
+  string url = 1; // 图片url
+  uint32 w = 2;   // 原生广告位宽度，原生对象下必填
+  uint32 h = 3;   // 原生广告位高度；原生对象下必填
+}
+
+message ResponseAssetText {
+  string context = 1; // text文字内容
+}

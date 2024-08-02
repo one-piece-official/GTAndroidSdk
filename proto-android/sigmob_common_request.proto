@@ -1,0 +1,49 @@
+/**
+@description sigmob程序化交易竞价协议
+@author jie.pu
+//modifyby kai.huang
+    add click_type                  //点击类型
+    add version.version_str         //字符串版本号
+    add device.mem_size             //硬件内存大小
+    //eo kai.huang
+@版本: 2.6.1
+**/
+
+syntax = "proto3";
+import "sigmob_common.proto";
+
+package sigmob;
+option java_multiple_files = true;
+option java_package = "com.sigmob.sdk.common.models";
+option go_package = "sigmob.com/common/entry/sigmob";
+option objc_class_prefix = "Sigmob";
+option optimize_for = LITE_RUNTIME;
+
+// 内部竞价请求
+message BidRequest {
+  string                 request_id         = 1;              // 内部生成；请求唯一标识，[a-zA-Z0-9]{32}
+  Version                api_version        = 2;            // 选填, API版本
+  App                    app                = 3;                        // 必填！应用信息
+  Device                 device             = 4;                  // 必填！设备信息
+  Network                network            = 5;                // 必填！网络环境信息
+  repeated AdSlot        slots              = 6;          // 必填！广告位信息。 目前只支持单广告位
+  int64                  req_timestamp      = 7;            // 广告请求时间，unix时间戳 (10 位，从1970开始的时间戳)
+  uint32                 request_scene_type = 8;      // 发起请求时场景，1）前后台切换 2）视频播放中自动加载请求 3）初始化请求 4）其他被动请求
+  bool                   ad_is_expired      = 9;             // 发起请求时已缓存的广告是否过期了
+  Privacy                privacy            = 10;               // 用户隐私
+  bool                   disable_mediation  = 11;        // false: 使用的聚合；true: 单接
+  map<string, string>    options            = 15;    // 保留扩展字段
+  HeaderBidding          header_bidding     = 16;  // header bidding信息
+  User                   user               = 17;                     // 用户信息
+  repeated HeaderBidding hbs                = 18;    // 第三方adn headerbidding信息
+  map<string, string>    ext_options        = 19;// 保留扩展字段
+  Version                sdk_version        = 20;            // sdk版本
+  WXProgramReq           wx_program_req     = 21;
+  StrategyReq strategy_req = 22;       // 策略请求
+  bool disable_install_package = 23;            //应用是否禁止安装行为，默认false
+}
+
+message StrategyReq {
+  bool strategy_init = 1;       // 略是否初始化请求标记
+  string last_strategy_id = 2;  // 上一次的下发的策略分组id 按广告位区分
+}

@@ -1,0 +1,124 @@
+apply plugin: 'com.android.application'
+apply plugin: 'io.sentry.android.gradle'
+
+android {
+    signingConfigs {
+        sign {
+            keyAlias 'key'
+            keyPassword 'fengyun'
+            storeFile file('../key/signKey')
+            storePassword 'fengyun'
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    compileSdkVersion 33
+    defaultConfig {
+        applicationId 'com.sigmob.androidcn'
+        minSdkVersion 21
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+
+        ndk {
+            abiFilters 'armeabi-v7a', 'x86', 'arm64-v8a', 'x86_64', 'armeabi'
+        }
+        packagingOptions {
+            doNotStrip "*/armeabi-v7a/*.so"
+            doNotStrip "*/x86/*.so"
+            doNotStrip "*/arm64-v8a/*.so"
+            doNotStrip "*/x86_64/*.so"
+            doNotStrip "armeabi.so"
+        }
+        // namespace 'com.wind.demo'
+
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        //添加了javaCompileOptions
+//        javaCompileOptions {
+//            annotationProcessorOptions {
+//                includeCompileClasspath = true
+//            }
+//        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.sign
+        }
+        debug {
+            minifyEnabled false
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.sign
+
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+}
+
+
+configurations.all {
+    // 每隔24小时检查远程依赖是否存在更新，针对xxx:xxx:1.1之类的静态版本
+    resolutionStrategy.cacheChangingModulesFor 24, 'hours'
+    // 每隔10分钟..
+    // resolutionStrategy.cacheChangingModulesFor 0, 'minutes'
+    // 采用动态版本声明的依赖缓存10分钟，针对xxx:xxx:1.1.+之类的动态版本
+    resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+}
+
+
+dependencies {
+    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+
+    testImplementation 'junit:junit:4.12'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+
+//    implementation project(":sigmob-sdk")
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
+
+    //noinspection GradleCompatible
+    //AndroidX
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    implementation 'com.android.support:multidex:1.0.3'
+
+////    //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
+//    implementation 'com.tencent.bugly:crashreport:latest.release'
+//    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+
+    implementation 'io.github.didi.dokit:dokitx:3.5.0.1-beta01'
+//    releaseImplementation 'io.github.didi.dokit:dokitx-no-op:3.5.0.1-beta01'
+//
+    implementation "com.mapzen:on-the-road:0.8.4"
+
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android:+'
+
+    implementation 'io.sentry:sentry-android:6.22.0'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
+
+    // NEW: LeakCanary for releases!
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-release:2.14'
+    // Optional: detect retained objects. This helps but is not required.
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-object-watcher-android:2.14'
+
+}

@@ -1,0 +1,7 @@
+package com.sigmob.sdk;
+
+import android.support.v4.content.FileProvider;
+
+public class SigmobFileV4Provider extends FileProvider {
+
+}

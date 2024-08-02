@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/sig_ad_privacy_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:background="#D9D9D9"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/sig_ad_privacy_ad_logo"
+                android:layout_width="wrap_content"
+                android:scaleType="fitXY"
+                android:minWidth="13dp"
+                android:maxWidth="40dp"
+                android:adjustViewBounds="true"
+                android:layout_gravity="bottom"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/sig_ad_privacy_ad_text"
+            android:layout_marginLeft="2dp"
+            android:layout_width="20dp"
+            android:layout_height="12dp"
+            android:layout_gravity="bottom"
+            android:text="广告"
+            android:textSize="8sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/sig_ad_privacy_view"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:visibility="invisible"
+        android:paddingRight="2dp"
+        android:layout_height="12dp">
+
+        <TextView
+            android:id="@+id/sig_ad_privacy_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="名称"
+            android:singleLine="true"
+            android:textSize="8sp" />
+
+        <TextView
+            android:id="@+id/sig_ad_privacy_version"
+            android:layout_marginLeft="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="版本"
+            android:singleLine="true"
+            android:textSize="8sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="3dp"
+            android:text="开发者"
+            android:singleLine="true"
+            android:textSize="8sp" />
+
+        <TextView
+            android:id="@+id/sig_ad_privacy_permission"
+            android:layout_marginLeft="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="权限"
+            android:singleLine="true"
+            android:textSize="8sp" />
+
+        <TextView
+            android:id="@+id/sig_ad_privacy_info"
+            android:layout_marginLeft="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="隐私协议"
+            android:singleLine="true"
+            android:textSize="8sp" />
+
+        <TextView
+            android:layout_marginLeft="3dp"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:text="介绍"
+            android:singleLine="true"
+            android:textSize="8sp" />
+    </LinearLayout>
+</LinearLayout>
