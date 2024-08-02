@@ -9,8 +9,7 @@ def gitVersionCode() {
 def mVersionCode = 100
 def mVersionName = "2.14.6"
 
-if (project.hasProperty("buildVersion"))
-    mVersionName = "${project.buildVersion}"
+if (project.hasProperty("buildVersion")) mVersionName = "${project.buildVersion}"
 
 android {
     sourceSets {
@@ -28,7 +27,6 @@ android {
     }
     compileSdkVersion 33
     defaultConfig {
-
         applicationId 'com.sigmob.androidcn'
         minSdkVersion 21
         targetSdkVersion 33
@@ -71,7 +69,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    // namespace 'com.wind.demo'
 //    compileOptions {
 //        sourceCompatibility JavaVersion.VERSION_1_8
 //        targetCompatibility JavaVersion.VERSION_1_8
@@ -84,16 +81,15 @@ android.applicationVariants.all { variant ->
         outputs.upToDateWhen { false }
         doLast {
             println "Depdencies for ${variant.name.capitalize()}\n"
-            configurations.getByName("${variant.name}RuntimeClasspath").getResolvedConfiguration().getResolvedArtifacts().each {
-                artifact ->
-                    def id = artifact.moduleVersion.id
-                    def targetName = "${id.group}"
-                    if (targetName.contains("com.sigmob.sdk")) {
-                        copy {
-                            from artifact.file
-                            into "libs"
-                        }
+            configurations.getByName("${variant.name}RuntimeClasspath").getResolvedConfiguration().getResolvedArtifacts().each { artifact ->
+                def id = artifact.moduleVersion.id
+                def targetName = "${id.group}"
+                if (targetName.contains("com.sigmob.sdk")) {
+                    copy {
+                        from artifact.file
+                        into "libs"
                     }
+                }
             }
         }
     }
