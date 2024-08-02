@@ -128,6 +128,9 @@ dependencies {
 
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android:+'
 
+
+    implementation fileTree(include: ["windmill-sdk-3.8.0.aar"], dir: 'libs')
+
 }
 
 task copyAAR {

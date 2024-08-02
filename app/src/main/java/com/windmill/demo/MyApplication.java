@@ -21,7 +21,7 @@ import com.windmill.sdk.WMWaterfallFilter;
 import com.windmill.sdk.WindMillAd;
 import com.windmill.sdk.WindMillConsentStatus;
 import com.windmill.sdk.WindMillUserAgeStatus;
-import com.windmill.xbid.Actor;
+
 
 import org.json.JSONObject;
 
@@ -280,18 +280,6 @@ public class MyApplication extends MultiDexApplication {
 //        PackageInfo packageInfo = new PackageInfo();
 //        packageInfo.packageName = "com.lance.demo";
 //        packageInfoList.add(packageInfo);
-
-        Actor.getInstance().registerBiddingInfo(new Actor.XBiddingInfo() {
-            @Override
-            public Map<String, String> getBidInfoFromYou(int channelId, boolean isWin, Map<String, Object> referBidInfo, Map<String, String> resultBidInfo) {
-                Log.d("lance", "----------getBidInfoFromYou----------" + channelId + ":" + isWin + ":" + referBidInfo + ":" + resultBidInfo);
-                if (resultBidInfo != null) {
-                    resultBidInfo.put("key", "value");
-                    return resultBidInfo;
-                }
-                return null;
-            }
-        });
 
         ads.startWithAppId(this, appId, new WMAdConfig.Builder().customController(new WMCustomController() {
             @Override

@@ -122,7 +122,6 @@ public class BannerActivity extends AppCompatActivity implements View.OnClickLis
         WMBannerView bannerView = bannerAdMap.get(placementId);
         Log.d("lance", "---------showAd---------" + placementId);
         if (bannerView != null) {
-            Log.d("lance", "---------getLoadFailMessages---------" + bannerView.getLoadFailMessages());
             List<AdInfo> adInfoList = bannerView.checkValidAdCaches();
             if (adInfoList != null && adInfoList.size() > 0) {
                 for (int i = 0; i < adInfoList.size(); i++) {

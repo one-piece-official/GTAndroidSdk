@@ -156,7 +156,6 @@ public class RewardVideoActivity extends AppCompatActivity implements WMRewardAd
         WMRewardAd rewardAd = rewardAdMap.get(placementId);
         Log.d("lance", "---------showAd---------" + placementId);
         if (rewardAd != null) {
-            Log.d("lance", "---------getLoadFailMessages---------" + rewardAd.getLoadFailMessages());
             List<AdInfo> adInfoList = rewardAd.checkValidAdCaches();
             if (adInfoList != null && adInfoList.size() > 0) {
                 for (int i = 0; i < adInfoList.size(); i++) {

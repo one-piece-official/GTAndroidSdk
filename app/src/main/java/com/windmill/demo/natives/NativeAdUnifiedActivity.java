@@ -64,10 +64,7 @@ public class NativeAdUnifiedActivity extends AppCompatActivity implements View.O
     }
 
     public static void hideSystemUI(Activity context) {
-        int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             uiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
@@ -189,7 +186,6 @@ public class NativeAdUnifiedActivity extends AppCompatActivity implements View.O
     private void showAd(final String placementId) {
         Log.d("lance", "---------showAd---------" + placementId);
         if (nativeUnifiedAd != null) {
-            Log.d("lance", "---------getLoadFailMessages---------" + nativeUnifiedAd.getLoadFailMessages());
             List<AdInfo> adInfoList = nativeUnifiedAd.checkValidAdCaches();
             if (adInfoList != null && adInfoList.size() > 0) {
                 for (int i = 0; i < adInfoList.size(); i++) {

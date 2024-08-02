@@ -144,7 +144,6 @@ public class InterstitialActivity extends AppCompatActivity implements WMInterst
         WMInterstitialAd interstitialAd = interstitialAdMap.get(placementId);
         Log.d("lance", "---------showAd---------" + placementId);
         if (interstitialAd != null) {
-            Log.d("lance", "---------getLoadFailMessages---------" + interstitialAd.getLoadFailMessages());
             List<AdInfo> adInfoList = interstitialAd.checkValidAdCaches();
             if (adInfoList != null && adInfoList.size() > 0) {
                 for (int i = 0; i < adInfoList.size(); i++) {

@@ -77,12 +77,6 @@ public class MainFragment extends Fragment implements WMSplashAdListener {
             public void onClick(View v) {
 
                 //开屏代码位id
-                if (v.getId() == R.id.splash_button_load_preload) {
-                    splashPreload();
-                    return;
-                }
-
-                //开屏代码位id
                 if (v.getId() == R.id.splash_button_load) {
                     LoadSplashAd();
                     return;
@@ -129,34 +123,6 @@ public class MainFragment extends Fragment implements WMSplashAdListener {
         return dm;
     }
 
-    private void splashPreload() {
-        MyApplication.initPlacementCustomMap(getMyActivity(), splash_placement_id);
-        MyApplication.filterChannelId(getMyActivity(), splash_placement_id);
-        initViewGroup(getMyActivity());
-        WMSplashAd splashAd = rewardAdMap.get(splash_placement_id);
-        Log.d("lance", (splashAd == null) + "---------LoadSplashAd---------" + splash_placement_id);
-
-        Map<String, Object> options = new HashMap<>();
-        options.put("user_id", userID);
-        options.put(WMConstants.AD_WIDTH, getRealMetrics(getActivity()).widthPixels);//针对于穿山甲、GroMore、AdScope开屏有效、单位px
-        options.put(WMConstants.AD_HEIGHT, getRealMetrics(getActivity()).heightPixels);//针对于穿山甲、GroMore、AdScope开屏有效、单位px
-
-        if (splashAd != null) {
-            if (isNewInstance) {
-                rewardAdMap.remove(splash_placement_id);
-                splashAd = new WMSplashAd(getMyActivity(), new WMSplashAdRequest(splash_placement_id, userID, options, true), this);
-            }
-        } else {
-            splashAd = new WMSplashAd(getMyActivity(), new WMSplashAdRequest(splash_placement_id, userID, options, true), this);
-        }
-        Log.d("lance", "------------start--------loadAd-------" + System.currentTimeMillis());
-//        splashAd.loadAdOnly();
-
-        splashAd.loadWaterfall();
-
-        rewardAdMap.put(splash_placement_id, splashAd);
-    }
-
     private void LoadSplashAd() {
         MyApplication.initPlacementCustomMap(getMyActivity(), splash_placement_id);
         MyApplication.filterChannelId(getMyActivity(), splash_placement_id);
@@ -187,7 +153,6 @@ public class MainFragment extends Fragment implements WMSplashAdListener {
         WMSplashAd splashAd = rewardAdMap.get(splash_placement_id);
         Log.d("lance", "---------showAd---------" + splash_placement_id);
         if (splashAd != null) {
-            Log.d("lance", "---------getLoadFailMessages---------" + splashAd.getLoadFailMessages());
             List<AdInfo> adInfoList = splashAd.checkValidAdCaches();
             if (adInfoList != null && adInfoList.size() > 0) {
                 for (int i = 0; i < adInfoList.size(); i++) {
@@ -302,7 +267,6 @@ public class MainFragment extends Fragment implements WMSplashAdListener {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        bindButton(R.id.splash_button_load_preload, null);
         bindButton(R.id.splash_button_load, null);
         bindButton(R.id.splash_button_show, null);
         bindButton(R.id.reward_button, RewardVideoActivity.class);
