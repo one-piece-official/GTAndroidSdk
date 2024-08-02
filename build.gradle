@@ -24,7 +24,6 @@ buildscript {
         classpath 'com.adison.gradleplugin:jar:1.1.0'
         classpath 'io.sentry:sentry-android-gradle-plugin:2.1.5'
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21'
-
     }
 }
 

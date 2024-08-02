@@ -18,15 +18,15 @@ if (project.hasProperty("artifactId"))
 
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
         }
     }
     defaultConfig {
-        minSdkVersion 18
-        targetSdkVersion 31
+        minSdkVersion 19
+        targetSdkVersion 33
         versionCode mVersionCode
         versionName mVersionName
 

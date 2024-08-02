@@ -9,14 +9,14 @@ include ':wire'
 include ':lib-aar-local'
 include ':common-app'
 
-project(":common").projectDir = file('common-sdk/common')
-project(":common-app").projectDir = file('common-sdk/app')
+project(":common").projectDir = file('GTAndroidShare/common')
+project(":common-app").projectDir = file('GTAndroidShare/app')
 
-project(":lib-aar-local").projectDir = file('common-sdk/lib-aar-local')
-project(":deviceHelper").projectDir = file('common-sdk/deviceHelper')
-project(":logger").projectDir = file('common-sdk/logger')
-project(":volley").projectDir = file('common-sdk/volley')
-project(":wire").projectDir = file('common-sdk/wire')
+project(":lib-aar-local").projectDir = file('GTAndroidShare/lib-aar-local')
+project(":deviceHelper").projectDir = file('GTAndroidShare/deviceHelper')
+project(":logger").projectDir = file('GTAndroidShare/logger')
+project(":volley").projectDir = file('GTAndroidShare/volley')
+project(":wire").projectDir = file('GTAndroidShare/wire')
 
 include ':wind-app'
 project(":wind-app").projectDir = file('WindSDK-Android/app')

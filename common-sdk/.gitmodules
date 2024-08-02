@@ -1,4 +1,0 @@
-[submodule "protocol"]
-	path = protocol
-	url = https://code.happyelements.net/sigmob/protocol.git/
-	branch = master

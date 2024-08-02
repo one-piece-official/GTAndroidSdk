@@ -9,17 +9,15 @@ def gitVersionCode() {
 def mVersionCode = 100
 def mVersionName = "3.6.0" + "-SNAPSHOT"
 
-if (project.hasProperty("buildVersion"))
-    mVersionName = "${project.buildVersion}"
+if (project.hasProperty("buildVersion")) mVersionName = "${project.buildVersion}"
 
 
 def mArtifactId = "wind-sdk"
-if (project.hasProperty("artifactId"))
-    mArtifactId = "${project.artifactId}"
+if (project.hasProperty("artifactId")) mArtifactId = "${project.artifactId}"
 
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
@@ -27,7 +25,7 @@ android {
     }
     defaultConfig {
         minSdkVersion 18
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode mVersionCode
         versionName mVersionName
 
