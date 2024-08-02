@@ -1,112 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.wind.demo">
+    package="com.windmill.demo">
 
-    <uses-sdk tools:overrideLibrary="com.bun.miitmdid" />
+    <uses-sdk tools:overrideLibrary="com.bun.miitmdid,com.unity3d.ads,com.tapsdk.tapad" />
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:node="replace" />
 
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
     <application
         android:name=".MyApplication"
-        android:hardwareAccelerated="true"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:testOnly="false"
-        android:theme="@style/AppTheme">
-        <meta-data
-            android:name="io.sentry.dsn"
-            android:value="https://ccaa4b9872c449538193cc958c41b2be@o4505276295610368.ingest.sentry.io/4505276297052160" />
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
+        tools:replace="android:allowBackup">
 
+        <meta-data
+            android:name="hw_ads_sdk_type"
+            android:value="6"
+            tools:node="replace" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713" />
+
+        <!--        <meta-data-->
+        <!--            android:name="com.google.android.gms.ads.APPLICATION_ID"-->
+        <!--            android:value="ca-app-pub-6589669004351150~6175647458" />-->
+        <meta-data
+            android:name="applovin.sdk.key"
+            android:value="fTNcuplMNyleC9R7us1BW5DiU35-bBlQStDeRwCev6RNIIZGorznubcQz4NNvmqFwTgtlbVwm6T2cPT4x9_LAn" />
+
+        <activity
+            android:name=".SettingActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SettingIDActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".InitSettingActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DeviceInfoActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".natives.NativeAdDrawActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".natives.NativeAdUnifiedRecycleActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".natives.NativeAdUnifiedListActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".natives.NativeAdUnifiedActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
-            android:name=".natives.BidNativeAdUnifiedActivity"
-            android:configChanges="orientation|screenSize"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".natives.NativeAdActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".BidRewardVideoActivity"
+            android:name=".BannerActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".NewInterstitialActivity"
+            android:name=".InterstitialActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="sensor"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
-            android:name=".BidNewInterstitialActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="sensor"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".RewardVideoActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="sensor"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
-            android:name=".DeviceInfoActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="sensor"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
-            android:name=".BIdSettingActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="sensor"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
-            android:name=".BidSplashActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="sensor"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <!-- <activity -->
-        <!-- android:name=".SplashActivity" -->
-        <!-- android:screenOrientation="portrait" -->
-        <!-- android:theme="@android:style/Theme.NoTitleBar.Fullscreen"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.MAIN" /> -->
-        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
+            android:screenOrientation="sensor" />
+
+        <provider
+            android:name="com.bytedance.sdk.openadsdk.TTFileProvider"
+            android:authorities="${applicationId}.TTFileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <!-- TT（国内） GP专属 -->
+        <provider
+            android:name="com.bytedance.sdk.openadsdk.multipro.TTMultiProvider"
+            android:authorities="${applicationId}.TTMultiProvider"
+            android:exported="false" />
+
+        <!-- TT 改包名 -->
+        <!--        <provider-->
+        <!--            android:name="com.vkyb.kv.kvnepo.TTFileProvider"-->
+        <!--            android:authorities="${applicationId}.TTFileProvider"-->
+        <!--            android:exported="false"-->
+        <!--            android:grantUriPermissions="true">-->
+        <!--            <meta-data-->
+        <!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
+        <!--                android:resource="@xml/file_paths" />-->
+        <!--        </provider>-->
+        <!-- TT 改包名 -->
+        <!--        <provider-->
+        <!--            android:name="com.vkyb.kv.kvnepo.multipro.TTMultiProvider"-->
+        <!--            android:authorities="${applicationId}.TTMultiProvider"-->
+        <!--            android:exported="false" />-->
+        <!-- MTG -->
+        <!-- <provider -->
+        <!-- android:name="com.mbridge.msdk.foundation.tools.MBFileProvider" -->
+        <!-- android:authorities="${applicationId}.mbFileProvider" -->
+        <!-- android:exported="false" -->
+        <!-- android:grantUriPermissions="true"> -->
+        <!-- <meta-data -->
+        <!-- android:name="android.support.FILE_PROVIDER_PATHS" -->
+        <!-- android:resource="@xml/mb_provider_paths" /> -->
+        <!-- </provider> -->
+        <provider
+            android:name="com.qq.e.comm.GDTFileProvider"
+            android:authorities="${applicationId}.gdt.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/gdt_file_path" />
+        </provider>
+
+        <!-- OneWay -->
+        <!-- <provider -->
+        <!-- android:name="mobi.oneway.export.OWProvider" -->
+        <!-- android:authorities="${applicationId}.OWProvider" -->
+        <!-- android:exported="false" -->
+        <!-- android:grantUriPermissions="true" -->
+        <!-- tools:ignore="Instantiatable"> -->
+        <!-- <meta-data -->
+        <!-- android:name="android.support.FILE_PROVIDER_PATHS" -->
+        <!-- android:resource="@xml/ow_file_paths" /> -->
+        <!-- </provider> -->
+        <!-- 游可赢 -->
+        <provider
+            android:name="com.tencent.klevin.utils.FileProvider"
+            android:authorities="${applicationId}.klevin.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/klevin_provider_paths" />
+        </provider>
+
+        <!-- MiMo -->
+        <!--        <provider-->
+        <!--            android:name="androidx.core.content.FileProvider"-->
+        <!--            android:authorities="${applicationId}.fileprovider"-->
+        <!--            android:exported="false"-->
+        <!--            android:grantUriPermissions="true">-->
+        <!--            <meta-data-->
+        <!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
+        <!--                android:resource="@xml/mimo_file_paths" />-->
+        <!--        </provider>-->
+
         <activity
             android:name=".SplashActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
-            android:screenOrientation="sensor"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -120,7 +201,7 @@
             android:hardwareAccelerated="true"
             android:launchMode="singleTask"
             android:screenOrientation="sensor"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:theme="@style/AppSplashTheme"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
     </application>
 

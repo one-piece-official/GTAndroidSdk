@@ -1,3 +1,25 @@
+# Add project specific ProGuard rules here.
+# You can control the set of applied configuration files using the
+# proguardFiles setting in build.gradle.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
+
+# Uncomment this to preserve the line number information for
+# debugging stack traces.
+#-keepattributes SourceFile,LineNumberTable
+
+# If you keep the line number information, uncomment this to
+# hide the original source file name.
+#-renamesourcefileattribute SourceFile
+
 #指定代码的压缩级别
 -optimizationpasses 5
 
@@ -103,9 +125,7 @@ public static final android.os.Parcelable$Creator *;
   ** scene;
 }
 
--applymapping mapping.txt
-
--printmapping mapping-new.txt #混淆后文件映射
+-printmapping mapping.txt #混淆后文件映射
 
 # android.net
 -dontwarn android.net.**
@@ -165,13 +185,172 @@ public static final android.os.Parcelable$Creator *;
 #SigMobSdk
 -keep class com.sigmob.sdk.common.SDKConfig{public *;}
 -keep class com.sigmob.logger.**{public *;}
--keep class com.wind.sdk.common.Constants{public *;}
+-keep class com.sigmob.sdk.common.Constants{public *;}
+-keep class com.sigmob.sdk.common.CustomController{public *;}
 -keep class com.sigmob.sdk.common.models.** { *; }
 -keep class com.sigmob.sdk.base.models.** {*; }
--keep class com.wind.devicehelper.DeviceHelper {public *; }
+
+-keep class com.sigmob.devicehelper.DeviceHelper {public *; }
 -keep class com.sigmob.devicehelper.oaId.helpers.DevicesIDsHelper$* {public *; }
--keep class com.sigmob.sdk.common.mta.**{public *;}
+-keep class com.czhj.sdk.common.mta.**{public *;}
 -keep class com.sigmob.wire.** {public *; }
 -keep interface com.sigmob.wire.** {public *; }
 -keep class com.sigmob.sdk.SigmobXFileProvider{public *; }
+
 -keep class com.sigmob.sdk.SigmobFileProvider{public *; }
+
+#csj
+-keep class com.bytedance.sdk.openadsdk.** { *; }
+-keep class com.bytedance.frameworks.** { *; }
+
+-keep class ms.bd.c.Pgl.**{*;}
+-keep class com.bytedance.mobsec.metasec.ml.**{*;}
+
+-keep class com.ss.android.**{*;}
+
+-keep class com.bytedance.embedapplog.** {*;}
+-keep class com.bytedance.embed_dr.** {*;}
+
+-keep class com.bykv.vk.** {*;}
+
+#头条gp
+-keep class com.bykv.vk.openvk.** {*;}
+-keep public interface com.bykv.vk.openvk.downloadnew.** {*;}
+-keep class com.pgl.sys.ces.* {*;}
+
+#gdt
+-keep class com.qq.e.** {
+    public protected *;
+}
+
+#tapjoy
+-keep class com.tapjoy.** { *; }
+-keep class com.moat.** { *; }
+-keepattributes JavascriptInterface
+-keepattributes *Annotation*
+-keep class * extends java.util.ListResourceBundle {
+protected Object[][] getContents();
+}
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+public static final *** NULL;
+}
+-keepnames @com.google.android.gms.common.annotation.KeepName class *
+-keepclassmembernames class * {
+@com.google.android.gms.common.annotation.KeepName *;
+}
+-keepnames class * implements android.os.Parcelable {
+public static final ** CREATOR;
+}
+-keep class com.google.android.gms.ads.identifier.** { *; }
+-dontwarn com.tapjoy.**
+
+#kuaishou
+-keep class org.chromium.** {*;}
+-keep class org.chromium.** { *; }
+-keep class aegon.chrome.** { *; }
+-keep class com.kwai.**{ *; }
+-dontwarn com.kwai.**
+-dontwarn com.kwad.**
+-dontwarn com.ksad.**
+-dontwarn aegon.chrome.**
+
+#mtg
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class com.mbridge.** {*; }
+-keep interface com.mbridge.** {*; }
+-keep interface androidx.** { *; }
+-keep class androidx.** { *; }
+-keep public class * extends androidx.** { *; }
+-dontwarn com.mbridge.**
+-keep class **.R$* { public static final int mbridge*; }
+
+# klevinAd
+-keep class com.tencent.tgpa.**{*;}
+-keep class com.tencent.klevin.**{*;}
+
+# BaiDu
+-ignorewarnings
+-dontwarn com.baidu.mobads.sdk.api.**
+-keepclassmembers class * extends android.app.Activity {
+   public void *(android.view.View);
+}
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-keep class com.baidu.mobads.** { *; }
+-keep class com.style.widget.** {*;}
+-keep class com.component.** {*;}
+-keep class com.baidu.ad.magic.flute.** {*;}
+-keep class com.baidu.mobstat.forbes.** {*;}
+
+#Gromore
+-keep class bykvm*.**
+-keep class com.bytedance.msdk.adapter.**{ public *; }
+-keep class com.bytedance.msdk.api.** {
+ public *;
+}
+-keep class com.bytedance.msdk.base.TTBaseAd{*;}
+-keep class com.bytedance.msdk.adapter.TTAbsAdLoaderAdapter{
+    public *;
+    protected <fields>;
+}
+
+# 倍孜混淆
+-dontwarn com.beizi.fusion.**
+-dontwarn com.beizi.ad.**
+-keep class com.beizi.fusion.** {*; }
+-keep class com.beizi.ad.** {*; }
+
+# TapTap
+-dontwarn com.tapsdk.**
+-dontwarn com.tapadn.**
+-keep class com.tapsdk.** {*; }
+-keep class com.tapadn.** {*; }
+
+
+# Honor
+-keep class com.hihonor.ads.** {*; }
+-keep class com.hihonor.adsdk.** {*;}
+
+# csjx
+-keep class com.vkyb.kv.kvnepo.** {*;}
+-keep public interface com.vkyb.kv.kvnepo.downloadnew.** {*;}
+-keep class com.pgl.sys.ces.* {*;}
+
+# Vungle
+-dontwarn com.vungle.ads.**
+-keepclassmembers class com.vungle.ads.** {
+  *;
+}
+# Google
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.android.gms.**
+# START OkHttp + Okio
+# JSR 305 annotations are for embedding nullability information.
+-dontwarn javax.annotation.**
+# A resource is loaded with a relative path so the package of this class must be preserved.
+-adaptresourcefilenames okhttp3/internal/publicsuffix/PublicSuffixDatabase.gz
+# Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+# OkHttp platform used only on JVM and when Conscrypt and other security providers are available.
+-dontwarn okhttp3.internal.platform.**
+-dontwarn org.conscrypt.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.openjsse.**
+# Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+
+# END OkHttp + Okio
+
+# START Protobuf
+-dontwarn com.google.protobuf.**
+-keepclassmembers class com.google.protobuf.** {
+ *;
+}
+-keep class * extends com.google.protobuf.GeneratedMessageLite { *; }
+
+# END Protobuf

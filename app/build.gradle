@@ -1,5 +1,6 @@
-apply plugin: 'com.android.application'
-apply plugin: 'io.sentry.android.gradle'
+plugins {
+    id 'com.android.application'
+}
 
 def gitVersionCode() {
     def cmd = 'git rev-list HEAD --first-parent --count'
@@ -7,16 +8,12 @@ def gitVersionCode() {
 }
 
 def mVersionCode = 100
-def mVersionName = "2.14.6"
+def mVersionName = "1.0.0"
 
 if (project.hasProperty("buildVersion")) mVersionName = "${project.buildVersion}"
 
 android {
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ['libs']
-        }
-    }
+
     signingConfigs {
         sign {
             keyAlias 'key'
@@ -25,22 +22,22 @@ android {
             storePassword 'fengyun'
         }
     }
+
     compileSdkVersion 33
+
     defaultConfig {
-        applicationId 'com.sigmob.androidcn'
+        applicationId "com.windmill.demo.android"
         minSdkVersion 21
         targetSdkVersion 33
         versionCode mVersionCode
         versionName mVersionName
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
         ndk {
             abiFilters 'armeabi-v7a', 'x86', 'arm64-v8a', 'x86_64', 'armeabi'
         }
-//        javaCompileOptions {
-//            annotationProcessorOptions {
-//                includeCompileClasspath true
-//            }
-//        }
+
         packagingOptions {
             doNotStrip "*/armeabi-v7a/*.so"
             doNotStrip "*/x86/*.so"
@@ -51,87 +48,76 @@ android {
 
         multiDexEnabled true
     }
+
     useLibrary 'org.apache.http.legacy'
 
     lintOptions {
         abortOnError false
+        checkReleaseBuilds false
     }
+
     buildTypes {
+
         release {
             minifyEnabled true
-
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.sign
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
         debug {
             minifyEnabled false
-
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-//    compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
-//    }
 
-}
-
-android.applicationVariants.all { variant ->
-    task "listDependencies${variant.name.capitalize()}"() {
-        outputs.upToDateWhen { false }
-        doLast {
-            println "Depdencies for ${variant.name.capitalize()}\n"
-            configurations.getByName("${variant.name}RuntimeClasspath").getResolvedConfiguration().getResolvedArtifacts().each { artifact ->
-                def id = artifact.moduleVersion.id
-                def targetName = "${id.group}"
-                if (targetName.contains("com.sigmob.sdk")) {
-                    copy {
-                        from artifact.file
-                        into "libs"
-                    }
-                }
-            }
-        }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 repositories {
-
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 configurations.all {
-    // 每隔24小时检查远程依赖是否存在更新，针对xxx:xxx:1.1之类的静态版本
-    resolutionStrategy.cacheChangingModulesFor 24, 'hours'
-    // 每隔10分钟..
-    // resolutionStrategy.cacheChangingModulesFor 0, 'minutes'
+//    // 每隔24小时检查远程依赖是否存在更新，针对xxx:xxx:1.1之类的静态版本
+//    resolutionStrategy.cacheChangingModulesFor 24, 'hours'
+    //每隔10分钟..
+    resolutionStrategy.cacheChangingModulesFor 0, 'minutes'
     // 采用动态版本声明的依赖缓存10分钟，针对xxx:xxx:1.1.+之类的动态版本
     // resolutionStrategy.cacheDynamicVersionsFor 10*60, 'seconds'
 }
 
 
 dependencies {
-
-    implementation fileTree(include: ["msa_mdid*.aar"], dir: 'libs')
-    implementation fileTree(include: ["Wind-Consent.aar"], dir: 'libs')
-    implementation fileTree(include: ["oaid_sdk*.aar"], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation "com.google.android.material:material:1.6.0"
-
+    implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
-
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
-
-    testImplementation 'junit:junit:4.12'
-
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation 'com.android.support:multidex:1.0.3'
 
-//    implementation fileTree(include: ["*.aar"], dir: 'libs')
+    implementation 'com.google.android.material:material:1.6.1'//billowlink需要
+
+    implementation fileTree(include: ["oaid_sdk_*.aar"], dir: 'libs')
+    implementation fileTree(include: ["Wind-Consent.aar"], dir: 'libs')
+
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+
+    // 广告助手
+//    implementation 'com.qq.e.union:tools:+'
+//    implementation "com.google.android.material:material:1.0.0"
+
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android:+'
 
     implementation project(':sigmob-sdk')
-    implementation 'com.squareup.okhttp3:okhttp:3.14.9'
-//    implementation fileTree(include: ["common-release.aar"], dir: 'libs')
-//    implementation fileTree(include: ["sigmob-sdk-release.aar"], dir: 'libs')
 
     implementation project(':common')
     implementation project(':wire')
@@ -140,43 +126,79 @@ dependencies {
     implementation project(':deviceHelper')
     implementation project(':lib-aar-local')
 
-    implementation 'com.tencent.bugly:crashreport:latest.release'
-    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
-
-
-//    debugImplementation 'io.github.didi.dokit:dokitx:3.5.0.1'
-//    releaseImplementation 'io.github.didi.dokit:dokitx-no-op:3.5.0.1'
-    implementation 'io.sentry:sentry-android:6.22.0'
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
-
-    // NEW: LeakCanary for releases!
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-release:2.14'
-    // Optional: detect retained objects. This helps but is not required.
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-object-watcher-android:2.14'
-
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android:+'
 
-    //noinspection GradleCompatible
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    //noinspection GradleCompatible
-    implementation 'com.android.support:support-v4:23.0.+'
+}
+
+task copyAAR {
+    doLast {
+//        delete "../Core/"
+        copy {
+            from "../windmill-sdk/build/outputs/aar"
+            include "windmill-sdk-release.aar"
+            into '../Core/'
+            rename "windmill-sdk-release.aar", "windmill-sdk-" + mVersionName + ".aar"
+        }
+//        copy {
+//            from "../Core/"
+//            into '../WindMillAd/app/libs'
+//            include "*.aar"
+//        }
+    }
 }
 
 task buildZip(type: Zip) {
     from '../'
-    exclude 'WindAd/.gradle'
-    exclude 'WindAd/.idea'
-    include 'WindAd/'
-    include 'AAR/'
+//    exclude 'WindMillAd/.gradle'
+//    exclude 'WindMillAd/.idea'
+//    include 'WindMillAd/'
+    include 'Core/'
     include 'xml/'
-    include 'README.md'
+    include 'ReadMe/'
+    include 'Configs/'
 
-    destinationDirectory = file('../OutZip/')
-    archiveBaseName = 'Sigmob'
-    archiveAppendix = 'android'
+    destinationDir file('../OutZip/')
+    baseName 'tobid'
+    appendix 'android-cn'
     version mVersionName
-    archiveExtension = 'zip'
+    extension 'zip'
 }
 
+task buildOthersZip(type: Zip) {
+    from '../'
+//    exclude 'WindMillAd/.gradle'
+//    exclude 'WindMillAd/.idea'
+//    include 'WindMillAd/'
+    include 'Core/'
+    include 'xml/'
+    include 'AdNetworks-gp/'
+//    include 'adapterLibs-gp/'
+    include 'mediation.gradle'
+    include 'ReadMe/'
+    include 'Configs/'
 
+    destinationDir file('../OutZip/')
+    baseName 'tobid'
+    appendix 'mediation-android-gp'
+    version mVersionName
+    extension 'zip'
+}
 
+task buildOthersCNZip(type: Zip) {
+    from '../'
+//    exclude 'WindMillAd/.gradle'
+//    exclude 'WindMillAd/.idea'
+//    include 'WindMillAd/'
+    include 'Core/'
+    include 'xml/'
+    include 'AdNetworks/'
+//    include 'adapterLibs/'
+    include 'ReadMe/'
+    include 'Configs/'
+
+    destinationDir file('../OutZip/')
+    baseName 'tobid'
+    appendix 'mediation-android-cn'
+    version mVersionName
+    extension 'zip'
+}

@@ -6,7 +6,7 @@
     android:background="@mipmap/bg"
     android:orientation="vertical"
     android:scrollbars="none"
-    tools:context=".NewInterstitialActivity">
+    tools:context=".InterstitialActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,37 +21,6 @@
             android:orientation="vertical">
 
         </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/notice_win_button"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_weight="1"
-                android:onClick="buttonClick"
-                android:text="NoticeWin"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/notice_loss_button"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_weight="1"
-                android:onClick="buttonClick"
-                android:text="NoticeLoss"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
 
         <Button
             android:id="@+id/cleanLog_button"
