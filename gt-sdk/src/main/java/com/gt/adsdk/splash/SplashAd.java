@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.czhj.sdk.common.models.AdStatus;
 import com.czhj.sdk.common.utils.AdLifecycleManager;
+import com.czhj.sdk.logger.SigmobLog;
 import com.gt.adsdk.AdRequest;
 import com.gt.adsdk.api.SplashAdListener;
 import com.gt.adsdk.base.GtBaseAd;
@@ -159,5 +160,22 @@ public class SplashAd extends GtBaseAd implements SplashAdListener, AdLifecycleM
     }
 
     public void destroy() {
+        SigmobLog.i(String.format("splash ad  %s is Destroy", mRequest != null ? mRequest.getPlacementId() : "null"));
+
+        if (mSplashAd != null) {
+            mSplashAd.destroy();
+            mHandler.removeCallbacksAndMessages(null);
+            if (splashLY != null) {
+                splashLY.setVisibility(View.GONE);
+                splashLY.removeAllViews();
+                splashLY = null;
+            }
+            if (mViewGroup != null) {
+                mViewGroup.removeAllViews();
+                mViewGroup = null;
+            }
+            mSplashADListener = null;
+            mViewGroup = null;
+        }
     }
 }
