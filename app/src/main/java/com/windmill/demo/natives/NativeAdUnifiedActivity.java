@@ -125,8 +125,6 @@ public class NativeAdUnifiedActivity extends AppCompatActivity implements View.O
     }
 
     private void loadAd(String placementId) {
-        MyApplication.initPlacementCustomMap(this, placementId);
-        MyApplication.filterChannelId(this, placementId);
         nativeUnifiedAd = nativeUnifiedAdMap.get(placementId);
         Log.d("lance", (nativeUnifiedAd == null) + "---------loadAd---------" + placementId);
         Map<String, Object> options = new HashMap<>();

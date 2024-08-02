@@ -124,8 +124,6 @@ public class MainFragment extends Fragment implements WMSplashAdListener {
     }
 
     private void LoadSplashAd() {
-        MyApplication.initPlacementCustomMap(getMyActivity(), splash_placement_id);
-        MyApplication.filterChannelId(getMyActivity(), splash_placement_id);
         initViewGroup(getMyActivity());
         WMSplashAd splashAd = rewardAdMap.get(splash_placement_id);
         Log.d("lance", (splashAd == null) + "---------LoadSplashAd---------" + splash_placement_id);

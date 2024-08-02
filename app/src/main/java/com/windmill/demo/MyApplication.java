@@ -1,38 +1,23 @@
 package com.windmill.demo;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
-import com.windmill.sdk.WMAdnInitConfig;
-import com.windmill.sdk.WMAdConfig;
-import com.windmill.sdk.WMCustomController;
-import com.windmill.sdk.WMNetworkConfig;
-import com.windmill.sdk.WMWaterfallFilter;
-import com.windmill.sdk.WindMillAd;
-import com.windmill.sdk.WindMillConsentStatus;
-import com.windmill.sdk.WindMillUserAgeStatus;
+import com.gt.adsdk.GtAdSdk;
+import com.gt.adsdk.SdkConfig;
+import com.gt.adsdk.api.GtCustomController;
+import com.gt.adsdk.api.GtInitCallback;
 
 
 import org.json.JSONObject;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 //import com.tencent.bugly.crashreport.CrashReport;
 
@@ -69,9 +54,6 @@ public class MyApplication extends MultiDexApplication {
     }
 
     private void initSDK() {
-        WindMillAd ads = WindMillAd.sharedAds();
-
-        ads.setLocalStrategyAssetPath(this, "localStrategy");
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("setting", 0);
         String appId = sharedPreferences.getString(Constants.CONF_APP_ID, "");
@@ -82,167 +64,6 @@ public class MyApplication extends MultiDexApplication {
         int coppa_str = sharedPreferences.getInt(Constants.CONF_COPPA, 0);
         Log.d("lance", "gdpr_str:" + gdpr_str);
         Log.d("lance", "coppa_str:" + coppa_str);
-        switch (gdpr_str) {
-            case "0":
-                ads.setUserGDPRConsentStatus(WindMillConsentStatus.UNKNOWN);
-                break;
-            case "1":
-                ads.setUserGDPRConsentStatus(WindMillConsentStatus.ACCEPT);
-                break;
-            case "2":
-                ads.setUserGDPRConsentStatus(WindMillConsentStatus.DENIED);
-                break;
-        }
-
-        switch (coppa_str) {
-            case 0:
-                ads.setIsAgeRestrictedUser(WindMillUserAgeStatus.WindAgeRestrictedStatusUnknown);
-                break;
-            case 1:
-                ads.setIsAgeRestrictedUser(WindMillUserAgeStatus.WindAgeRestrictedStatusYES);
-                break;
-            case 2:
-                ads.setIsAgeRestrictedUser(WindMillUserAgeStatus.WindAgeRestrictedStatusNO);
-                break;
-        }
-
-        ads.setUserAge(18);
-        ads.setAdult(isAdult);
-        ads.setPersonalizedAdvertisingOn(isPersonalizedAdvertisingOn);
-        ads.setDebugEnable(isSdkLogEnable);
-
-        ads.setSupportMultiProcess(true);
-
-        Set<String> groupList = sharedPreferences.getStringSet(Constants.CONF_GROUP, null);
-        if (groupList != null) {
-            Log.d("lance", "------initSDK------" + groupList.toString());
-            Map<String, String> customMap = new HashMap<>();
-            Iterator<String> iterator = groupList.iterator();
-            while (iterator.hasNext()) {
-                String next = iterator.next();
-                if (!TextUtils.isEmpty(next)) {
-                    String[] split = next.split("-");
-                    if (split.length == 2) {
-                        customMap.put(split[0], split[1]);
-                    }
-                }
-            }
-            ads.initCustomMap(customMap); //  App的自定义规则为全局设置，对全部Placement有效
-        }
-
-        WMNetworkConfig.Builder builder = new WMNetworkConfig.Builder();
-
-        String initString = sharedPreferences.getString(Constants.INIT_SETTING, "");
-        if (!TextUtils.isEmpty(initString)) {
-            try {
-                JSONObject jsonObject = new JSONObject(initString);
-                Log.d("lance", "initString: " + jsonObject.toString());
-                Iterator<String> it = jsonObject.keys();
-                while (it.hasNext()) {
-                    String key = it.next();
-                    JSONObject object = jsonObject.getJSONObject(key);
-                    String app_id = object.optString("appId");
-                    String app_Key = object.optString("appKey");
-                    if (!TextUtils.isEmpty(app_id) || !TextUtils.isEmpty(app_Key)) {
-                        builder.addInitConfig(new WMAdnInitConfig(Integer.parseInt(key), app_id, app_Key));
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        boolean sdkRelease = sharedPreferences.getBoolean(Constants.CONF_SDK_RELEASE, false);
-        if (!sdkRelease) {
-            try {
-                //com.windmill.sdk.b.f:k
-                Class cls = Class.forName("com.windmill.sdk.strategy.WMSdkConfig");
-                Field f = cls.getDeclaredField("lance");
-                f.setAccessible(true);
-                f.set(null, "https://adstage.sigmob.cn/w/config");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-//        /**
-//         * 下面构造了过滤表达式例子的含义为：
-//         *
-//         * 1、针对聚合广告位id:88888888 过滤gdt渠道下的广告位id:123
-//         * 2、针对聚合广告位id:88888888 过滤csj渠道下的广告位id:456
-//         * 3、针对聚合广告位id:88888888 过滤ks渠道下的广告位id集合:123、456、789
-//         * 4、针对聚合广告位id:88888888 过滤bd整个渠道
-//         * 5、针对聚合广告位id:88888888 过滤该瀑布流下的123、345、789等三方渠道的广告位id,与渠道无关
-//         * 6、针对聚合广告位id:88888888 过滤该瀑布流下的ks、csj、gdt等三方渠道
-//         * 7、针对聚合广告位id:88888888 过滤该瀑布流下的客户端bidding、服务端bidding、普通广告源（相当于过滤整个瀑布流）
-//         * 8、针对聚合广告位id:88888888 过滤该瀑布流下的客户端bidding的三方广告源
-//         * 9、针对聚合广告位id:88888888 过滤该瀑布流下的服务端bidding的三方广告源
-//         * 10、针对聚合广告位id:88888888 过滤该瀑布流下的非bidding的普通三方广告源
-//         * 11、针对聚合广告位id:88888888 过滤该瀑布流下价格在50-100之间的三方广告源
-//         * 12、针对聚合广告位id:88888888 过滤该瀑布流下价格小于等于50的三方广告源
-//         * 13、针对聚合广告位id:88888888 过滤该瀑布流下价格大于等于100的三方广告源
-//         * 14、针对聚合广告位id:88888888 过滤该瀑布流下价格等于50的三方广告源
-//         */
-//        WindMillAd.sharedAds().addFilter(new WMWaterfallFilter("88888888")//针对这个聚合广告位进行的过滤
-//                .equalTo(WMWaterfallFilter.KEY_CHANNEL_ID, "16")//gdt渠道id
-//                .equalTo(WMWaterfallFilter.KEY_ADN_PLACEMENT_ID, "123")//渠道的广告位id
-//                .or()//或的关系：开启一个新的过滤表达式了
-//                .equalTo(WMWaterfallFilter.KEY_CHANNEL_ID, "13")//csj渠道id
-//                .and()//与的关系：不开启新的过滤表达式:可写可不写
-//                .equalTo(WMWaterfallFilter.KEY_ADN_PLACEMENT_ID, "456")//渠道的广告位id
-//                .or()//或的关系：开启一个新的过滤表达式了
-//                .equalTo(WMWaterfallFilter.KEY_CHANNEL_ID, "19")//快手渠道id
-//                .in(WMWaterfallFilter.KEY_ADN_PLACEMENT_ID, Arrays.asList("123", "456", "789"))//渠道的广告位集合
-//                .or()//或的关系：开启一个新的过滤表达式了
-//                .equalTo(WMWaterfallFilter.KEY_CHANNEL_ID, "21")//百度渠道id
-//                .or()//或的关系：开启一个新的过滤表达式了
-//                .in(WMWaterfallFilter.KEY_ADN_PLACEMENT_ID, Arrays.asList("123", "456", "789"))
-//                .or()//或的关系：开启一个新的过滤表达式了
-//                .in(WMWaterfallFilter.KEY_CHANNEL_ID, Arrays.asList("19", "13", "16"))
-//                .or()//或的关系：开启一个新的过滤表达式了
-//                .in(WMWaterfallFilter.KEY_BIDDING_TYPE, Arrays.asList(WMWaterfallFilter.C2S, WMWaterfallFilter.S2S, WMWaterfallFilter.NORMAL))
-//                .or()//或的关系：开启一个新的过滤表达式了
-//                .equalTo(WMWaterfallFilter.KEY_BIDDING_TYPE, WMWaterfallFilter.C2S)
-//                .or()//或的关系：开启一个新的过滤表达式了
-//                .equalTo(WMWaterfallFilter.KEY_BIDDING_TYPE, WMWaterfallFilter.S2S)
-//                .or()//或的关系：开启一个新的过滤表达式了
-//                .equalTo(WMWaterfallFilter.KEY_BIDDING_TYPE, WMWaterfallFilter.NORMAL)
-//                .or()//或的关系：开启一个新的过滤表达式了
-//                .equalTo(WMWaterfallFilter.KEY_E_CPM, new WMWaterfallFilter.PriceInterval().withMinPrice(50).withMaxPrice(100).toString())
-//                .or()//或的关系：开启一个新的过滤表达式了
-//                .equalTo(WMWaterfallFilter.KEY_E_CPM, new WMWaterfallFilter.PriceInterval().withMinPrice(50).toString())
-//                .or()//或的关系：开启一个新的过滤表达式了
-//                .equalTo(WMWaterfallFilter.KEY_E_CPM, new WMWaterfallFilter.PriceInterval().withMaxPrice(100).toString())
-//                .or()//或的关系：开启一个新的过滤表达式了
-//                .equalTo(WMWaterfallFilter.KEY_E_CPM, new WMWaterfallFilter.PriceInterval().withMinPrice(50).withMaxPrice(50).toString())
-//        );
-
-//        WMNetworkConfig.Builder builder = (new WMNetworkConfig.Builder())
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.ADMOB))
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.REKLAMUP))
-//                .addInitConfig(new WMAdnInitConfig(23, "appId"))
-//                .addInitConfig(new WMAdnInitConfig(24, "appId"))
-//                .addInitConfig(new WMAdnInitConfig(25, "appId"))
-//                .addInitConfig(new WMAdnInitConfig(26, "appId"))//异步
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.VUNGLE, "appId"))//异步
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.UNITYADS, "appId"))//异步
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.IRONSOURCE, "appId"))
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.TOUTIAO, "appId"))
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.GDT, "appId"))
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.KUAISHOU, "appId"))
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.KLEVIN, "appId"))
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.BAIDU, "appId"))
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.GROMORE, "appId"))
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.ADSCOPE, "appId"))
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.QUMENG, "appId"))
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.PANGLE, "appId"))
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.APPLOVIN, "appKey"))
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.APPLOVIN_MAX, "appKey"))
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.MOBVISTA, "appId", "appKey"))
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.SIGMOB, "appId", "appKey"))
-//                .addInitConfig(new WMAdnInitConfig(WMNetworkConfig.TAPTAP, "appId", "appKey"));
-
-        ads.setInitNetworkConfig(builder.build());
 
         String custom_info = sharedPreferences.getString(Constants.CONF_CUSTOM_DEVICE_INFO, null);
         Log.d("lance", "------------MyApplication-----------:" + custom_info);
@@ -281,191 +102,114 @@ public class MyApplication extends MultiDexApplication {
 //        packageInfo.packageName = "com.lance.demo";
 //        packageInfoList.add(packageInfo);
 
-        ads.startWithAppId(this, appId, new WMAdConfig.Builder().customController(new WMCustomController() {
-            @Override
-            public boolean isCanUseLocation() {
-                if (isCanUseLocation != null) {
-                    return isCanUseLocation;
-                }
-                return super.isCanUseLocation();
-            }
-
-            @Override
-            public Location getLocation() {
-                if (getLocation != null) {
-                    return getLocation;
-                }
-                return super.getLocation();
-            }
-
-            @Override
-            public boolean isCanUsePhoneState() {
-                if (isCanUsePhoneState != null) {
-                    return isCanUsePhoneState;
-                }
-                return super.isCanUsePhoneState();
-            }
-
-            @Override
-            public String getDevImei() {
-                if (!TextUtils.isEmpty(getDevImei)) {
-                    return getDevImei;
-                }
-                return super.getDevImei();
-            }
-
-            @Override
-            public boolean isCanUseAndroidId() {
-                if (isCanUseAndroidId != null) {
-                    return isCanUseAndroidId;
-                }
-                return super.isCanUseAndroidId();
-            }
-
-            @Override
-            public String getAndroidId() {
-                if (!TextUtils.isEmpty(getAndroidId)) {
-                    return getAndroidId;
-                }
-                return super.getAndroidId();
-            }
-
-            @Override
-            public String getDevOaid() {
-                if (!TextUtils.isEmpty(getDevOaid)) {
-                    return getDevOaid;
-                }
-                return super.getDevOaid();
-            }
-
-            @Override
-            public boolean isCanUseWifiState() {
-                if (isCanUseWifiState != null) {
-                    return isCanUseWifiState;
-                }
-                return super.isCanUseWifiState();
-            }
-
-            @Override
-            public String getMacAddress() {
-                if (!TextUtils.isEmpty(getMacAddress)) {
-                    return getMacAddress;
-                }
-                return super.getMacAddress();
-            }
-
-            @Override
-            public boolean isCanUseWriteExternal() {
-                if (isCanUseWriteExternal != null) {
-                    return isCanUseWriteExternal;
-                }
-                return super.isCanUseWriteExternal();
-            }
-
-            @Override
-            public boolean isCanUseAppList() {
-                if (isCanUseAppList != null) {
-                    return isCanUseAppList;
-                }
-                return super.isCanUseAppList();
-            }
-
-            @Override
-            public List<PackageInfo> getInstalledPackages() {
-                return super.getInstalledPackages();
-            }
-
-            @Override
-            public boolean isCanUsePermissionRecordAudio() {
-                if (isCanUsePermissionRecordAudio != null) {
-                    return isCanUsePermissionRecordAudio;
-                }
-                return super.isCanUsePermissionRecordAudio();
-            }
-        }).build());
-    }
-
-    // Called before we send every request.
-    @SuppressLint("MissingPermission")
-    private Location getAppLocation() {
-        Location lastLocation = null;
-
-        try {
-            if (this.checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION") == PackageManager.PERMISSION_GRANTED || this.checkCallingOrSelfPermission("android.permission.ACCESS_COARSE_LOCATION") == PackageManager.PERMISSION_GRANTED) {
-                // Get lat, long failFrom any GPS information that might be currently
-                // available
-                LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
-                for (String provider_name : lm.getProviders(true)) {
-                    Location l = lm.getLastKnownLocation(provider_name);
-                    if (l == null) {
-                        continue;
-                    }
-
-                    if (lastLocation == null) {
-                        lastLocation = l;
-                    } else {
-                        if (l.getTime() > 0 && lastLocation.getTime() > 0) {
-                            if (l.getTime() > lastLocation.getTime()) {
-                                lastLocation = l;
-                            }
+        GtAdSdk.sharedAds().init(this, new SdkConfig.Builder().appId(appId) // 测试aapId，请联系快手平台申请正式AppId，必填
+                .appName("appName") // 测试appName，请填写您应用的名称，非必填
+                .showNotification(true) // 是否展示下载通知栏
+                .customController(new GtCustomController() {
+                    @Override
+                    public boolean canReadLocation() {
+                        if (isCanUseLocation != null) {
+                            return isCanUseLocation;
                         }
+                        return super.canReadLocation();
                     }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return lastLocation;
-    }
 
-    public static void initPlacementCustomMap(Context context, String placementId) {
-        if (!TextUtils.isEmpty(placementId)) {
-            SharedPreferences sharedPreferences = context.getSharedPreferences("setting", 0);
-            Set<String> groupList = sharedPreferences.getStringSet(placementId, null);
-            if (groupList != null) {
-                Log.d("lance", placementId + "------initPlacementCustomMap------" + groupList);
-                Map<String, String> customMap = new HashMap<>();
-                Iterator<String> iterator = groupList.iterator();
-                while (iterator.hasNext()) {
-                    String next = iterator.next();
-                    if (!TextUtils.isEmpty(next)) {
-                        String[] split = next.split("-");
-                        if (split.length == 2) {
-                            customMap.put(split[0], split[1]);
+                    @Override
+                    public Location getLocation() {
+                        if (getLocation != null) {
+                            return getLocation;
                         }
+                        return super.getLocation();
                     }
-                }
-                WindMillAd.sharedAds().initPlacementCustomMap(placementId, customMap);
-            }
-        }
-    }
 
-    public static void filterChannelId(Context context, String placementId) {
-        if (!TextUtils.isEmpty(placementId)) {
-            SharedPreferences sharedPreferences = context.getSharedPreferences("setting", 0);
-            String initString = sharedPreferences.getString(Constants.INIT_SETTING, "");
-            if (!TextUtils.isEmpty(initString)) {
-                try {
-                    JSONObject jsonObject = new JSONObject(initString);
-                    Iterator<String> it = jsonObject.keys();
-                    List<String> ids = new ArrayList<>();
-                    while (it.hasNext()) {
-                        String key = it.next();
-                        JSONObject object = jsonObject.getJSONObject(key);
-                        String app_id = object.optString("appId");
-                        String app_Key = object.optString("appKey");
-                        if (TextUtils.isEmpty(app_id) && TextUtils.isEmpty(app_Key)) {
-                            ids.add(key);
-                            Log.d("lance", "filterChannelId: " + key);
+                    @Override
+                    public boolean canUsePhoneState() {
+                        if (isCanUsePhoneState != null) {
+                            return isCanUsePhoneState;
                         }
+                        return super.canUsePhoneState();
                     }
-                    WindMillAd.sharedAds().setFilterNetworkFirmIdList(placementId, ids);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+
+                    @Override
+                    public String getImei() {
+                        if (!TextUtils.isEmpty(getDevImei)) {
+                            return getDevImei;
+                        }
+                        return super.getImei();
+                    }
+
+                    @Override
+                    public boolean canUseAndroidId() {
+                        if (isCanUseAndroidId != null) {
+                            return isCanUseAndroidId;
+                        }
+                        return super.canUseAndroidId();
+                    }
+
+                    @Override
+                    public String getAndroidId() {
+                        if (!TextUtils.isEmpty(getAndroidId)) {
+                            return getAndroidId;
+                        }
+                        return super.getAndroidId();
+                    }
+
+                    @Override
+                    public boolean canUseWriteExternal() {
+                        if (isCanUseWriteExternal != null) {
+                            return isCanUseWriteExternal;
+                        }
+                        return super.canUseWriteExternal();
+                    }
+
+                    @Override
+                    public boolean canReadInstalledPackages() {
+                        if (isCanUseAppList != null) {
+                            return isCanUseAppList;
+                        }
+                        return super.canReadInstalledPackages();
+                    }
+
+                    @Override
+                    public List<String> getInstalledPackages() {
+                        return super.getInstalledPackages();
+                    }
+
+                    @Override
+                    public boolean canUseWifiState() {
+                        if (isCanUseWifiState != null) {
+                            return isCanUseWifiState;
+                        }
+                        return super.canUseWifiState();
+                    }
+
+                    @Override
+                    public String getMacAddress() {
+                        if (!TextUtils.isEmpty(getMacAddress)) {
+                            return getMacAddress;
+                        }
+                        return super.getMacAddress();
+                    }
+
+                    @Override
+                    public String getOaid() {
+                        if (!TextUtils.isEmpty(getDevOaid)) {
+                            return getDevOaid;
+                        }
+                        return super.getOaid();
+                    }
+                }).setInitCallback(new GtInitCallback() {
+                    @Override
+                    public void onSuccess() {
+                        // 启动成功后再获取SDK
+                        Log.d("lance", "--------------onSuccess-----------");
+                    }
+
+                    @Override
+                    public void onFail(int code, String msg) {
+                        Log.d("lance", "--------------onFail-----------" + code + ":" + msg);
+                    }
+                }).build());
     }
 
 }

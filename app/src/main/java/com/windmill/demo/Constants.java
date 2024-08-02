@@ -24,7 +24,6 @@ public class Constants {
     public static final String CONF_APP_TITLE = "conf_appTitle";
     public static final String CONF_APP_DESC = "conf_appDesc";
 
-    public static final String CONF_GROUP = "conf_group";
 
     public static final String CONF_CUSTOM_DEVICE_INFO = "conf_custom_device_info";
 

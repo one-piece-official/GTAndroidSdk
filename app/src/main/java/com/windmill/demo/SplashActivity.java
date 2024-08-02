@@ -163,9 +163,6 @@ public class SplashActivity extends AppCompatActivity implements WMSplashAdListe
 //        options.put(WMConstants.AD_HEIGHT, this.getResources().getDisplayMetrics().heightPixels);//针对于穿山甲、GroMore、AdScope开屏有效、单位px
         options.put(WMConstants.AD_HEIGHT, PxUtils.getRealMetrics(this).heightPixels - dipsToIntPixels(100, this));//针对于穿山甲、GroMore、AdScope开屏有效、单位px
 
-        MyApplication.initPlacementCustomMap(this, splash_placement_id);
-        MyApplication.filterChannelId(this, splash_placement_id);
-
         WMSplashAdRequest adRequest = new WMSplashAdRequest(splash_placement_id, userID, options, appTitle, appDesc, true);
 
         splashAd = new WMSplashAd(this, adRequest, this);

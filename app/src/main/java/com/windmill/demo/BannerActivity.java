@@ -90,8 +90,6 @@ public class BannerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void loadAd(String placementId) {
-        MyApplication.initPlacementCustomMap(this, placementId);
-        MyApplication.filterChannelId(this, placementId);
         adWidth = Integer.valueOf(editTextWidth.getText().toString());
         adHeight = Integer.valueOf(editTextHeight.getText().toString());
         WMBannerView bannerView = bannerAdMap.get(placementId);

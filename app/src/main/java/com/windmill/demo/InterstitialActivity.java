@@ -112,8 +112,6 @@ public class InterstitialActivity extends AppCompatActivity implements WMInterst
     }
 
     private void loadAd(String placementId) {
-        MyApplication.initPlacementCustomMap(this, placementId);
-        MyApplication.filterChannelId(this, placementId);
         WMInterstitialAd interstitialAd = interstitialAdMap.get(placementId);
         Log.d("lance", (interstitialAd == null) + "---------loadAd---------" + placementId);
         Map<String, Object> options = new HashMap<>();

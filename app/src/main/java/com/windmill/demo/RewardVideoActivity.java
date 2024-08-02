@@ -125,8 +125,6 @@ public class RewardVideoActivity extends AppCompatActivity implements WMRewardAd
     }
 
     private void loadAd(String placementId) {
-        MyApplication.initPlacementCustomMap(this, placementId);
-        MyApplication.filterChannelId(this, placementId);
         WMRewardAd rewardAd = rewardAdMap.get(placementId);
         Log.d("lance", (rewardAd == null) + "---------loadAd---------" + placementId);
         Map<String, Object> options = new HashMap<>();
