@@ -7,7 +7,6 @@ public final class PointEntitySigmobError extends PointEntitySigmob {
 
     private String error_message;
 
-
     public String getError_message() {
         return error_message;
     }
@@ -21,14 +20,12 @@ public final class PointEntitySigmobError extends PointEntitySigmob {
         return SDKContext.getDeviceContext();
     }
 
-
     public static PointEntitySigmobError SigmobError(String category, int errorCode, String errorMessage) {
         PointEntitySigmobError entityError = new PointEntitySigmobError();
         entityError.setAc_type(PointType.SIGMOB_ERROR);
         entityError.setCategory(category);
         entityError.setError_code(String.valueOf(errorCode));
         entityError.setError_message(errorMessage);
-
 
         return entityError;
     }

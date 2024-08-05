@@ -3,7 +3,6 @@ package com.sigmob.sdk.base.mta;
 
 public class PointEntitySigmob extends PointEnitySigmobBase {
 
-
     private String request_id;
     private String price;
     private String expand;
@@ -34,7 +33,6 @@ public class PointEntitySigmob extends PointEnitySigmobBase {
     private String content_type;
     private String retry;
     private String source;
-
 
     private String duration;
     private String file_name;
@@ -509,6 +507,7 @@ public class PointEntitySigmob extends PointEnitySigmobBase {
     public void setAdx_id(String adx_id) {
         this.adx_id = adx_id;
     }
+
     public String getAdx_id() {
         return adx_id;
     }

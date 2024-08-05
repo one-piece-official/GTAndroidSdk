@@ -3,7 +3,6 @@ package com.sigmob.sdk.base.mta;
 
 public final class PointEntitySensor extends PointEnitySigmobBase {
 
-
     private String motion_before;
     private String motion_after;
     private String motion_interval;
@@ -31,7 +30,5 @@ public final class PointEntitySensor extends PointEnitySigmobBase {
     public void setMotion_interval(String motion_interval) {
         this.motion_interval = motion_interval;
     }
-
-
 
 }

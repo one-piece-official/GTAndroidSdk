@@ -2,9 +2,6 @@ package com.sigmob.sdk.base.mta;
 
 public class PointEntityActive extends PointEntitySigmobSuper {
     private String active_id;
-
-
-
     private String request_id;
     private String vid;
 
@@ -43,9 +40,8 @@ public class PointEntityActive extends PointEntitySigmobSuper {
         return vid;
     }
 
-    public static PointEntityActive ActiveTracking(String category,  String active_id, String duration, String active_time){
+    public static PointEntityActive ActiveTracking(String category, String active_id, String duration, String active_time) {
         PointEntityActive entityWind = new PointEntityActive();
-        
         entityWind.setAc_type(PointType.WIND_ACTIVE);
         entityWind.setCategory(category);
         entityWind.setActive_id(active_id);

@@ -38,14 +38,12 @@ public class PointEntitySigmobPrivacy extends PointEntityGDPR {
     }
 
     @Override
-    public String getSdkversion() {
-        return WindConstants.SDK_VERSION;
-    }
-
-    @Override
     public String appId() {
         return WindAds.sharedAds().getAppId();
     }
 
-
+    @Override
+    public String getSdkVersion() {
+        return WindConstants.SDK_VERSION;
+    }
 }

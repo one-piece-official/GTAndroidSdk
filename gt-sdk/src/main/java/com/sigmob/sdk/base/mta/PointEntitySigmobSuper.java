@@ -42,9 +42,9 @@ public class PointEntitySigmobSuper extends PointEntitySuper {
         return WindAds.sharedAds().getAppId();
     }
 
-
     @Override
-    public String getSdkversion() {
+    public String getSdkVersion() {
         return WindConstants.SDK_VERSION;
     }
+
 }

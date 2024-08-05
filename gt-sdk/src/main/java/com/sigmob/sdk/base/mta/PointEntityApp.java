@@ -2,7 +2,6 @@ package com.sigmob.sdk.base.mta;
 
 public class PointEntityApp extends PointEntitySigmobSuper {
 
-
     private String app_name;
     private String package_name;
     private String update;
@@ -39,9 +38,5 @@ public class PointEntityApp extends PointEntitySigmobSuper {
     public void setApp_version(String app_version) {
         this.app_version = app_version;
     }
-
-//    PointEntityApp(){
-//        mPointEntityClass = this;
-//    }
 
 }

@@ -47,13 +47,13 @@ public class PointEntitySigmobCrash extends PointEntityCrash {
     }
 
     @Override
-    public String getSdkversion() {
-        return WindConstants.SDK_VERSION;
+    public String appId() {
+        return WindAds.sharedAds().getAppId();
     }
 
     @Override
-    public String appId() {
-        return WindAds.sharedAds().getAppId();
+    public String getSdkVersion() {
+        return WindConstants.SDK_VERSION;
     }
 
 }

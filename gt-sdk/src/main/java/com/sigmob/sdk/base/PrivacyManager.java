@@ -76,18 +76,17 @@ public class PrivacyManager {
         return mUserAge;
     }
 
-    public void setUserAge(int userAge,boolean sendTrack) {
+    public void setUserAge(int userAge, boolean sendTrack) {
         mUserAge = userAge;
 
         SharedPreferences.Editor editor = WindPrefsUtils.getPrefs().edit();
         editor.putInt(Constants.USER_AGE, mUserAge);
         editor.apply();
 
-        if(sendTrack){
+        if (sendTrack) {
             trackUserAge(userAge);
         }
     }
-
 
 
     public int getAge_restricted() {
@@ -100,12 +99,11 @@ public class PrivacyManager {
         editor.putInt(Constants.AGE_RESTRICTED_STATUS, mAge_restricted);
         editor.apply();
 
-        if(sendTrack){
+        if (sendTrack) {
             trackAgeRestricted(age_restricted);
         }
 
     }
-
 
 
     public boolean isAdult() {
@@ -116,20 +114,18 @@ public class PrivacyManager {
         SigmobLog.i("PrivacyManager -> setAdult " + isAdult);
         mIsAdult = isAdult;
 
-        if(sendTrack){
+        if (sendTrack) {
             trackAdult(isAdult);
         }
 
     }
 
 
-
-
     public boolean isPersonalizedAdvertisingOn() {
         return mIsPersonalizedAdvertisingOn;
     }
 
-    public void setPersonalizedAdvertisingOn(boolean isPersonalizedAdvertisingOn,boolean sendTrack) {
+    public void setPersonalizedAdvertisingOn(boolean isPersonalizedAdvertisingOn, boolean sendTrack) {
 
 
         if (init_personalized_state == null) {
@@ -139,7 +135,7 @@ public class PrivacyManager {
 
         mIsPersonalizedAdvertisingOn = isPersonalizedAdvertisingOn;
 
-        if(sendTrack){
+        if (sendTrack) {
 
             trackPersonalizedOn(isPersonalizedAdvertisingOn);
         }
@@ -156,7 +152,7 @@ public class PrivacyManager {
         return mGDPRConsentStatus;
     }
 
-    public void setGDPRConsentStatus(int gdprConSentStatus,boolean sendtrack) {
+    public void setGDPRConsentStatus(int gdprConSentStatus, boolean sendtrack) {
 
 
         this.mGDPRConsentStatus = gdprConSentStatus;
@@ -165,7 +161,7 @@ public class PrivacyManager {
         editor.putInt(Constants.GDPR_CONSENT_STATUS, gdprConSentStatus);
         editor.apply();
 
-        if (sendtrack){
+        if (sendtrack) {
             WindPrivacyInfoTrack();
         }
     }
@@ -188,6 +184,7 @@ public class PrivacyManager {
         pointEntityPrivacy.setCategory(PointCategory.PRIVACY);
         pointEntityPrivacy.commit();
     }
+
     private void trackAdult(boolean isAdult) {
         PointEntitySigmobPrivacy pointEntityPrivacy = new PointEntitySigmobPrivacy();
         pointEntityPrivacy.setAc_type(PointType.GDPR_CONSENT);
@@ -205,6 +202,7 @@ public class PrivacyManager {
         pointEntityPrivacy.setIs_unpersonalized(isPersonalizedAdvertisingOn ? FAIL : SUCCESS);
         pointEntityPrivacy.commit();
     }
+
     private void WindPrivacyInfoTrack() {
 
         PointEntitySigmobPrivacy pointEntityPrivacy = new PointEntitySigmobPrivacy();
@@ -230,17 +228,17 @@ public class PrivacyManager {
 
     public void setExtGDPRRegion(Boolean extGDPRRegion) {
 
-        if (extGDPRRegion != null){
+        if (extGDPRRegion != null) {
             SharedPreferences.Editor editor = WindPrefsUtils.getPrefs().edit();
             editor.putBoolean(Constants.EXT_GDPR_REGION, extGDPRRegion);
             editor.apply();
             this.extGDPRRegion = extGDPRRegion;
         }
 
-        if(canCollectPersonalInformation()){
+        if (canCollectPersonalInformation()) {
             WindPrivacyInfoTrack();
             trackPersonalizedOn(mIsPersonalizedAdvertisingOn);
-            trackAdult( mIsAdult);
+            trackAdult(mIsAdult);
             trackAgeRestricted(mAge_restricted);
             trackUserAge(mUserAge);
         }
@@ -250,7 +248,6 @@ public class PrivacyManager {
 //        return extGDPRRegion && WindSDKConfig.isGDPRRegion();
         return extGDPRRegion;
     }
-
 
     public boolean canCollectPersonalInformation() {
         boolean isAccept = getGDPRConsentStatus() == 1;

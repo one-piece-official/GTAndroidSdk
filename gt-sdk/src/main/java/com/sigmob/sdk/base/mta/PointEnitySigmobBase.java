@@ -49,7 +49,6 @@ public class PointEnitySigmobBase extends PointEntityBase {
 
     @Override
     public boolean isAcTypeBlock() {
-
         if (!PrivacyManager.getInstance().canCollectPersonalInformation()) {
             return true;
         }
@@ -73,7 +72,7 @@ public class PointEnitySigmobBase extends PointEntityBase {
     }
 
     @Override
-    public String getSdkversion() {
+    public String getSdkVersion() {
         return WindConstants.SDK_VERSION;
     }
 }

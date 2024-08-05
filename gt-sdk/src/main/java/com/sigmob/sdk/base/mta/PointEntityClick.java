@@ -3,14 +3,12 @@ package com.sigmob.sdk.base.mta;
 
 public class PointEntityClick extends PointEnitySigmobBase {
 
-
     private String location;
     private String click_duration;
     private String is_valid_click;
     private String touchType;
     private String pressure;
     private String touchSize;
-
 
     public String getLocation() {
         return location;

@@ -1,6 +1,6 @@
 package com.sigmob.sdk.base.mta;
 
-public class PointEntitySigmobRequest extends PointEntitySigmob{
+public class PointEntitySigmobRequest extends PointEntitySigmob {
     private String load_count;
     private String invalid_load_count;
     private String gdpr_filters;
@@ -10,8 +10,6 @@ public class PointEntitySigmobRequest extends PointEntitySigmob{
     private String interval_filters;
     private String init_filters;
     private String proguard_filters;
-
-
 
     public String getLoad_count() {
         return load_count;
