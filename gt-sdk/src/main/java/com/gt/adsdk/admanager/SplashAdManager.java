@@ -1,9 +1,15 @@
-package com.gt.adsdk.base;
+package com.gt.adsdk.admanager;
 
+import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
+
+import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
+import com.czhj.sdk.common.ClientMetadata;
 import com.czhj.sdk.common.models.AdStatus;
 import com.gt.adsdk.AdRequest;
 import com.gt.adsdk.api.SplashAdListener;
@@ -19,8 +25,7 @@ import com.sigmob.windad.WindAdError;
 
 public class SplashAdManager {
 
-    public SplashAdManager(final AdRequest splashAdRequest,
-                           SplashAdListener splashADListener) {
+    public SplashAdManager(final AdRequest splashAdRequest, SplashAdListener splashADListener) {
 
         timerRunnable = new Runnable() {
 
@@ -59,9 +64,10 @@ public class SplashAdManager {
     }
 
     public boolean isReady() {
+        return true;
     }
 
-    public void loadAd(String bidToken, int bidFloor, String currency, int fetchTime, boolean isPreload) {
+    public void loadAd() {
 
         if (!isPreload) {
             adStatus = AdStatus.AdStatusLoading;
@@ -77,7 +83,7 @@ public class SplashAdManager {
 
         } else {
             mLoadAdRequest.setRequest_scene_type(RequestSceneType.SplashCloseRequest.getValue());
-            PointEntitySigmobUtils.SigmobTracking(PointCategory.REQUEST, PointCategory.PLAY, null,null,mLoadAdRequest,new PointEntitySigmobUtils.OnPointEntityExtraInfo() {
+            PointEntitySigmobUtils.SigmobTracking(PointCategory.REQUEST, PointCategory.PLAY, null, null, mLoadAdRequest, new PointEntitySigmobUtils.OnPointEntityExtraInfo() {
                 @Override
                 public void onAddExtra(Object pointEntityBase) {
                     if (pointEntityBase instanceof PointEntitySigmob) {
@@ -96,20 +102,16 @@ public class SplashAdManager {
 
                     case what_timeout: {
                         WindAdError adError = WindAdError.ERROR_SIGMOB_SPLASH_TIMEOUT;
-                        PointEntitySigmobUtils.SigmobError(PointCategory.REQUEST, null,
-                                adError.getErrorCode(),
-                                adError.getMessage(),
-                                null,
-                                mLoadAdRequest,null,new PointEntitySigmobUtils.OnPointEntityExtraInfo() {
+                        PointEntitySigmobUtils.SigmobError(PointCategory.REQUEST, null, adError.getErrorCode(), adError.getMessage(), null, mLoadAdRequest, null, new PointEntitySigmobUtils.OnPointEntityExtraInfo() {
 
-                                    @Override
-                                    public void onAddExtra(Object pointEntityBase) {
+                            @Override
+                            public void onAddExtra(Object pointEntityBase) {
 
-                                        if (pointEntityBase instanceof PointEntitySigmob) {
-                                            ((PointEntitySigmob) pointEntityBase).setAdx_id(null);
-                                        }
-                                    }
-                                });
+                                if (pointEntityBase instanceof PointEntitySigmob) {
+                                    ((PointEntitySigmob) pointEntityBase).setAdx_id(null);
+                                }
+                            }
+                        });
 
 
                         handleError(adError, true);
@@ -131,4 +133,51 @@ public class SplashAdManager {
         RequestFactory.LoadAd(mLoadAdRequest, this);
     }
 
+    public void showSplashAd(ViewGroup viewGroup) {
+
+        boolean isPortrait = ORIENTATION_PORTRAIT == ClientMetadata.getInstance().getOrientationInt();
+
+        if (!isPortrait) {
+            onAdPlayFailNotSupportOrientation();
+            return;
+        }
+
+        if (viewGroup != null) {
+            viewGroup.removeAllViews();
+            boolean result = createSplashView(viewGroup.getContext(), mAdUnit);
+            if (!result) {
+                onAdPlayFail();
+                return;
+            }
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            viewGroup.addView(mSplashAdView, layoutParams);
+
+
+            mSplashAdInterstitial.showInterstitial(mAdUnit, null);
+            mDuration = mSplashAdInterstitial.mAdconfig.getShowDuration();
+            autoClickMode = mSplashAdInterstitial.mAdconfig.getAutoClickMode();
+            autoClickTimeRatio = mSplashAdInterstitial.mAdconfig.getAutoClickTimeRatio();
+
+            mSplashAdView.setDuration(mDuration);
+            result = mSplashAdView.loadSplashResource();
+
+            if (result) {
+                return;
+            }
+        }
+        onAdPlayFail();
+    }
+
+    public void destroyAd() {
+    }
+
+    public void onPause(Activity activity) {
+    }
+
+    public void onResume(Activity activity) {
+    }
 }
+
+
+
+

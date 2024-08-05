@@ -4,7 +4,7 @@ package com.gt.adsdk;
 import com.gt.adsdk.api.GtCustomController;
 import com.gt.adsdk.api.GtInitCallback;
 
-public class SdkConfig {
+public class GtSdkConfig {
 
     public boolean enableDebug;
 
@@ -42,7 +42,7 @@ public class SdkConfig {
         return enableDebug;
     }
 
-    private SdkConfig(Builder var1) {
+    private GtSdkConfig(Builder var1) {
         this.enableDebug = var1.enableDebug;
         this.appId = var1.appId;
         this.appName = var1.appName;
@@ -98,8 +98,8 @@ public class SdkConfig {
             return this;
         }
 
-        public SdkConfig build() {
-            return new SdkConfig(this);
+        public GtSdkConfig build() {
+            return new GtSdkConfig(this);
         }
     }
 }

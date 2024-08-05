@@ -21,7 +21,7 @@ public class GtAdSdk {
 
     private String mAppId = "";
     private Context mContext;
-    private SdkConfig mSdkConfig;
+    private GtSdkConfig mSdkConfig;
     private Handler mHandler;
     private static volatile GtAdSdk gInstance;
 
@@ -62,7 +62,7 @@ public class GtAdSdk {
         }
     }
 
-    public synchronized boolean init(Context context, SdkConfig config) {
+    public synchronized boolean init(Context context, GtSdkConfig config) {
         try {
             if (context == null || config == null) {
                 throw new RuntimeException("init context or config is null");
@@ -77,7 +77,7 @@ public class GtAdSdk {
             }
         } catch (Throwable throwable) {
             if (mSdkConfig.getGtInitCallback() != null) {
-                mSdkConfig.getGtInitCallback().onFail(0, throwable.getMessage());
+                mSdkConfig.getGtInitCallback().onFail(AdError.ERROR_AD_INIT_FAIL.getErrorCode(), throwable.getMessage());
             }
         }
 
@@ -93,5 +93,9 @@ public class GtAdSdk {
             return mSdkConfig.getAppId();
         }
         return "";
+    }
+
+    public boolean isInit() {
+        return sHasInit.get();
     }
 }

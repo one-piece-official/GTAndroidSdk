@@ -5,6 +5,7 @@ import android.location.Location;
 import java.util.List;
 
 public abstract class GtCustomController {
+
     public GtCustomController() {
     }
 
@@ -31,7 +32,6 @@ public abstract class GtCustomController {
     public String getAndroidId() {
         return "";
     }
-
 
     public boolean canUseWifiState() {
         return true;

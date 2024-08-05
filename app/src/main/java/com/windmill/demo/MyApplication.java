@@ -10,7 +10,7 @@ import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
 import com.gt.adsdk.GtAdSdk;
-import com.gt.adsdk.SdkConfig;
+import com.gt.adsdk.GtSdkConfig;
 import com.gt.adsdk.api.GtCustomController;
 import com.gt.adsdk.api.GtInitCallback;
 
@@ -102,7 +102,7 @@ public class MyApplication extends MultiDexApplication {
 //        packageInfo.packageName = "com.lance.demo";
 //        packageInfoList.add(packageInfo);
 
-        GtAdSdk.sharedAds().init(this, new SdkConfig.Builder().appId(appId) // 测试aapId，请联系快手平台申请正式AppId，必填
+        GtAdSdk.sharedAds().init(this, new GtSdkConfig.Builder().appId(appId) // 测试aapId，请联系快手平台申请正式AppId，必填
                 .appName("appName") // 测试appName，请填写您应用的名称，非必填
                 .showNotification(true) // 是否展示下载通知栏
                 .customController(new GtCustomController() {

@@ -1,18 +1,22 @@
 package com.gt.adsdk.base;
 
+import static com.czhj.sdk.common.models.AdStatus.AdStatusLoading;
 import static com.czhj.sdk.common.models.AdStatus.AdStatusNone;
+import static com.czhj.sdk.common.models.AdStatus.AdStatusReady;
 
 import android.text.TextUtils;
 
-import com.czhj.sdk.common.Constants;
+
 import com.czhj.sdk.common.models.AdStatus;
+import com.czhj.sdk.logger.SigmobLog;
+import com.gt.adsdk.AdError;
 import com.gt.adsdk.AdRequest;
-import com.sigmob.sdk.base.PrivacyManager;
+import com.gt.adsdk.GtAdSdk;
 import com.sigmob.sdk.base.common.PointEntitySigmobUtils;
 import com.sigmob.sdk.base.mta.PointCategory;
 import com.sigmob.sdk.base.mta.PointEntitySigmobRequest;
+import com.sigmob.windad.WindAdRequest;
 
-import java.util.HashMap;
 
 public abstract class GtBaseAd {
 
@@ -25,39 +29,34 @@ public abstract class GtBaseAd {
     }
 
     public boolean loadAdFilter() {
+        AdError adError = null;
+
+        if (mAdRequest == null || TextUtils.isEmpty(mAdRequest.getCodeId())) {
+            SigmobLog.e("PlacementId with AdRequest can't is null");
+            adError = AdError.ERROR_AD_PLACEMENT_ID_EMPTY;
+        } else {
+            if (!GtAdSdk.sharedAds().isInit()) {
+                SigmobLog.e("GtAdSdk not initialize");
+                adError = AdError.ERROR_AD_NOT_INIT;
+            } else if (adStatus != AdStatusReady) {
+                if (adStatus == AdStatusLoading) {
+                    SigmobLog.e("Ad is Loading");
+                    adError = AdError.ERROR_AD_LOAD_FAIL_LOADING;
+                }
+            }
+        }
+
+        if (adError != null) {
+            onAdFilterLoadFail(adError);
+            return false;
+        }
         return true;
     }
 
-    protected void sendRequestEvent() {
-        PointEntitySigmobUtils.SigmobRequestTracking(PointCategory.REQUEST, PointCategory.INIT, mRequest, null,new PointEntitySigmobUtils.OnPointEntityExtraInfo() {
-            @Override
-            public void onAddExtra(Object pointEntityBase) {
-                if (pointEntityBase instanceof PointEntitySigmobRequest) {
-                    PointEntitySigmobRequest entityInit = (PointEntitySigmobRequest) pointEntityBase;
-                    entityInit.setLoad_count(String.valueOf(loadFilterItem.loadCount));
-                    entityInit.setInvalid_load_count(String.valueOf(loadFilterItem.invalidLoadCount));
-                    entityInit.setGdpr_filters(String.valueOf(loadFilterItem.gdpr_filters));
-                    entityInit.setInterval_filters(String.valueOf(loadFilterItem.interval_filters));
-                    entityInit.setPldempty_filters(String.valueOf(pIdEmpty_filters));
-                    entityInit.setInit_filters(String.valueOf(loadFilterItem.init_filters));
-                    entityInit.setLoading_filters(String.valueOf(loadFilterItem.loading_filters));
-                    entityInit.setProguard_filters(String.valueOf(loadFilterItem.proguard_filters));
-                    if (!TextUtils.isEmpty(bid_token)) {
-                        entityInit.setBid_token(bid_token);
-                    }
-                    entityInit.setAdx_id(null);
-                    HashMap<String, String> options = new HashMap<>();
-                    options.put("is_minor", PrivacyManager.getInstance().isAdult() ? Constants.FAIL : Constants.SUCCESS);
-                    options.put("is_unpersonalized", PrivacyManager.getInstance().isPersonalizedAdvertisingOn() ? Constants.FAIL : Constants.SUCCESS);
-                    options.put("personalized_filters", String.valueOf(loadFilterItem.personalized_filters));
-                    entityInit.setOptions(options);
-
-                }
-                reset();
-
-            }
-        });
+    protected void sendRequestEvent(AdRequest adRequest) {
 
     }
+
+    protected abstract void onAdFilterLoadFail(AdError adError);
 
 }

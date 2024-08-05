@@ -1,13 +1,8 @@
 package com.gt.adsdk.api;
 
-import com.sigmob.windad.WindAdError;
+import com.gt.adsdk.AdError;
 
 public interface SplashAdListener {
-
-    /**
-     * 开屏广告成功展示
-     */
-    void onSplashAdShow(final String placementId);
 
     /**
      * 开屏广告成功加载
@@ -18,12 +13,17 @@ public interface SplashAdListener {
     /**
      * 开屏广告加载失败
      */
-    void onSplashAdLoadFail(final String placementId, final WindAdError error);
+    void onSplashAdLoadFail(final String placementId, final AdError error);
+
+    /**
+     * 开屏广告成功展示
+     */
+    void onSplashAdShow(final String placementId);
 
     /**
      * 开屏广告展示失败
      */
-    void onSplashAdShowError(final String placementId, final WindAdError error);
+    void onSplashAdShowError(final String placementId, final AdError error);
 
     /**
      * 开屏广告被点击

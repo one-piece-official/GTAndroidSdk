@@ -12,11 +12,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.gt.adsdk.AdError;
 import com.gt.adsdk.AdRequest;
 import com.gt.adsdk.GtAdSdk;
 import com.gt.adsdk.api.SplashAdListener;
 import com.gt.adsdk.splash.SplashAd;
-import com.sigmob.windad.WindAdError;
 import com.windmill.demo.utils.PxUtils;
 
 
@@ -124,14 +124,14 @@ public class SplashActivity extends AppCompatActivity implements SplashAdListene
     }
 
     @Override
-    public void onSplashAdLoadFail(String placementId, WindAdError error) {
+    public void onSplashAdLoadFail(String placementId, AdError error) {
         Log.d("lance", "----------onSplashAdLoadFail----------" + error.toString() + ":" + placementId);
         logs.add("onSplashAdLoadFail: " + error + " placementId: " + placementId);
         jumpMainActivity();
     }
 
     @Override
-    public void onSplashAdShowError(String placementId, WindAdError error) {
+    public void onSplashAdShowError(String placementId, AdError error) {
         Log.d("lance", "----------onSplashAdShowError----------" + error.toString() + ":" + placementId);
         logs.add("onSplashAdShowError: " + error + " placementId: " + placementId);
         jumpMainActivity();
@@ -154,7 +154,7 @@ public class SplashActivity extends AppCompatActivity implements SplashAdListene
     protected void onDestroy() {
         super.onDestroy();
         if (splashAd != null) {
-            splashAd.destroy();
+            splashAd.destroyAd();
             splashAd = null;
         }
     }

@@ -28,6 +28,7 @@ import org.xmlpull.v1.XmlPullParserException;
 public class AdLoadCheckUtil {
 
     private static Boolean canInstallPackage = null;
+
     public static String[] getPermissions() {
         Context context = SDKContext.getApplicationContext();
 
@@ -105,6 +106,7 @@ public class AdLoadCheckUtil {
 
         return null;
     }
+
     public static synchronized boolean canInstallPackage() {
 
         if (canInstallPackage != null) {
