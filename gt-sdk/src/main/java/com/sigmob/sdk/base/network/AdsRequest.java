@@ -535,7 +535,7 @@ public class AdsRequest extends SigmobRequest<BidResponse> {
                     PointEntitySigmobError sigmobError = (PointEntitySigmobError) pointEntityBase;
                     sigmobError.setRequest_id(request_id);
                     sigmobError.setPlacement_id(placementId);
-                    sigmobError.setAdtype(String.valueOf(adType));
+                    sigmobError.setAdType(String.valueOf(adType));
                 }
             }
         });

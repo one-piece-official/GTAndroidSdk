@@ -1,4 +1,4 @@
-package com.gt.adsdk.splash;
+package com.gt.sdk.splash;
 
 import static com.czhj.sdk.common.models.AdStatus.AdStatusClick;
 import static com.czhj.sdk.common.models.AdStatus.AdStatusClose;
@@ -14,11 +14,11 @@ import android.view.ViewGroup;
 import com.czhj.sdk.common.models.AdStatus;
 import com.czhj.sdk.common.utils.AdLifecycleManager;
 import com.czhj.sdk.logger.SigmobLog;
-import com.gt.adsdk.AdError;
-import com.gt.adsdk.AdRequest;
-import com.gt.adsdk.api.SplashAdListener;
-import com.gt.adsdk.base.GtBaseAd;
-import com.gt.adsdk.admanager.SplashAdManager;
+import com.gt.sdk.AdError;
+import com.gt.sdk.AdRequest;
+import com.gt.sdk.api.SplashAdListener;
+import com.gt.sdk.base.GtBaseAd;
+import com.gt.sdk.admanager.SplashAdManager;
 
 public class SplashAd extends GtBaseAd implements SplashAdListener, AdLifecycleManager.LifecycleListener {
 

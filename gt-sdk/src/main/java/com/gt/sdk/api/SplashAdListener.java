@@ -1,6 +1,6 @@
-package com.gt.adsdk.api;
+package com.gt.sdk.api;
 
-import com.gt.adsdk.AdError;
+import com.gt.sdk.AdError;
 
 public interface SplashAdListener {
 

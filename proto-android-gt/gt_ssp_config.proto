@@ -1,0 +1,80 @@
+syntax = "proto3";
+import "gt_common.proto";
+
+package gt;
+option java_multiple_files = true;
+option java_package = "com.gt.sdk.base.models";
+option objc_class_prefix = "gt";
+option optimize_for = LITE_RUNTIME;
+
+message SdkConfigRequest {
+  App     app = 1;                        // 必填！应用信息
+  Device  device = 2;                  // 必填！设备信息
+  User    user = 5;                     // 用户信息
+}
+
+message SdkConfigResponse {
+  uint32    code = 1;
+  string    error_message = 2;
+  SdkConfig config = 3;
+}
+
+//配置信息
+message SdkConfig {
+  Common  common_config = 1;
+  Android android_config = 3;
+}
+
+message Common {
+  uint32                configRefresh = 1;                     //config刷新间隔
+  bool                  is_gdpr_region = 2;                      //是否gdpr地区，默认是false
+  uint32                tracking_expiration_time = 3;          //track事件过期时间，过期后不执行补发操作，单位秒
+  uint32                tracking_retry_interval = 4;          //track上报失败的重发时间间隔
+  uint32                max_send_log_records = 5;             //每次上传打点日志的最大条数
+  uint32                send_log_interval = 6;                //打点日志上报时间间隔（单位：秒）
+  repeated uint32       dc_log_blacklist = 7;         //点号位黑明单，默认会将100，101号点自动加入黑名单，如果下发了黑明单，以下发为准。
+  bool                  enable_debug_level = 8;                 //是否开启debug日志、初始化监测广告插件、监测结果打点和日志输出
+  uint32                load_interval = 9;                    //重复发起请求的间隔时间，在非ready的情况下，用来防止重复发起请求
+  bool                  disable_up_location = 10;                //是否禁止上传用户的位置信息。false: 不禁止上传；true: 禁止上传
+  bool                  log_enc = 11;          //false: 不加密；true: 加密
+  UrlConfig             urlConfig = 12;          //api配置
+  RvConfig              rv_config = 13;                       //激励视频配置
+  SplashConfig          splash_config = 14;               //开屏配置
+  NativeConfig          native_config = 15;
+}
+
+message Android {
+  bool   disableUpAppInfo = 1;                    //是否禁止上传用户已安装的app信息，默认是false，即可以上传
+  uint32 report_log = 2;                        //是否要写log,控制最细颗粒度为设备 0:关、1:开
+  uint32 up_wifi_list_interval = 3;             //上传wiki列表的时间间隔，单位秒，小于60秒则表示不上传
+  uint32 disable_up_oaid = 4;                   //是否禁止获取oaid信息，其中在android10一下默认为不上传，Android10以上默认上传；1: 不禁止上传；2: 禁止上传; 其它走默认值
+  bool   enable_permission = 5;                   //允许获取权限的开关；默认为false: 表示不获取权限列表
+  uint32 apk_expired_time = 6;                  //下载的apk的过期时间，单位：s; 默认0: 表示永远过期
+  bool   enable_report_crash = 7;                 //允许获取崩溃信息的开关；默认为false: 表示不上报崩溃信息
+  bool   oaid_api_is_disable = 8;                 //默认值 false :允许通过API模式采集oaid, true: 禁止通过API模式采集oaid，
+  bool   disable_boot_mark = 9;                   //禁止 boot_mark, update_mark 获取,default=false
+}
+
+//通用地址配置
+message UrlConfig {
+  string log = 1;
+  string ads = 2;
+}
+
+message RvConfig {
+  uint32        cacheTop = 1;                            //本地缓存上限
+  uint32        ad_load_timeout = 2;                     //广告总超时
+}
+
+message SplashConfig {
+  int32  cacheTop = 1;                             //原生广告素材缓存上限，小于等于0，则清除缓存
+  uint32 ad_load_timeout = 2;                     //广告总超时
+}
+
+message NativeConfig {
+  int32  cacheTop = 1;                             //原生广告素材缓存上限，小于等于0，则清除缓存
+  uint32 ad_load_timeout = 2;                     //广告总超时
+}
+
+
+

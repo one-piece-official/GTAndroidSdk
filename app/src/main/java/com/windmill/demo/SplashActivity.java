@@ -12,11 +12,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.gt.adsdk.AdError;
-import com.gt.adsdk.AdRequest;
-import com.gt.adsdk.GtAdSdk;
-import com.gt.adsdk.api.SplashAdListener;
-import com.gt.adsdk.splash.SplashAd;
+import com.gt.sdk.AdError;
+import com.gt.sdk.AdRequest;
+import com.gt.sdk.GtAdSdk;
+import com.gt.sdk.api.SplashAdListener;
+import com.gt.sdk.splash.SplashAd;
 import com.windmill.demo.utils.PxUtils;
 
 

@@ -1,4 +1,4 @@
-package com.gt.adsdk;
+package com.gt.sdk;
 
 public enum AdError {
 

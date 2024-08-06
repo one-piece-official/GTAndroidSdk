@@ -1,4 +1,4 @@
-package com.gt.adsdk.api;
+package com.gt.sdk.api;
 
 public interface GtInitCallback {
     void onSuccess();

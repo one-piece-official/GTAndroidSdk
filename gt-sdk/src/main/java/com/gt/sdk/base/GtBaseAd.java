@@ -1,4 +1,4 @@
-package com.gt.adsdk.base;
+package com.gt.sdk.base;
 
 import static com.czhj.sdk.common.models.AdStatus.AdStatusLoading;
 import static com.czhj.sdk.common.models.AdStatus.AdStatusNone;
@@ -9,13 +9,9 @@ import android.text.TextUtils;
 
 import com.czhj.sdk.common.models.AdStatus;
 import com.czhj.sdk.logger.SigmobLog;
-import com.gt.adsdk.AdError;
-import com.gt.adsdk.AdRequest;
-import com.gt.adsdk.GtAdSdk;
-import com.sigmob.sdk.base.common.PointEntitySigmobUtils;
-import com.sigmob.sdk.base.mta.PointCategory;
-import com.sigmob.sdk.base.mta.PointEntitySigmobRequest;
-import com.sigmob.windad.WindAdRequest;
+import com.gt.sdk.AdError;
+import com.gt.sdk.AdRequest;
+import com.gt.sdk.GtAdSdk;
 
 
 public abstract class GtBaseAd {

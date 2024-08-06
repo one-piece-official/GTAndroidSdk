@@ -1,8 +1,10 @@
-package com.gt.adsdk;
+package com.gt.sdk;
 
 
-import com.gt.adsdk.api.GtCustomController;
-import com.gt.adsdk.api.GtInitCallback;
+import com.gt.sdk.api.GtCustomController;
+import com.gt.sdk.api.GtInitCallback;
+
+import java.util.Map;
 
 public class GtSdkConfig {
 
@@ -12,7 +14,9 @@ public class GtSdkConfig {
 
     public String appName;
 
-    public boolean showNotification;
+    public String userId;
+
+    public Map<String, String> customData;
 
     public GtCustomController gtCustomController;
 
@@ -26,8 +30,12 @@ public class GtSdkConfig {
         return appName;
     }
 
-    public boolean isShowNotification() {
-        return showNotification;
+    public String getUserId() {
+        return userId;
+    }
+
+    public Map<String, String> getCustomData() {
+        return customData;
     }
 
     public GtCustomController getGtCustomController() {
@@ -46,7 +54,8 @@ public class GtSdkConfig {
         this.enableDebug = var1.enableDebug;
         this.appId = var1.appId;
         this.appName = var1.appName;
-        this.showNotification = var1.showNotification;
+        this.userId = var1.userId;
+        this.customData = var1.customData;
         this.gtCustomController = var1.gtCustomController;
         this.gtInitCallback = var1.gtInitCallback;
     }
@@ -59,7 +68,9 @@ public class GtSdkConfig {
 
         private String appName;
 
-        private boolean showNotification = true;
+        private String userId;
+
+        private Map<String, String> customData;
 
         private GtCustomController gtCustomController;
 
@@ -73,6 +84,11 @@ public class GtSdkConfig {
             return this;
         }
 
+        public Builder userId(String userId) {
+            this.userId = userId;
+            return this;
+        }
+
         public Builder appId(String var1) {
             this.appId = var1;
             return this;
@@ -83,8 +99,8 @@ public class GtSdkConfig {
             return this;
         }
 
-        public Builder showNotification(boolean var1) {
-            this.showNotification = var1;
+        public Builder addCustomData(Map<String, String> customData) {
+            this.customData = customData;
             return this;
         }
 

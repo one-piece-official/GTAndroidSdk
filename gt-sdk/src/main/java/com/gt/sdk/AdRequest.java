@@ -1,8 +1,5 @@
-package com.gt.adsdk;
+package com.gt.sdk;
 
-import android.text.TextUtils;
-
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Map;

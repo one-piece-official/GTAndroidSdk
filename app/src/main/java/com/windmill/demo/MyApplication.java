@@ -9,15 +9,17 @@ import android.util.Log;
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
-import com.gt.adsdk.GtAdSdk;
-import com.gt.adsdk.GtSdkConfig;
-import com.gt.adsdk.api.GtCustomController;
-import com.gt.adsdk.api.GtInitCallback;
+import com.gt.sdk.GtAdSdk;
+import com.gt.sdk.GtSdkConfig;
+import com.gt.sdk.api.GtCustomController;
+import com.gt.sdk.api.GtInitCallback;
 
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //import com.tencent.bugly.crashreport.CrashReport;
 
@@ -102,9 +104,11 @@ public class MyApplication extends MultiDexApplication {
 //        packageInfo.packageName = "com.lance.demo";
 //        packageInfoList.add(packageInfo);
 
+        Map<String, String> customData = new HashMap<>();
+        customData.put("key", "value");
         GtAdSdk.sharedAds().init(this, new GtSdkConfig.Builder().appId(appId) // 测试aapId，请联系快手平台申请正式AppId，必填
                 .appName("appName") // 测试appName，请填写您应用的名称，非必填
-                .showNotification(true) // 是否展示下载通知栏
+                .addCustomData(customData) // 是否展示下载通知栏
                 .customController(new GtCustomController() {
                     @Override
                     public boolean canReadLocation() {

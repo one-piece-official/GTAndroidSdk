@@ -1,4 +1,4 @@
-package com.gt.adsdk.admanager;
+package com.gt.sdk.admanager;
 
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 
@@ -11,8 +11,8 @@ import android.widget.FrameLayout;
 
 import com.czhj.sdk.common.ClientMetadata;
 import com.czhj.sdk.common.models.AdStatus;
-import com.gt.adsdk.AdRequest;
-import com.gt.adsdk.api.SplashAdListener;
+import com.gt.sdk.AdRequest;
+import com.gt.sdk.api.SplashAdListener;
 import com.sigmob.sdk.base.common.AdStackManager;
 import com.sigmob.sdk.base.common.PointEntitySigmobUtils;
 import com.sigmob.sdk.base.models.LoadAdRequest;
