@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 import com.czhj.sdk.common.json.JSONSerializer;
 import com.gt.sdk.GtAdSdk;
-import com.gt.sdk.base.point.GtPointCategory;
+import com.gt.sdk.base.point.PointCategory;
 import com.gt.sdk.base.point.GtPointEntityActive;
 import com.gt.sdk.base.point.PointType;
 import com.gt.sdk.utils.AdLifecycleManager;
@@ -40,7 +40,7 @@ public class GtLifecycleManager implements AdLifecycleManager.LifecycleListener 
             active_id = UUID.randomUUID().toString();
             //session_start打点
             WMLogUtil.i("session_start: " + session_start + ":" + active_id);
-            activeTracking(GtPointCategory.SESSION_START, active_id, "0", String.valueOf(session_start));
+            activeTracking(PointCategory.SESSION_START, active_id, "0", String.valueOf(session_start));
         } catch (Throwable e) {
             WMLogUtil.e(e.getMessage());
         }
@@ -86,7 +86,7 @@ public class GtLifecycleManager implements AdLifecycleManager.LifecycleListener 
             session_start = System.currentTimeMillis();
             isAppAlive = true;
             WMLogUtil.i("onActivityResumed session_start: " + session_start + ":" + active_id);
-            activeTracking(GtPointCategory.SESSION_START, active_id, "0", String.valueOf(session_start));
+            activeTracking(PointCategory.SESSION_START, active_id, "0", String.valueOf(session_start));
         }
     }
 
@@ -99,7 +99,7 @@ public class GtLifecycleManager implements AdLifecycleManager.LifecycleListener 
                 long duration = (session_end - session_start) / 1000;
                 //用户切换到后台
                 WMLogUtil.i("onActivityStopped session_end: " + session_end + ":" + active_id + ":" + duration);
-                activeTracking(GtPointCategory.SESSION_END, active_id, String.valueOf(duration), String.valueOf(session_end));
+                activeTracking(PointCategory.SESSION_END, active_id, String.valueOf(duration), String.valueOf(session_end));
                 session_start = System.currentTimeMillis();
                 isAppAlive = false;
             }
@@ -114,7 +114,7 @@ public class GtLifecycleManager implements AdLifecycleManager.LifecycleListener 
             long duration = (session_end - session_start) / 1000;
             //用户切换到后台
             WMLogUtil.i("onActivityDestroyed session_end: " + session_end + ":" + active_id + ":" + duration);
-            activeTracking(GtPointCategory.SESSION_END, active_id, String.valueOf(duration), String.valueOf(session_end));
+            activeTracking(PointCategory.SESSION_END, active_id, String.valueOf(duration), String.valueOf(session_end));
             session_start = System.currentTimeMillis();
             isAppAlive = false;
         }

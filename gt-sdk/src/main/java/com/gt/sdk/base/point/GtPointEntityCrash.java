@@ -14,10 +14,9 @@ import java.util.List;
 public class GtPointEntityCrash extends PointEntityCrash {
 
     public static GtPointEntityCrash WindCrash(String crash) {
-
         GtPointEntityCrash windCrash = new GtPointEntityCrash();
         windCrash.setAc_type(PointType.GT_CRASH);
-        windCrash.setCategory(GtPointCategory.CRASH);
+        windCrash.setCategory(PointCategory.CRASH);
         windCrash.setCrashMessage(crash);
         return windCrash;
     }

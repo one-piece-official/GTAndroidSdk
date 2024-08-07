@@ -1,0 +1,29 @@
+syntax = "proto3";
+import "gt_common.proto";
+
+package gt;
+option java_multiple_files = true;
+option java_package = "com.gt.sdk.base.models";
+option objc_class_prefix = "gt";
+option optimize_for = LITE_RUNTIME;
+
+
+message BidResponse {
+  string          request_id = 1;              // 对应请的request_id(内部生成的)
+  repeated SeatBid     bids = 2;                // 广告信息
+  string          bidId = 3;
+  uint32          code = 4;         // 广告有效截止日期。Unix时间戳，单位秒。
+  uint32          nbs = 5;         // 广告有效截止日期。Unix时间戳，单位秒。
+  uint32          nbt = 6;         // 广告有效截止日期。Unix时间戳，单位秒。
+}
+
+// 广告信息
+message SeatBid {
+  string                adslot_id = 1;                       // 对应请求时填写的广告位ID
+  string                vid = 2;                             // 广告曝光id.
+  string                cust_id = 3;                         // 客户ID
+  string                camp_id = 4;                         // 推广计划ID
+  string                crid = 5;                            // 创意ID
+}
+
+

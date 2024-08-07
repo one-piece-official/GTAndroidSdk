@@ -88,6 +88,15 @@ public enum AdError {
         this.message = message;
     }
 
+    public static AdError getAdError(int error_code) {
+        for (AdError error : AdError.values()) {
+            if (error.getErrorCode() == error_code) {
+                return error;
+            }
+        }
+        return null;
+    }
+
     public int getErrorCode() {
         return errorCode;
     }

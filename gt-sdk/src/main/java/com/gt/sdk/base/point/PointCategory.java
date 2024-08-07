@@ -1,13 +1,16 @@
 package com.gt.sdk.base.point;
 
 
-public final class GtPointCategory {
+public final class PointCategory {
     public static final String INIT = "init";
+    public static final String REQUEST = "request";
+    public static final String RESPOND = "respond";
     public static final String LOAD = "load";
     public static final String START = "start";
     public static final String READY = "ready";
     public static final String PLAY = "play";
     public static final String SKIP = "skip";
+    public static final String SHOW = "show";
     public static final String CLOSE = "close";
     public static final String CLICK = "click";
     public static final String REWARD = "reward";
@@ -24,6 +27,8 @@ public final class GtPointCategory {
     public static final String ADAPTER_PLUGIN = "adapter_plugin";
     public static final String LANDING_PAGE_SHOW = "landing_page_show";
     public static final String LANDING_PAGE_CLOSE = "landing_page_close";
+
+    public static final String FOUR_ELEMENTS = "four_elements";
 
     public static final String TIME_OUT = "time_out";
 

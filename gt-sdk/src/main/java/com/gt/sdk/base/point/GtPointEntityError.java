@@ -23,11 +23,10 @@ public final class GtPointEntityError extends GtPointEntity {
         this.error_code = error_code;
     }
 
-    public static GtPointEntityError WindError(String category, String event_type, int errorCode, String errorMessage) {
+    public static GtPointEntityError GTError(String category, String event_type, int errorCode, String errorMessage) {
         GtPointEntityError entityError = new GtPointEntityError();
         entityError.setAc_type(PointType.GT_ERROR);
         entityError.setCategory(category);
-        entityError.setEvent_type(event_type);
         entityError.setError_code(String.valueOf(errorCode));
         if (!TextUtils.isEmpty(errorMessage)) {
             entityError.setError_message(errorMessage);

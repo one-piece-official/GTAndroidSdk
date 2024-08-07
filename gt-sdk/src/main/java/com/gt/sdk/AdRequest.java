@@ -17,6 +17,8 @@ public class AdRequest {
     private int rewardAmount;
     private String rewardName;
 
+    private int bidFloor;
+
     private AdRequest() {
         this.orientation = 2;
     }
@@ -37,6 +39,9 @@ public class AdRequest {
         return this.height;
     }
 
+    public int getBidFloor() {
+        return bidFloor;
+    }
 
     public int getAdCount() {
         return this.adCount;
@@ -80,9 +85,9 @@ public class AdRequest {
             var1.put("extOption", this.extOption);
             var1.put("rewardName", this.rewardName);
             var1.put("rewardAmount", this.rewardAmount);
-        } catch (Exception var2) {
+            var1.put("bidFloor", this.bidFloor);
+        } catch (Exception ignored) {
         }
-
         return var1;
     }
 
@@ -97,6 +102,7 @@ public class AdRequest {
         private Map<String, String> extOption;
         private int rewardAmount;
         private String rewardName;
+        private int bidFloor;
 
         public Builder() {
 
@@ -129,6 +135,10 @@ public class AdRequest {
             return this;
         }
 
+        public Builder setBidFloor(int bidFloor) {
+            this.bidFloor = bidFloor;
+            return this;
+        }
 
         public Builder setAdCount(int adCount) {
             if (adCount <= 0) {
@@ -175,6 +185,7 @@ public class AdRequest {
             request.adType = this.adType;
             request.rewardName = this.rewardName;
             request.rewardAmount = this.rewardAmount;
+            request.bidFloor = this.bidFloor;
             return request;
         }
     }

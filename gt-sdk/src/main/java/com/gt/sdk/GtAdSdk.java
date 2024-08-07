@@ -24,8 +24,8 @@ import com.gt.sdk.admanager.GtConfigManager;
 import com.gt.sdk.admanager.GtLifecycleManager;
 import com.gt.sdk.admanager.PrivacyDataManager;
 import com.gt.sdk.api.GtCustomController;
-import com.gt.sdk.base.point.GtPointCategory;
-import com.gt.sdk.base.point.GtPointEntityCommon;
+import com.gt.sdk.base.point.GtPointEntity;
+import com.gt.sdk.base.point.PointCategory;
 import com.gt.sdk.base.point.GtPointEntityCrash;
 import com.gt.sdk.base.point.PointType;
 import com.gt.sdk.utils.DeviceContextManager;
@@ -68,6 +68,10 @@ public class GtAdSdk {
             }
         }
         return gInstance;
+    }
+
+    public GtSdkConfig getSdkConfig() {
+        return mSdkConfig;
     }
 
     /**
@@ -175,25 +179,9 @@ public class GtAdSdk {
     }
 
     private void trackInitEvent() {
-        GtPointEntityCommon entityInit = new GtPointEntityCommon();
+        GtPointEntity entityInit = new GtPointEntity();
         entityInit.setAc_type(PointType.GT_COMMON);
-        entityInit.setCategory(GtPointCategory.INIT);
-
-        int x, y;
-
-        if (!GtConfigManager.sharedInstance().isDisable_up_location()) {
-            ClientMetadata.getInstance().setEnableLocation(true);
-            x = 1;
-        } else {
-            x = 0;
-        }
-
-        if (ClientMetadata.getInstance().getLocation() != null) {
-            y = 1;
-        } else {
-            y = 0;
-        }
-
+        entityInit.setCategory(PointCategory.INIT);
         HashMap<String, String> options = new HashMap<>();
         try {
             if (getCustomData() != null && !getCustomData().isEmpty()) {
@@ -206,8 +194,6 @@ public class GtAdSdk {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        entityInit.setLocation_switch(x + "," + y);
         options.put("is_minor", mIsAdult ? GtConstants.FAIL : GtConstants.SUCCESS);
         options.put("is_unpersonalized", mIsPersonalizedAdvertisingOn ? GtConstants.FAIL : GtConstants.SUCCESS);
 

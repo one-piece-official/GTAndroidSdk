@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
 
 import com.czhj.sdk.common.Constants;
 import com.gt.sdk.GtConstants;
-import com.gt.sdk.base.point.GtPointCategory;
+import com.gt.sdk.base.point.PointCategory;
 import com.gt.sdk.base.point.GtPointEntityPrivacy;
 import com.gt.sdk.base.point.PointType;
 import com.gt.sdk.utils.GtSharedPreUtil;
@@ -63,8 +63,8 @@ public class PrivacyDataManager {
             GtPointEntityPrivacy pointEntityPrivacy = new GtPointEntityPrivacy();
             pointEntityPrivacy.setAge(String.valueOf(userAge));
             pointEntityPrivacy.setAc_type(PointType.GT_PRIVACY);
-            pointEntityPrivacy.setSub_category(GtPointCategory.AGE);
-            pointEntityPrivacy.setCategory(GtPointCategory.PRIVACY);
+            pointEntityPrivacy.setSub_category(PointCategory.AGE);
+            pointEntityPrivacy.setCategory(PointCategory.PRIVACY);
             pointEntityPrivacy.commit();
         }
     }
@@ -85,8 +85,8 @@ public class PrivacyDataManager {
             GtPointEntityPrivacy pointEntityPrivacy = new GtPointEntityPrivacy();
             pointEntityPrivacy.setAge_restricted(String.valueOf(age_restricted));
             pointEntityPrivacy.setAc_type(PointType.GT_PRIVACY);
-            pointEntityPrivacy.setSub_category(GtPointCategory.COPPA);
-            pointEntityPrivacy.setCategory(GtPointCategory.PRIVACY);
+            pointEntityPrivacy.setSub_category(PointCategory.COPPA);
+            pointEntityPrivacy.setCategory(PointCategory.PRIVACY);
             pointEntityPrivacy.commit();
         }
     }
@@ -101,8 +101,8 @@ public class PrivacyDataManager {
             GtPointEntityPrivacy pointEntityPrivacy = new GtPointEntityPrivacy();
             pointEntityPrivacy.setIs_minor(mIsAdult ? GtConstants.FAIL : GtConstants.SUCCESS);
             pointEntityPrivacy.setAc_type(PointType.GT_PRIVACY);
-            pointEntityPrivacy.setSub_category(GtPointCategory.ADULT);
-            pointEntityPrivacy.setCategory(GtPointCategory.PRIVACY);
+            pointEntityPrivacy.setSub_category(PointCategory.ADULT);
+            pointEntityPrivacy.setCategory(PointCategory.PRIVACY);
             pointEntityPrivacy.commit();
         }
     }
@@ -130,8 +130,8 @@ public class PrivacyDataManager {
             GtPointEntityPrivacy pointEntityPrivacy = new GtPointEntityPrivacy();
             pointEntityPrivacy.setIs_unpersonalized(mIsPersonalizedAdvertisingOn ? GtConstants.FAIL : GtConstants.SUCCESS);
             pointEntityPrivacy.setAc_type(PointType.GT_PRIVACY);
-            pointEntityPrivacy.setSub_category(GtPointCategory.PERSONALIZED);
-            pointEntityPrivacy.setCategory(GtPointCategory.PRIVACY);
+            pointEntityPrivacy.setSub_category(PointCategory.PERSONALIZED);
+            pointEntityPrivacy.setCategory(PointCategory.PRIVACY);
             pointEntityPrivacy.commit();
         }
     }
@@ -164,8 +164,8 @@ public class PrivacyDataManager {
         GtPointEntityPrivacy pointEntityPrivacy = new GtPointEntityPrivacy();
         pointEntityPrivacy.setUser_consent(String.valueOf(getGDPRConsentStatus()));
         pointEntityPrivacy.setGdpr_region(getIsGDPRRegion() ? SUCCESS : FAIL);
-        pointEntityPrivacy.setSub_category(GtPointCategory.CONSENT);
-        pointEntityPrivacy.setCategory(GtPointCategory.GDPR);
+        pointEntityPrivacy.setSub_category(PointCategory.CONSENT);
+        pointEntityPrivacy.setCategory(PointCategory.GDPR);
         pointEntityPrivacy.setAc_type(PointType.GT_PRIVACY);
         pointEntityPrivacy.commit();
     }

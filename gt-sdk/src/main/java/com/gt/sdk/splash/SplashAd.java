@@ -37,10 +37,8 @@ public class SplashAd extends GtBaseAd implements SplashAdListener, AdLifecycleM
         }
 
         mSplashAdListener = adListener;
-
-        mHandler = new Handler(Looper.getMainLooper());
-
         adManager = new SplashAdManager(adRequest, this);
+        mHandler = adManager.getHandler();
 
     }
 
