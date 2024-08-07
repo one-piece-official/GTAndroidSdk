@@ -184,7 +184,11 @@ public class BaseAdUnit implements Serializable {
     public int expiration_time;
     public BiddingResponse bidding_response;
 
-    public static BaseAdUnit adUnit(SeatBid ad, String request_id, LoadAdRequest adRequest, String uid) {
+    public static BaseAdUnit adUnit(SeatBid ad, String request_id, LoadAdRequest adRequest, String bidId) {
+
+        if (!TextUtils.isEmpty(bidId)) {
+            adRequest.setBidId(bidId);
+        }
 
         BaseAdUnit baseAdUnit = null;
         try {

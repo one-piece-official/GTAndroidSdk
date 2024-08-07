@@ -17,6 +17,7 @@ import com.czhj.volley.toolbox.DownloadItem;
 import com.czhj.volley.toolbox.FileDownloadRequest;
 import com.czhj.volley.toolbox.FileDownloader;
 import com.gt.sdk.GtAdSdk;
+import com.gt.sdk.admanager.GtConfigManager;
 import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.utils.GtFileUtil;
 import com.sigmob.sdk.SDKContext;
@@ -686,6 +687,45 @@ public class AdStackManager {
 
     private void AdCache(final BaseAdUnit adUnit, final AdStackStatusListener adStackStatusListener) {
         if (adUnit != null) {
+            //下载隐私协议模板
+            String privacy_template_url = GtConfigManager.sharedInstance().getPrivacyUrl();
+            if (!TextUtils.isEmpty(privacy_template_url)) {
+                String fileName = Md5Util.md5(privacy_template_url);
+                File sigHtmlDir = GtFileUtil.getPrivacyHtmlDir();
+                File destFile = new File(sigHtmlDir, fileName + ".html");
+                if (!destFile.exists()) {//不存在就要下载
+                    //然后再去下载新的文件
+                    DownloadItem downloadItem = new DownloadItem();
+                    downloadItem.url = privacy_template_url;
+                    downloadItem.filePath = destFile.getAbsolutePath();
+                    downloadItem.type = DownloadItem.FileType.OTHER;
+                    FileDownloader downloader = DownloaderFactory.getDownloader();
+                    downloader.add(downloadItem, new FileDownloadRequest.FileDownloadListener() {
+                        @Override
+                        public void onSuccess(DownloadItem item) {
+                            SigmobLog.i("onPostExecute onSuccess:" + item.url);
+                        }
+
+                        @Override
+                        public void onCancel(DownloadItem item) {
+                            SigmobLog.i("onPostExecute onCancel:" + item.url);
+                        }
+
+
+                        @Override
+                        public void onErrorResponse(DownloadItem item) {
+                            SigmobLog.i("onPostExecute onErrorResponse:" + item.url);
+                        }
+
+                        @Override
+                        public void downloadProgress(DownloadItem item, long totalSize, long readSize) {
+
+                        }
+                    });
+                } else {
+                    SigmobLog.i("privacy_template_url:" + fileName + " is exists");
+                }
+            }
 
             File splashAdFile = new File(adUnit.getSplashFilePath());
             if (splashAdFile.exists()) {
@@ -700,11 +740,9 @@ public class AdStackManager {
                 item.url = adUnit.getSplashURL();
                 item.type = DownloadItem.FileType.OTHER;
                 item.userRange = false;
-                FileDownloader.DownloadController mDownloadController;
-                mDownloadController = downloader.add(item, new FileDownloadRequest.FileDownloadListener() {
+                downloader.add(item, new FileDownloadRequest.FileDownloadListener() {
                     @Override
                     public void onSuccess(DownloadItem item) {
-
                         if (adStackStatusListener != null) {
                             adStackStatusListener.loadEnd(adUnit, null);
                         }
@@ -714,7 +752,6 @@ public class AdStackManager {
                     public void onCancel(DownloadItem item) {
 
                     }
-
 
                     @Override
                     public void onErrorResponse(DownloadItem item) {
@@ -733,9 +770,7 @@ public class AdStackManager {
 
                     }
                 });
-
             }
-
         }
     }
 

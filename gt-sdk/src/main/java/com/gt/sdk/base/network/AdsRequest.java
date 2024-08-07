@@ -155,10 +155,7 @@ public class AdsRequest extends SigmobRequest<BidResponse> {
     @Override
     protected void deliverResponse(final BidResponse bidResponse) {
         if (bidResponse != null) {
-            String uid = bidResponse.bidId;
-            if (!TextUtils.isEmpty(uid)) {
-                ClientMetadata.getInstance().setUid(uid);
-            }
+
             if (bidResponse.code == 0 && !bidResponse.bids.isEmpty()) {
                 try {
                     List<BaseAdUnit> adUnits = new ArrayList<>();
