@@ -1,7 +1,7 @@
 package com.gt.sdk.base.point;
 
 
-public class GtPointEntityTrack extends GtPointEntity {
+public class GtPointEntityAdTrack extends GtPointEntityAd {
 
     private String url;
     private String tracking_type;
@@ -67,8 +67,8 @@ public class GtPointEntityTrack extends GtPointEntity {
         this.content_type = content_type;
     }
 
-    public static GtPointEntityTrack WindTracking(String category, String acType, String placement_id, String adType) {
-        GtPointEntityTrack entityWind = new GtPointEntityTrack();
+    public static GtPointEntityAdTrack AdTracking(String category, String acType, String placement_id, String adType) {
+        GtPointEntityAdTrack entityWind = new GtPointEntityAdTrack();
         entityWind.setAc_type(acType);
         entityWind.setCategory(category);
         entityWind.setAdType(adType);

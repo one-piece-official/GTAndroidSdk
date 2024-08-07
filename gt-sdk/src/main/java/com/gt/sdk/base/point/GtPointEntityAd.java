@@ -11,21 +11,21 @@ import com.gt.sdk.utils.DeviceContextManager;
 
 import java.util.List;
 
-public class GtPointEntity extends PointEntityBase {
+public class GtPointEntityAd extends PointEntityBase {
 
     private String appId;
     private String placement_id;
-
     private String load_count;
     private String feed_cnt;
-
-    private String offer_id;
-
-    private String e_cpm;
-
     private String custom_info;
+    private String custom_info_ad;
 
-    private String ad_position_custom_info;
+    private String bidId;//本次响应标识 ID，用于日志和后续调试
+    private String logId;//用于记录日志或行为追踪
+    private String adId;//生成的素材校验 id
+    private String impId;//对应请求中的 imp 的 id
+    private String admId;//序号
+    private String price;
 
     public String getCustom_info() {
         return custom_info;
@@ -35,28 +35,20 @@ public class GtPointEntity extends PointEntityBase {
         this.custom_info = custom_info;
     }
 
-    public String getAd_position_custom_info() {
-        return ad_position_custom_info;
+    public String getCustom_info_ad() {
+        return custom_info_ad;
     }
 
-    public void setAd_position_custom_info(String position_custom_info) {
-        this.ad_position_custom_info = position_custom_info;
+    public void setCustom_info_ad(String position_custom_info) {
+        this.custom_info_ad = position_custom_info;
     }
 
-    public String getE_cpm() {
-        return e_cpm;
+    public String getPrice() {
+        return price;
     }
 
-    public void setE_cpm(String e_cpm) {
-        this.e_cpm = e_cpm;
-    }
-
-    public String getOffer_id() {
-        return offer_id;
-    }
-
-    public void setOffer_id(String offer_id) {
-        this.offer_id = offer_id;
+    public void setPrice(String price) {
+        this.price = price;
     }
 
     public String getFeed_cnt() {
@@ -91,8 +83,48 @@ public class GtPointEntity extends PointEntityBase {
         this.load_count = load_count;
     }
 
-    public static GtPointEntity WindTracking(String category, String placement_id, String adType) {
-        GtPointEntity entityWind = new GtPointEntity();
+    public String getBidId() {
+        return bidId;
+    }
+
+    public void setBidId(String bidId) {
+        this.bidId = bidId;
+    }
+
+    public String getLogId() {
+        return logId;
+    }
+
+    public void setLogId(String logId) {
+        this.logId = logId;
+    }
+
+    public String getAdId() {
+        return adId;
+    }
+
+    public void setAdId(String adId) {
+        this.adId = adId;
+    }
+
+    public String getImpId() {
+        return impId;
+    }
+
+    public void setImpId(String impId) {
+        this.impId = impId;
+    }
+
+    public String getAdmId() {
+        return admId;
+    }
+
+    public void setAdmId(String admId) {
+        this.admId = admId;
+    }
+
+    public static GtPointEntityAd AdTracking(String category, String placement_id, String adType) {
+        GtPointEntityAd entityWind = new GtPointEntityAd();
         entityWind.setAc_type(PointType.GT_COMMON);
         entityWind.setCategory(category);
         entityWind.setAdType(adType);

@@ -24,7 +24,7 @@ import com.gt.sdk.admanager.GtConfigManager;
 import com.gt.sdk.admanager.GtLifecycleManager;
 import com.gt.sdk.admanager.PrivacyDataManager;
 import com.gt.sdk.api.GtCustomController;
-import com.gt.sdk.base.point.GtPointEntity;
+import com.gt.sdk.base.point.GtPointEntityAd;
 import com.gt.sdk.base.point.PointCategory;
 import com.gt.sdk.base.point.GtPointEntityCrash;
 import com.gt.sdk.base.point.PointType;
@@ -179,7 +179,7 @@ public class GtAdSdk {
     }
 
     private void trackInitEvent() {
-        GtPointEntity entityInit = new GtPointEntity();
+        GtPointEntityAd entityInit = new GtPointEntityAd();
         entityInit.setAc_type(PointType.GT_COMMON);
         entityInit.setCategory(PointCategory.INIT);
         HashMap<String, String> options = new HashMap<>();

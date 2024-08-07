@@ -46,7 +46,7 @@ public class ModelBuilderCreator {
             if (romInfo != null) {
                 String osMarket = romInfo.getOsMarket();
                 if (!TextUtils.isEmpty(osMarket)) {
-                    int packageVersionCode = AppPackageUtil.getPackageVersionCode(SDKContext.getApplicationContext(), osMarket);
+                    int packageVersionCode = AppPackageUtil.getPackageVersionCode(GtAdSdk.sharedAds().getContext(), osMarket);
                     if (packageVersionCode != -1) {
                         builder.store_ver(String.valueOf(packageVersionCode));
                     }

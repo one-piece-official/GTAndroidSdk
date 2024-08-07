@@ -2,26 +2,21 @@ package com.gt.sdk.utils;
 
 import android.text.TextUtils;
 
-import com.czhj.sdk.common.json.JSONSerializer;
 import com.czhj.sdk.common.track.AdTracker;
 import com.czhj.volley.NetworkResponse;
 import com.czhj.volley.VolleyError;
 import com.gt.sdk.AdError;
 import com.gt.sdk.GtAdSdk;
-import com.gt.sdk.GtConstants;
 import com.gt.sdk.GtSdkConfig;
 import com.gt.sdk.api.GtCustomController;
 import com.gt.sdk.base.BaseAdUnit;
 import com.gt.sdk.base.LoadAdRequest;
-import com.gt.sdk.base.point.GtPointEntity;
-import com.gt.sdk.base.point.GtPointEntityError;
-import com.gt.sdk.base.point.PointCategory;
+import com.gt.sdk.base.point.GtPointEntityAd;
+import com.gt.sdk.base.point.GtPointEntityAdError;
 import com.gt.sdk.base.point.PointType;
 
 
 import org.json.JSONObject;
-
-import java.util.HashMap;
 
 public class PointEntityUtils {
 
@@ -43,7 +38,7 @@ public class PointEntityUtils {
 
     public static void GtTracking(String category, String sub_category, BaseAdUnit adUnit, LoadAdRequest adRequest, OnPointEntityExtraInfo onPointEntityExtraInfo) {
 
-        GtPointEntity pointEntity = new GtPointEntity();
+        GtPointEntityAd pointEntity = new GtPointEntityAd();
         pointEntity.setAc_type(PointType.GT_COMMON);
         pointEntity.setCategory(category);
         pointEntity.setSub_category(sub_category);
@@ -63,7 +58,7 @@ public class PointEntityUtils {
         PointEntityUtils.GtTracking(category, sub_category, adUnit, null);
     }
 
-    public static void updateADunitInfo(BaseAdUnit adUnit, GtPointEntity pointEntity) {
+    public static void updateADunitInfo(BaseAdUnit adUnit, GtPointEntityAd pointEntity) {
         if (adUnit != null) {
             try {
                 pointEntity.setAdType(String.valueOf(adUnit.getAd_type()));
@@ -94,7 +89,7 @@ public class PointEntityUtils {
 
     public static void GtError(String category, String sub_category, int error_code, String error_msg, LoadAdRequest loadAdRequest, BaseAdUnit adUnit, OnPointEntityExtraInfo onPointEntityExtraInfo) {
 
-        GtPointEntityError pointEntityError = GtPointEntityError.GTError(category, "", error_code, error_msg);
+        GtPointEntityAdError pointEntityError = GtPointEntityAdError.GTError(category, "", error_code, error_msg);
 
         pointEntityError.setSub_category(sub_category);
 
@@ -109,7 +104,7 @@ public class PointEntityUtils {
         pointEntityError.commit();
     }
 
-    public static void updateLoadRequestInfo(LoadAdRequest adRequest, GtPointEntity pointEntity) {
+    public static void updateLoadRequestInfo(LoadAdRequest adRequest, GtPointEntityAd pointEntity) {
 
         if (pointEntity != null && adRequest != null) {
 
@@ -123,7 +118,7 @@ public class PointEntityUtils {
 
             if (adRequest.getOptions() != null) {
                 JSONObject jsonObject = new JSONObject(adRequest.getOptions());
-                pointEntity.setAd_position_custom_info(jsonObject.toString());
+                pointEntity.setCustom_info_ad(jsonObject.toString());
             }
         }
     }
@@ -145,7 +140,7 @@ public class PointEntityUtils {
         }
     }
 
-    public static void updatePointEntity(GtPointEntity pointEntity) {
+    public static void updatePointEntity(GtPointEntityAd pointEntity) {
         GtSdkConfig sdkConfig = GtAdSdk.sharedAds().getSdkConfig();
         if (sdkConfig != null && sdkConfig.getGtCustomController() != null) {
             GtCustomController controller = sdkConfig.getGtCustomController();

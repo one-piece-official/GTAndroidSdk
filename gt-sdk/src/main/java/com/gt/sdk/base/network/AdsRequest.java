@@ -26,6 +26,7 @@ import com.gt.sdk.utils.DeviceContextManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 
 public class AdsRequest extends SigmobRequest<BidResponse> {
@@ -53,12 +54,12 @@ public class AdsRequest extends SigmobRequest<BidResponse> {
 
         BidRequest.Builder builder = new BidRequest.Builder();
         try {
-            builder.token("");
+//            builder.token("");
 
-            builder.id(loadAdRequest.getLoadId());
+            builder.id(loadAdRequest.getLoadId());//请求标识 ID，由媒体生成，请确保全局唯一
 
             Imp.Builder impBuild = new Imp.Builder();
-            impBuild.id(loadAdRequest.getLoadId());
+            impBuild.id(UUID.randomUUID().toString());//曝光标识 ID，只在多次曝光有意义，媒体生成，请确保全局唯一
             impBuild.tagid(loadAdRequest.getPlacementId());
             impBuild.style(loadAdRequest.getAdType());
             impBuild.secure(0);
