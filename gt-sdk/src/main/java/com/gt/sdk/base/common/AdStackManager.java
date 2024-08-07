@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 
 import com.czhj.sdk.common.models.AdCache;
+import com.czhj.sdk.common.models.AdFormat;
 import com.czhj.sdk.common.utils.FileUtil;
 import com.czhj.sdk.common.utils.ImageManager;
 import com.czhj.sdk.common.utils.Md5Util;
@@ -147,24 +148,6 @@ public class AdStackManager {
 
     }
 
-
-    public static void addBidResponse(String request_id, BidResponse bidResponse) {
-        if (TextUtils.isEmpty(request_id) || bidResponse == null) {
-            return;
-        }
-        bidMap.put(request_id, bidResponse);
-    }
-
-    public static BidResponse getBidResponse(String request_id) {
-        return bidMap.get(request_id);
-    }
-
-    public static void removeBidResponse(String request_id) {
-        if (!TextUtils.isEmpty(request_id)) {
-            bidMap.remove(request_id);
-        }
-    }
-
     public static synchronized ImageManager getImageManger() {
 
         if (mImageManager == null) {
@@ -192,7 +175,6 @@ public class AdStackManager {
     }
 
     public static void cleanPlayAdUnit(BaseAdUnit adUnit) {
-
         if (adUnit != null && !TextUtils.isEmpty(adUnit.getUuid())) {
             AdUnitMap.remove(adUnit.getUuid());
             AdUnitListMap.remove(adUnit.getUuid());
@@ -204,18 +186,6 @@ public class AdStackManager {
     }
 
     private static Map<String, List<BaseAdUnit>> AdUnitListMap = new HashMap<>();
-
-
-//    public static synchronized void startNativeLoadDc(){
-//        if (mNativeLoadDc == null) {
-//            synchronized (AdStackManager.class){
-//                if(mNativeLoadDc == null){
-//                    mNativeLoadDc = new NativeLoadDc();
-//                }
-//            }
-//        }
-//        mNativeLoadDc.start();
-//    }
 
     public static List<BaseAdUnit> getNativeAdValidList(String placementId) {
         if (TextUtils.isEmpty(placementId)) return null;
@@ -267,47 +237,6 @@ public class AdStackManager {
             }
 
 
-        }
-    }
-
-    public static void addAdUnitList(List<BaseAdUnit> list) {
-        if (list != null && list.size() > 0) {
-            AdUnitListMap.put(list.get(0).getUuid(), list);
-        }
-    }
-
-    public static List<BaseAdUnit> getAdUnitList(String uuid) {
-        return AdUnitListMap.get(uuid);
-    }
-
-
-    public static void addShowCount(String placement_id) {
-        if (!TextUtils.isEmpty(placement_id)) {
-
-            Integer integer = showCount.get(placement_id);
-            if (integer != null) {
-                showCount.put(placement_id, integer + 1);
-            } else {
-                showCount.put(placement_id, 1);
-            }
-        }
-    }
-
-    public static void cleanShowCount(String placement_id) {
-        if (!TextUtils.isEmpty(placement_id)) {
-            showCount.remove(placement_id);
-        }
-    }
-
-    /**
-     * 删除缓存的临时html文件
-     */
-    public static void clearCacheFiles() {
-        try {
-            FileUtil.deleteDirectory(SigmobFileUtil.getSigHtmlDir(SigmobFileUtil.SigHtmlResourceDir).getAbsolutePath());
-            clearMraid2Zip();
-        } catch (Throwable e) {
-            SigmobLog.e(e.getMessage());
         }
     }
 
@@ -732,24 +661,6 @@ public class AdStackManager {
         }
     }
 
-    private void cacheAdHanlder(BaseAdUnit adUnit, String error, AdStackStatusListener adStackStatusListener) {
-
-        if (error == null) {
-            if (!adUnit.isVideoExist() || !adUnit.isEndCardIndexExist()) {
-                return;
-            }
-
-            if (adStackStatusListener != null) {
-                adStackStatusListener.loadEnd(adUnit, null);
-            }
-
-        } else {
-            if (adStackStatusListener != null) {
-                adStackStatusListener.loadEnd(adUnit, error);
-            }
-        }
-        cacheRemove(adUnit);
-    }
 
     public void cacheRemove(BaseAdUnit adUnit) {
         waitReadyAdList.remove(adUnit);
@@ -776,45 +687,11 @@ public class AdStackManager {
     }
 
 
-    private void splashCache(final BaseAdUnit adUnit, final AdStackStatusListener adStackStatusListener) {
+    private void AdCache(final BaseAdUnit adUnit, final AdStackStatusListener adStackStatusListener) {
         if (adUnit != null) {
-            File file = adUnit.getAdPrivacyTemplateFile();
-            if (file != null) {
-                if (!file.exists()) {
-                    DownloadItem downloadItem = new DownloadItem();
-                    downloadItem.url = adUnit.getadPrivacy().privacy_template_url;
-                    downloadItem.filePath = file.getAbsolutePath();
-                    downloadItem.type = DownloadItem.FileType.OTHER;
-                    FileDownloader downloader = DownloaderFactory.getDownloader();
-                    if (downloader != null) {
-                        downloader.add(downloadItem, new FileDownloadRequest.FileDownloadListener() {
-                            @Override
-                            public void onSuccess(DownloadItem item) {
-
-                            }
-
-                            @Override
-                            public void onCancel(DownloadItem item) {
-
-                            }
-
-                            @Override
-                            public void onErrorResponse(DownloadItem item) {
-
-                            }
-
-                            @Override
-                            public void downloadProgress(DownloadItem item, long totalSize, long readSize) {
-
-                            }
-                        });
-                    }
-                }
-            }
 
             File splashAdFile = new File(adUnit.getSplashFilePath());
             if (splashAdFile.exists()) {
-
                 splashAdFile.setLastModified(System.currentTimeMillis());
                 if (adStackStatusListener != null) {
                     adStackStatusListener.loadEnd(adUnit, null);
@@ -866,7 +743,6 @@ public class AdStackManager {
     }
 
     public void cache(final BaseAdUnit adUnit, AdStackStatusListener adStackStatusListener) {
-
         if (adStackStatusListener != null) {
             adStackStatusListener.loadStart(adUnit);
         }
@@ -879,22 +755,7 @@ public class AdStackManager {
             return;
         }
 
-        if (adUnit.getAd_type() == AdFormat.SPLASH) {
-            splashCache(adUnit, adStackStatusListener);
-        } else {
-            if (adStackStatusListener != null) {
-                adStackStatusListenerList.put(adUnit.getUuid(), adStackStatusListener);
-            }
-
-            try {
-                new AdUnitCheckCacheTask(adUnit).executeOnExecutor(getInstance().getExecutorService());
-
-            } catch (Throwable throwable) {
-                SigmobLog.e("AdUnitCheckCacheTask execute error", throwable);
-            }
-        }
-
-
+        AdCache(adUnit, adStackStatusListener);
     }
 
     public interface AdCacheVideoListener {
@@ -924,346 +785,6 @@ public class AdStackManager {
         void loadStart(BaseAdUnit adUnit);
 
         void loadEnd(BaseAdUnit adUnit, String message);
-    }
-
-    class AdUnitCacheFileTask extends AsyncTask<Object, Void, String> {
-
-
-        private DownloadItem mDownloadItem = null;
-
-        AdUnitCacheFileTask(DownloadItem downloadItem) {
-            mDownloadItem = downloadItem;
-        }
-
-        @Override
-        protected String doInBackground(Object... objects) {
-
-            if (mDownloadItem == null) {
-                SigmobLog.e("Download Item is null");
-                return WindAdError.ERROR_SIGMOB_FILE_DOWNLOAD.toString();
-
-            }
-            if (mDownloadItem.error != null) {
-                return mDownloadItem.error.toString();
-            }
-
-            String downloadPath = mDownloadItem.filePath;
-
-            String extensionName = FileUtil.getExtensionName(downloadPath);
-            String md5 = Md5Util.fileMd5(downloadPath);
-            if (!TextUtils.isEmpty(mDownloadItem.md5) && !mDownloadItem.md5.equalsIgnoreCase(md5)) {
-
-                mDownloadItem.status = 0;
-                return WindAdError.ERROR_SIGMOB_FILE_MD5.toString();
-            }
-            if (mDownloadItem.type == DownloadItem.FileType.VIDEO) {
-                videoFileMD5Map.put(downloadPath, md5);
-                mDownloadItem.status = 1;
-            } else if (!TextUtils.isEmpty(extensionName) && extensionName.equalsIgnoreCase("tgz")) {
-                try {
-
-                    GZipUtil.uncompressTarGzipSync(new File(downloadPath), new File(downloadPath.replace(".tgz", "/")));
-                    mDownloadItem.status = 1;
-
-                } catch (Throwable e) {
-                    mDownloadItem.status = 0;
-
-                    SigmobLog.e(e.getMessage());
-                    return WindAdError.ERROR_SIGMOB_FILE_DOWNLOAD.toString();
-                }
-
-            } else if (mDownloadItem.type == DownloadItem.FileType.MRAID_VIDEO) {
-                return null;
-            } else {
-                mDownloadItem.status = 0;
-                return WindAdError.ERROR_SIGMOB_INFORMATION_LOSE.toString();
-
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(final String error) {
-
-            super.onPostExecute(error);
-
-
-            if (!TextUtils.isEmpty(error)) {
-                FileUtil.deleteFile(mDownloadItem.filePath);
-            }
-
-            for (BaseAdUnit adUnit : new CopyOnWriteArrayList<>(waitReadyAdList)) {
-                AdStackStatusListener adStackStatusListener = adStackStatusListenerList.get(adUnit.getUuid());
-                if (mDownloadItem.type == DownloadItem.FileType.VIDEO && adUnit.getVideoPath().equals(mDownloadItem.filePath)) {
-                    PointEntitySigmobUtils.eventDownloadTracking(mDownloadItem, adUnit, error, false);
-                    cacheAdHanlder(adUnit, error, adStackStatusListener);
-                } else if (mDownloadItem.type == DownloadItem.FileType.FILE && adUnit.getEndCardZipPath().equals(mDownloadItem.filePath)) {
-                    cacheAdHanlder(adUnit, error, adStackStatusListener);
-                } else if (mDownloadItem.type == DownloadItem.FileType.ZIP_FILE) {
-                    cacheAdHanlder(adUnit, error, adStackStatusListener);
-                } else if (mDownloadItem.type == DownloadItem.FileType.MRAID_VIDEO) {
-                    PointEntitySigmobUtils.eventDownloadTracking(mDownloadItem, adUnit, error, false);
-                    cacheAdHanlder(adUnit, error, adStackStatusListener);
-                }
-            }
-
-        }
-    }
-
-    private class AdUnitCheckCacheTask extends AsyncTask<Object, Void, ArrayList<DownloadItem>> {
-
-        BaseAdUnit mAdUnit;
-
-        AdUnitCheckCacheTask(BaseAdUnit adUnit) {
-            mAdUnit = adUnit;
-        }
-
-        private DownloadItem getZipDownloadItem(Template template) {
-            DownloadItem sceneItem = null;
-            if (!TextUtils.isEmpty(template.context.utf8())) {
-                String fileName = Md5Util.md5(template.context.utf8());
-                File sigZipDir = SigmobFileUtil.getSigZipDir(SigmobFileUtil.SigZipResourceDir);
-                File destFile = new File(sigZipDir, fileName + ".tgz");
-
-                if (!destFile.exists()) {//不存在就要下载
-                    sceneItem = new DownloadItem();
-                    sceneItem.url = template.context.utf8();
-                    sceneItem.filePath = destFile.getAbsolutePath();
-                    sceneItem.type = DownloadItem.FileType.ZIP_FILE;
-                }
-            }
-
-            return sceneItem;
-        }
-
-        @Override
-        protected ArrayList<DownloadItem> doInBackground(Object... objects) {
-
-            try {
-                ArrayList<DownloadItem> downloadItems = new ArrayList<>();
-
-                if (mAdUnit == null || mAdUnit.getMaterial() == null) return null;
-                final MaterialMeta material = mAdUnit.getMaterial();
-                String md5 = null;
-                long videoFileSize = 0;
-                if (!TextUtils.isEmpty(mAdUnit.getVideo_url())) {
-
-                    if (mAdUnit.isVideoExist()) {
-                        md5 = Md5Util.fileMd5(mAdUnit.getVideoPath());
-                        if (!TextUtils.isEmpty(mAdUnit.getVideo_OriginMD5()) && !mAdUnit.getVideo_OriginMD5().equalsIgnoreCase(md5)) {
-                            FileUtil.deleteFile(mAdUnit.getVideoPath());
-                        } else {
-                            videoFileMD5Map.put(mAdUnit.getVideoPath(), md5);
-                            File file = new File(mAdUnit.getVideoPath());
-                            videoFileSize = file.length();
-                        }
-                    }
-
-                    boolean isVideoValid = mAdUnit.checkVideoValid();
-                    DownloadItem videoItem = new DownloadItem();
-
-                    if (isVideoValid && mAdUnit.isVideoExist()) {
-                        videoItem.url = mAdUnit.getVideo_url();
-                        videoItem.filePath = mAdUnit.getVideoPath();
-                        videoItem.type = DownloadItem.FileType.VIDEO;
-                        videoItem.md5 = md5;
-                        videoItem.size = videoFileSize;
-                        videoItem.status = 1;
-
-                        PointEntitySigmobUtils.eventDownloadTracking(videoItem, mAdUnit, null, true);
-
-                    } else if (mAdUnit.getPlayMode() != PLAY_MODE_STREAM) {
-
-                        videoItem.url = mAdUnit.getVideo_url();
-                        videoItem.filePath = mAdUnit.getVideoPath();
-                        videoItem.type = DownloadItem.FileType.VIDEO;
-                        videoItem.md5 = mAdUnit.getVideo_OriginMD5();
-                        preloadUrl(videoItem, mAdUnit);
-                        downloadItems.add(videoItem);
-                    }
-
-                }
-
-                if (material.creative_type == CreativeType.CreativeTypeVideo_Tar.getCreativeType()) {
-
-                    DownloadItem endcardItem = new DownloadItem();
-                    endcardItem.url = mAdUnit.getEndcard_url();
-                    endcardItem.filePath = mAdUnit.getEndCardZipPath();
-                    endcardItem.type = DownloadItem.FileType.FILE;
-                    endcardItem.md5 = mAdUnit.getEndCard_OriginMD5();
-                    downloadItems.add(endcardItem);
-                }
-
-                /**
-                 * 下载2.0——main模版
-                 */
-                if (mAdUnit.scene != null && mAdUnit.scene.type == 3) {
-                    DownloadItem zipDownloadItem = getZipDownloadItem(mAdUnit.scene);
-                    if (zipDownloadItem != null) {
-                        downloadItems.add(zipDownloadItem);
-                    }
-                }
-
-                if (material.main_template != null && material.main_template.type == 3) {
-                    DownloadItem zipDownloadItem = getZipDownloadItem(material.main_template);
-                    if (zipDownloadItem != null) {
-                        downloadItems.add(zipDownloadItem);
-                    }
-                }
-
-                if (material.sub_template != null && material.sub_template.type == 3) {
-                    DownloadItem zipDownloadItem = getZipDownloadItem(material.sub_template);
-                    if (zipDownloadItem != null) {
-                        downloadItems.add(zipDownloadItem);
-                    }
-                }
-
-                /**
-                 * 下载2.0video-只有video受予加载控制
-                 */
-                if (mAdUnit.isCatchVideo()) {
-                    if (material.asset != null && material.asset.size() > 0) {
-                        for (int i = 0; i < material.asset.size(); i++) {
-                            ResponseAsset responseAsset = material.asset.get(i);
-                            if (responseAsset != null && responseAsset.video != null && !TextUtils.isEmpty(responseAsset.video.url)) {
-
-                                File cacheFile = AdStackManager.getHttProxyCacheServer().getCacheFile(responseAsset.video.url);
-
-                                if (!cacheFile.exists()) {
-                                    DownloadItem videoItem = new DownloadItem();
-                                    videoItem.url = responseAsset.video.url;
-                                    videoItem.filePath = cacheFile.getAbsolutePath();
-                                    videoItem.type = DownloadItem.FileType.MRAID_VIDEO;
-                                    preloadUrl(videoItem, mAdUnit);
-                                    downloadItems.add(videoItem);
-                                }
-                            }
-                        }
-                    }
-                }
-                SigmobLog.d("cache() adUnit = [" + mAdUnit.getCrid() + "] videoUrl = [" + mAdUnit.getVideo_url() + "] endcardUrl = [" + mAdUnit.getEndcard_url() + "]");
-                return downloadItems;
-
-            } catch (Throwable t) {
-                SigmobLog.e("AdUnitCheckCacheTask error: " + t.getMessage());
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<DownloadItem> downloadItems) {
-            super.onPostExecute(downloadItems);
-
-            if (mAdUnit == null) return;
-
-            final MaterialMeta material = mAdUnit.getMaterial();
-
-
-            AdStackStatusListener adStackStatusListener = adStackStatusListenerList.get(mAdUnit.getUuid());
-
-            if (downloadItems == null) {
-                downloadItems = new ArrayList<>();
-            }
-            if (downloadItems.size() == 0) {
-                if (adStackStatusListener != null) {
-                    adStackStatusListener.loadEnd(mAdUnit, null);
-                }
-                cacheRemove(mAdUnit);
-            } else {
-
-                FileDownloader downloader = DownloaderFactory.getDownloader();
-
-
-                boolean isFind = false;
-
-                for (BaseAdUnit adUnit : waitReadyAdList) {
-
-                    if (adUnit.getUuid().equals(mAdUnit.getUuid())) {
-                        isFind = true;
-                        break;
-                    }
-                }
-
-                if (!isFind && adStackStatusListener != null) {
-                    waitReadyAdList.add(mAdUnit);
-                }
-                for (DownloadItem item : downloadItems) {
-                    String key = Md5Util.md5(item.url);
-                    SigmobLog.d("downloader add  item " + item.url);
-
-                    if (item.type != DownloadItem.FileType.VIDEO) {
-                        if (adDownloadStatus.get(key) == null || adDownloadStatus.get(key).equals(DOWNLOADSTATUS_END)) {
-                            adDownloadStatus.put(key, DOWNLOADSTATUS_START);
-                            downloader.add(item, listener);
-                        }
-                    }
-
-                }
-
-            }
-            if (material != null && material.ad_privacy != null) {
-                String privacy_template_url = material.ad_privacy.privacy_template_url;
-                if (!TextUtils.isEmpty(privacy_template_url)) {
-                    String fileName = Md5Util.md5(privacy_template_url);
-                    File sigHtmlDir = SigmobFileUtil.getSigHtmlDir(SigmobFileUtil.SigHtmlPrivacyDir);
-                    File destFile = new File(sigHtmlDir, fileName + ".html");
-                    if (!destFile.exists()) {//不存在就要下载
-                        try {
-                            //如果原来文件夹有文件就先删除以前的文件
-                            if ((sigHtmlDir.exists()) && sigHtmlDir.isDirectory()) {
-                                // 删除文件夹中的所有文件包括子目录
-                                File[] files = sigHtmlDir.listFiles();
-                                for (File file : files) {
-                                    // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
-                                    if (file.exists() && file.isFile()) {
-                                        if (file.delete()) {
-                                            SigmobLog.d("删除单个文件" + file.getAbsolutePath() + "成功！");
-                                        }
-                                    }
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        //然后再去下载新的文件
-                        DownloadItem downloadItem = new DownloadItem();
-                        downloadItem.url = privacy_template_url;
-                        downloadItem.filePath = destFile.getAbsolutePath();
-                        downloadItem.type = DownloadItem.FileType.OTHER;
-                        downloadItems.add(downloadItem);
-                        FileDownloader downloader = DownloaderFactory.getDownloader();
-                        downloader.add(downloadItem, new FileDownloadRequest.FileDownloadListener() {
-                            @Override
-                            public void onSuccess(DownloadItem item) {
-                                SigmobLog.i("onPostExecute onSuccess:" + item.url);
-                            }
-
-                            @Override
-                            public void onCancel(DownloadItem item) {
-                                SigmobLog.i("onPostExecute onCancel:" + item.url);
-                            }
-
-
-                            @Override
-                            public void onErrorResponse(DownloadItem item) {
-                                SigmobLog.i("onPostExecute onErrorResponse:" + item.url);
-                            }
-
-                            @Override
-                            public void downloadProgress(DownloadItem item, long totalSize, long readSize) {
-
-                            }
-                        });
-                    } else {
-                        SigmobLog.i("privacy_template_url:" + fileName + " is exists");
-                    }
-                }
-            }
-
-
-        }
     }
 
 }

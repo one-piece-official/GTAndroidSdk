@@ -23,8 +23,8 @@ import com.gt.sdk.base.models.SdkConfigResponse;
 import com.gt.sdk.base.models.SplashConfig;
 import com.gt.sdk.base.models.UrlConfig;
 import com.gt.sdk.base.network.GtConfigRequest;
-import com.gt.sdk.utils.FileUtil;
 import com.gt.sdk.utils.GtSharedPreUtil;
+import com.gt.sdk.utils.GtFileUtil;
 import com.gt.sdk.utils.WMLogUtil;
 
 import java.io.File;
@@ -37,7 +37,7 @@ import java.util.List;
 
 public class GtConfigManager {
     private static final String SDK_CONFIG_VER = "sdkConfigVer";
-    private static final String CONFIG_FILE_NAME = "/gt_config";
+    private static final String CONFIG_FILE_NAME = "/config";
     private static GtConfigManager gInstance;
     private static boolean mIsGDPRRegion = false;
     private final Handler mHandler;
@@ -170,7 +170,7 @@ public class GtConfigManager {
 
         ObjectInputStream objectInputStream = null;
 
-        File file = new File(FileUtil.getCachePath() + CONFIG_FILE_NAME);
+        File file = new File(GtFileUtil.getCachePath() + CONFIG_FILE_NAME);
 
         if (ver.equals(sdkConfigVer) && file.exists()) {
             try {
@@ -202,7 +202,7 @@ public class GtConfigManager {
 
             ObjectOutputStream out = null;
 
-            File file = new File(FileUtil.getCachePath() + CONFIG_FILE_NAME);
+            File file = new File(GtFileUtil.getCachePath() + CONFIG_FILE_NAME);
             if (file.exists()) {
                 file.delete();
             }

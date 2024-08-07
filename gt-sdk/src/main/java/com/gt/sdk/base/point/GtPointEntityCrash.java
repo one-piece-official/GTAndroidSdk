@@ -13,10 +13,11 @@ import java.util.List;
 
 public class GtPointEntityCrash extends PointEntityCrash {
 
-    public static GtPointEntityCrash WindCrash(String crash) {
+    public static GtPointEntityCrash AdCrash(String crash) {
         GtPointEntityCrash windCrash = new GtPointEntityCrash();
         windCrash.setAc_type(PointType.GT_CRASH);
         windCrash.setCategory(PointCategory.CRASH);
+        windCrash.setCrashTime(System.currentTimeMillis());
         windCrash.setCrashMessage(crash);
         return windCrash;
     }

@@ -29,8 +29,8 @@ import com.gt.sdk.base.point.PointCategory;
 import com.gt.sdk.base.point.GtPointEntityCrash;
 import com.gt.sdk.base.point.PointType;
 import com.gt.sdk.utils.DeviceContextManager;
-import com.gt.sdk.utils.FileUtil;
 import com.gt.sdk.utils.GtSharedPreUtil;
+import com.gt.sdk.utils.GtFileUtil;
 
 
 import java.lang.ref.WeakReference;
@@ -112,7 +112,7 @@ public class GtAdSdk {
                 DeviceContextManager.sharedInstance().init(null);
             }
 
-            FileUtil.initSDKCacheFolder(mContext, GtConstants.SDK_FOLDER);
+            GtFileUtil.initSDKCacheFolder(mContext, GtConstants.SDK_FOLDER);
 
             ClientMetadata.getInstance().initialize(mContext);
 
@@ -144,14 +144,6 @@ public class GtAdSdk {
         return sHasInit.get();
     }
 
-    /**
-     * 未处于GDPR区域
-     */
-    private void loadGDPRRegionStatus() {
-
-
-    }
-
     private void startServices() {
         //初始化埋点
         trackInitEvent();
@@ -167,8 +159,8 @@ public class GtAdSdk {
             CrashHandler.getInstance().add(new CrashHandler.CrashHandlerListener() {
                 @Override
                 public void reportCrash(String crash) {
-                    if (!TextUtils.isEmpty(crash) && crash.contains("com.gt.adsdk")) {
-                        GtPointEntityCrash entityCrash = GtPointEntityCrash.WindCrash(crash);
+                    if (!TextUtils.isEmpty(crash) && crash.contains("com.gt.sdk")) {
+                        GtPointEntityCrash entityCrash = GtPointEntityCrash.AdCrash(crash);
                         entityCrash.sendServe();
                     }
                 }

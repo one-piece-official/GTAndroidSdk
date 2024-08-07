@@ -12,6 +12,7 @@ import com.czhj.sdk.common.utils.Preconditions;
 import com.czhj.sdk.logger.SigmobLog;
 import com.czhj.volley.toolbox.StringUtil;
 import com.czhj.wire.Wire;
+import com.gt.sdk.base.common.AdStackManager;
 import com.gt.sdk.base.common.BaseAdConfig;
 import com.gt.sdk.base.common.SessionManager;
 import com.gt.sdk.base.common.SigAdTracker;

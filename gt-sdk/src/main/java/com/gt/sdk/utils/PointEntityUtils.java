@@ -89,7 +89,7 @@ public class PointEntityUtils {
 
     public static void GtError(String category, String sub_category, int error_code, String error_msg, LoadAdRequest loadAdRequest, BaseAdUnit adUnit, OnPointEntityExtraInfo onPointEntityExtraInfo) {
 
-        GtPointEntityAdError pointEntityError = GtPointEntityAdError.GTError(category, "", error_code, error_msg);
+        GtPointEntityAdError pointEntityError = GtPointEntityAdError.AdError(category, "", error_code, error_msg);
 
         pointEntityError.setSub_category(sub_category);
 

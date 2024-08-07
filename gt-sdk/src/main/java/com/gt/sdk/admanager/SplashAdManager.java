@@ -224,7 +224,7 @@ public class SplashAdManager implements RequestFactory.LoadAdRequestListener, Ad
 
         PointEntityUtils.GtTracking(PointCategory.RESPOND, GtConstants.FAIL, loadAdRequest);
 
-        PointEntityUtils.GtError(PointCategory.REQUEST, null, code, message, null, loadAdRequest, null, null);
+        PointEntityUtils.GtError(PointCategory.REQUEST, null, code, message, loadAdRequest, null, null);
 
         handleError(adError, true);
     }
