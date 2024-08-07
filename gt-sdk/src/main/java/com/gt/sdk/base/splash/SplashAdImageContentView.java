@@ -1,6 +1,5 @@
 package com.gt.sdk.base.splash;
 
-import static com.sigmob.sdk.base.models.IntentActions.ACTION_INTERSTITIAL_SHOW;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,18 +12,17 @@ import android.widget.ImageView;
 import com.czhj.sdk.common.utils.FileUtil;
 import com.czhj.sdk.common.utils.ImageTypeUtil;
 import com.czhj.sdk.logger.SigmobLog;
-import com.sigmob.sdk.base.common.BaseBroadcastReceiver;
-import com.sigmob.sdk.base.models.BaseAdUnit;
-import com.sigmob.sdk.base.views.gif.GifImageView2;
+import com.gt.sdk.base.common.BaseBroadcastReceiver;
+import com.gt.sdk.base.models.BaseAdUnit;
+import com.gt.sdk.base.models.IntentActions;
+import com.gt.sdk.base.view.gif.GifImageView2;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class SplashAdImageContentView extends SplashAdContentView {
 
-
-    private GifImageView2 imageView;
-
+    private final GifImageView2 imageView;
 
     @Override
     public void onPause() {
@@ -43,7 +41,6 @@ public class SplashAdImageContentView extends SplashAdContentView {
     }
 
     public SplashAdImageContentView(Context context) {
-
         super(context);
 
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -52,9 +49,7 @@ public class SplashAdImageContentView extends SplashAdContentView {
         setBackgroundColor(Color.WHITE);
 
         addView(imageView, layoutParams);
-
     }
-
 
     @Override
     public boolean loadResource(BaseAdUnit adUnit) {
@@ -67,27 +62,24 @@ public class SplashAdImageContentView extends SplashAdContentView {
 
         final String fileType = ImageTypeUtil.getFileType(filePath);
 
-        if (TextUtils.isEmpty(fileType))
-            return false;
+        if (TextUtils.isEmpty(fileType)) return false;
 
         if (fileType.equals("gif")) {
             imageView.setBytes(FileUtil.readBytes(filePath));
             imageView.startAnimation();
-            BaseBroadcastReceiver.broadcastAction(getContext(), adUnit.getUuid(), ACTION_INTERSTITIAL_SHOW);
+            BaseBroadcastReceiver.broadcastAction(getContext(), adUnit.getUuid(), IntentActions.ACTION_SPLASH_PLAY);
             return true;
         } else {
             if (supportImageType.contains(fileType)) {
                 Bitmap bitmap = BitmapFactory.decodeFile(filePath);
                 if (bitmap != null) {
-                    BaseBroadcastReceiver.broadcastAction(getContext(), adUnit.getUuid(), ACTION_INTERSTITIAL_SHOW);
+                    BaseBroadcastReceiver.broadcastAction(getContext(), adUnit.getUuid(), IntentActions.ACTION_SPLASH_PLAY);
                     imageView.setImageBitmap(bitmap);
                     return true;
                 }
             }
         }
-
         return false;
     }
-
 
 }

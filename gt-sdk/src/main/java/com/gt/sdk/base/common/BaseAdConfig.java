@@ -19,20 +19,8 @@ import com.czhj.sdk.logger.SigmobLog;
 import com.czhj.volley.RequestQueue;
 import com.czhj.volley.VolleyError;
 import com.czhj.wire.Wire;
-import com.gt.sdk.base.BaseAdUnit;
-import com.sigmob.sdk.SDKContext;
-import com.sigmob.sdk.base.ClickUIType;
-import com.sigmob.sdk.base.models.BaseAdUnit;
-import com.sigmob.sdk.base.models.SigMacroCommon;
-import com.sigmob.sdk.base.models.rtb.AndroidMarket;
-import com.sigmob.sdk.base.mta.PointCategory;
-import com.sigmob.sdk.base.mta.PointEntitySigmob;
-import com.sigmob.sdk.base.mta.PointEntitySigmobError;
-import com.sigmob.sdk.base.network.SigmobTrackingRequest;
-import com.sigmob.sdk.base.utils.SigmobFileUtil;
-import com.sigmob.sdk.base.views.DownloadDialog;
-import com.sigmob.sdk.videoAd.FractionalProgressAdTracker;
-import com.sigmob.sdk.videoAd.InterActionType;
+import com.gt.sdk.base.models.BaseAdUnit;
+import com.gt.sdk.base.view.DownloadDialog;
 
 import org.json.JSONObject;
 

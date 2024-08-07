@@ -1,9 +1,9 @@
 package com.gt.sdk.base.common;
 
 import com.czhj.sdk.logger.SigmobLog;
-import com.gt.sdk.base.BaseAdUnit;
+import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.network.SigmobTrackingRequest;
-import com.gt.sdk.base.point.PointCategory;
+import com.gt.sdk.base.models.point.PointCategory;
 import com.gt.sdk.utils.PointEntityUtils;
 
 import java.util.HashMap;

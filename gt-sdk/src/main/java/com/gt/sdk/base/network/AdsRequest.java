@@ -14,13 +14,13 @@ import com.czhj.volley.Response;
 import com.czhj.volley.VolleyError;
 import com.czhj.volley.toolbox.HttpHeaderParser;
 import com.gt.sdk.AdError;
-import com.gt.sdk.base.BaseAdUnit;
+import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.LoadAdRequest;
-import com.gt.sdk.base.models.BidRequest;
-import com.gt.sdk.base.models.BidResponse;
-import com.gt.sdk.base.models.Imp;
+import com.gt.sdk.base.models.rtb.BidRequest;
+import com.gt.sdk.base.models.rtb.BidResponse;
+import com.gt.sdk.base.models.rtb.Imp;
 import com.gt.sdk.base.models.ModelBuilderCreator;
-import com.gt.sdk.base.models.SeatBid;
+import com.gt.sdk.base.models.rtb.SeatBid;
 import com.gt.sdk.utils.DeviceContextManager;
 
 import java.util.ArrayList;

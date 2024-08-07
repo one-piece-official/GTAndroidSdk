@@ -1,6 +1,6 @@
 package com.gt.sdk.base.common;
 
-import com.gt.sdk.base.BaseAdUnit;
+import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.splash.SplashAdConfig;
 
 public class SplashAdInterstitial extends LoadAdsInterstitial {

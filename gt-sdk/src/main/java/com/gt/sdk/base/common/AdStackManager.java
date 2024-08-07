@@ -4,7 +4,6 @@ package com.gt.sdk.base.common;
 import static com.czhj.sdk.common.ThreadPool.ThreadPoolFactory.BackgroundThreadPool.getInstance;
 import static com.sigmob.sdk.base.WindConstants.PLAY_MODE_STREAM;
 
-import android.os.AsyncTask;
 import android.text.TextUtils;
 
 import com.czhj.sdk.common.models.AdCache;
@@ -17,7 +16,9 @@ import com.czhj.volley.VolleyError;
 import com.czhj.volley.toolbox.DownloadItem;
 import com.czhj.volley.toolbox.FileDownloadRequest;
 import com.czhj.volley.toolbox.FileDownloader;
-import com.gt.sdk.base.BaseAdUnit;
+import com.gt.sdk.GtAdSdk;
+import com.gt.sdk.base.models.BaseAdUnit;
+import com.gt.sdk.utils.GtFileUtil;
 import com.sigmob.sdk.SDKContext;
 import com.sigmob.sdk.base.WindSDKConfig;
 import com.sigmob.sdk.base.models.BaseAdUnit;
@@ -149,20 +150,16 @@ public class AdStackManager {
     }
 
     public static synchronized ImageManager getImageManger() {
-
         if (mImageManager == null) {
-            File file = new File(SigmobFileUtil.getNativeCachePath());
-
+            File file = new File(GtFileUtil.getNativeCachePath());
             synchronized (ImageManager.class) {
                 if (mImageManager == null) {
-                    mImageManager = new ImageManager(SDKContext.getApplicationContext()).customCachePath(file);
+                    mImageManager = new ImageManager(GtAdSdk.sharedAds().getContext()).customCachePath(file);
                 }
-
             }
         }
         return mImageManager;
     }
-
 
     public static void setPlayAdUnit(final BaseAdUnit adUnit) {
         addAdUnit(adUnit);

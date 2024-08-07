@@ -1,8 +1,6 @@
 package com.gt.sdk.base.common;
 
-import android.os.Bundle;
-
-import com.gt.sdk.base.BaseAdUnit;
+import com.gt.sdk.base.models.BaseAdUnit;
 
 
 public abstract class LoadAdsInterstitial extends CustomEventAd {

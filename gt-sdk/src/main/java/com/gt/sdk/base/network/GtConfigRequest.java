@@ -8,8 +8,8 @@ import com.czhj.volley.ParseError;
 import com.czhj.volley.Response;
 import com.czhj.volley.toolbox.HttpHeaderParser;
 import com.gt.sdk.base.models.ModelBuilderCreator;
-import com.gt.sdk.base.models.SdkConfigRequest;
-import com.gt.sdk.base.models.SdkConfigResponse;
+import com.gt.sdk.base.models.config.SdkConfigRequest;
+import com.gt.sdk.base.models.config.SdkConfigResponse;
 import com.gt.sdk.utils.DeviceContextManager;
 import com.gt.sdk.utils.WMLogUtil;
 

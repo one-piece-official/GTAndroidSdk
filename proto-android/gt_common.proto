@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package gt;
+option java_multiple_files = true;
+option java_package = "com.gt.sdk.base.models.rtb";
+option objc_class_prefix = "gt";
+option optimize_for = LITE_RUNTIME;
+
+message App {
+  string          id = 1;                      //应用标识
+  string          name = 2;                    //应⽤名称
+  string          ver = 3;                     //应⽤版本
+  string          bundle = 4;                  // 必填！应用包名。IOS设备为bundle id
+  repeated string cat = 5;                     //app 所属类别
+  repeated string pagecat = 6;                 //app当前页面的分类信息标签列表
+  repeated string keywords = 7;                //app 关键字标签列表
+  string          store_ver = 8;               // App的应用商店版本
+}
+
+message Device {
+  uint32   os = 1;                 // 操作系统类型. 1=IOS；2=Android
+  uint32   osv = 2;      // Android API level
+  string   did = 3;
+  string   didmd5 = 4;
+  string   didsha1 = 5;
+  string   oid = 6;
+  string   oidmd5 = 7;
+  string   dpid = 8;
+  string   dpidmd5 = 9;
+  string   dpidsha1 = 10;
+  string   ifa = 11;
+  string   ifamd5 = 12;
+  string   ip = 13;
+  string   ipv6 = 14;
+  string   ua = 15;
+  uint32   connectiontype = 16;
+  uint32   devicetype = 17;
+  string   make = 18;
+  string   model = 19;
+  string   hwv = 20;
+  uint32   carrier = 21;
+  string   macmd5 = 22;
+  string   macsha1 = 23;
+  string   mac = 24;
+  uint32   h = 25;
+  uint32   w = 26;
+  uint32   ppi = 27;
+  Geo      geo = 28;
+  string   ssid = 29;
+  string   wifi_mac = 30;
+  string   rom_version = 31;
+  repeated string installed_app = 32;
+  string   update_mark = 33;
+  string   update_time = 34;
+  string   boot_mark = 35;
+  string   boot_time = 36;
+  string   sys_compiling_time = 37;
+  string   birth_time = 38;
+  string   paid_1_4 = 39;
+  string   hms_ver = 40;
+  string   hwag_ver = 41;
+  string   caid = 42;
+  string   caid_md5 = 43;
+  string   caid_version = 44;
+  string   device_name_md5 = 45;
+  string   hardware_machine = 46;
+  string   physical_memory = 47;
+  string   hard_disk_size = 48;
+  string   country = 49;
+  string   language = 50;
+  string   time_zone = 51;
+  uint32   cpu_num = 52;
+}
+
+message Geo {
+  float  lat = 1;             // 纬度
+  float  lon = 2;             // 经度
+}
+
+message User {
+  string          id = 1;                     //用户ID
+  string          gender = 2;                 //用户性别，F 女性 M 男性
+  string          keywords = 3;               //用户关键字
+}
+
+
+
+
+
+
+

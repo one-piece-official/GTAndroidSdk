@@ -85,6 +85,23 @@ public final class GtFileUtil {
         return apkDownload;
     }
 
+    public static File getPrivacyHtmlDir() {
+        File dir = new File(cacheOutPath, "privacy");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return dir;
+    }
+
+    public static String getWebCachePath() {
+        String webCache = cachePath + File.separator + "webCache";
+        File file = new File(webCache);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return webCache;
+    }
+
     public static String getFileExtension(String fileName) {
         int lastIndexOfDot = fileName.lastIndexOf(".");
         return lastIndexOfDot != -1 ? fileName.substring(lastIndexOfDot) : "";

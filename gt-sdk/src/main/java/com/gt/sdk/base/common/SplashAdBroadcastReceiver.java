@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import com.czhj.sdk.common.utils.Preconditions;
-import com.gt.sdk.base.BaseAdUnit;
-import com.gt.sdk.base.obj.IntentActions;
+import com.gt.sdk.base.models.BaseAdUnit;
+import com.gt.sdk.base.models.IntentActions;
 
 public class SplashAdBroadcastReceiver extends BaseBroadcastReceiver {
 

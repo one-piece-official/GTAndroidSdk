@@ -33,7 +33,6 @@ public class SigMacroCommon extends BaseMacroCommon {
     public static final String _PRICE_ = "_PRICE_";
 
     public static final String __SLD__ = "__SLD__";
-
     public static final String __X_MAX_ACC__ = "__X_MAX_ACC__";
     public static final String __Y_MAX_ACC__ = "__Y_MAX_ACC__";
     public static final String __Z_MAX_ACC__ = "__Z_MAX_ACC__";
@@ -41,7 +40,6 @@ public class SigMacroCommon extends BaseMacroCommon {
     public static final String __TURN_X__ = "__TURN_X__";
     public static final String __TURN_Y__ = "__TURN_Y__";
     public static final String __TURN_Z__ = "__TURN_Z__";
-
     public static final String __TURN_TIME__ = "__TURN_TIME__";
 
     public static final String _DPNAME_ = "_DPNAME_";
@@ -63,6 +61,33 @@ public class SigMacroCommon extends BaseMacroCommon {
         } catch (Throwable e) {
             return "unFind";
         }
+    }
+
+    public void updateClickMarco(String dx, String dy, String dz) {
+        addMarcoKey(SigMacroCommon.__SLD__, "2");
+        addMarcoKey(SigMacroCommon.__X_MAX_ACC__, dx);
+        addMarcoKey(SigMacroCommon.__Y_MAX_ACC__, dy);
+        addMarcoKey(SigMacroCommon.__Z_MAX_ACC__, dz);
+    }
+
+    public void updateClickMarco(int dx, int dy, int dz, int time) {
+        addMarcoKey(SigMacroCommon.__TURN_X__, String.valueOf(dx));
+        addMarcoKey(SigMacroCommon.__TURN_Y__, String.valueOf(dy));
+        addMarcoKey(SigMacroCommon.__TURN_Z__, String.valueOf(dz));
+        addMarcoKey(SigMacroCommon.__TURN_TIME__, String.valueOf(time));
+    }
+
+    public void updateClickMarco(String dx, String dy, String ux, String uy) {
+
+        addMarcoKey(SigMacroCommon._SBZMX_, dx);
+        addMarcoKey(SigMacroCommon._SBZMY_, dy);
+        addMarcoKey(SigMacroCommon._SBZCX_, ux);
+        addMarcoKey(SigMacroCommon._SBZCY_, uy);
+
+        addMarcoKey(SigMacroCommon._AZMX_, dx);
+        addMarcoKey(SigMacroCommon._AZMY_, dy);
+        addMarcoKey(SigMacroCommon._AZCX_, ux);
+        addMarcoKey(SigMacroCommon._AZCY_, uy);
     }
 
 

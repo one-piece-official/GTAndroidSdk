@@ -14,14 +14,14 @@ import com.czhj.volley.VolleyError;
 import com.czhj.wire.Wire;
 import com.gt.sdk.GtAdSdk;
 import com.gt.sdk.GtConstants;
-import com.gt.sdk.base.models.Android;
-import com.gt.sdk.base.models.Common;
-import com.gt.sdk.base.models.NativeConfig;
-import com.gt.sdk.base.models.RvConfig;
-import com.gt.sdk.base.models.SdkConfig;
-import com.gt.sdk.base.models.SdkConfigResponse;
-import com.gt.sdk.base.models.SplashConfig;
-import com.gt.sdk.base.models.UrlConfig;
+import com.gt.sdk.base.models.config.Android;
+import com.gt.sdk.base.models.config.Common;
+import com.gt.sdk.base.models.config.NativeConfig;
+import com.gt.sdk.base.models.config.RvConfig;
+import com.gt.sdk.base.models.config.SdkConfig;
+import com.gt.sdk.base.models.config.SdkConfigResponse;
+import com.gt.sdk.base.models.config.SplashConfig;
+import com.gt.sdk.base.models.config.UrlConfig;
 import com.gt.sdk.base.network.GtConfigRequest;
 import com.gt.sdk.utils.GtSharedPreUtil;
 import com.gt.sdk.utils.GtFileUtil;
@@ -322,6 +322,10 @@ public class GtConfigManager {
         }
 
         return SDK_LOG_URL + "?" + getServerQueryString();
+    }
+
+    public String getPrivacyUrl() {
+        return "https://n.sigmob.cn/mraid/tobid6elements/index-v3.html";
     }
 
     public String getAdUrl() {

@@ -6,9 +6,9 @@ import android.text.TextUtils;
 
 import com.czhj.sdk.common.json.JSONSerializer;
 import com.gt.sdk.GtAdSdk;
-import com.gt.sdk.base.point.PointCategory;
-import com.gt.sdk.base.point.GtPointEntityActive;
-import com.gt.sdk.base.point.PointType;
+import com.gt.sdk.base.models.point.PointCategory;
+import com.gt.sdk.base.models.point.GtPointEntityActive;
+import com.gt.sdk.base.models.point.PointType;
 import com.gt.sdk.utils.AdLifecycleManager;
 import com.gt.sdk.utils.WMLogUtil;
 

@@ -13,7 +13,10 @@ import com.czhj.sdk.common.utils.DeviceUtils;
 import com.czhj.sdk.common.utils.RomUtils;
 import com.czhj.sdk.logger.SigmobLog;
 import com.gt.sdk.GtAdSdk;
-import com.sigmob.sdk.SDKContext;
+import com.gt.sdk.base.models.rtb.App;
+import com.gt.sdk.base.models.rtb.Device;
+import com.gt.sdk.base.models.rtb.Geo;
+import com.gt.sdk.base.models.rtb.User;
 
 import java.util.TimeZone;
 

@@ -1,5 +1,8 @@
 package com.gt.sdk.utils;
 
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
 import android.location.Location;
 import android.text.TextUtils;
 
@@ -7,9 +10,13 @@ import com.czhj.sdk.common.ClientMetadata;
 import com.czhj.sdk.common.mta.DeviceContext;
 import com.gt.sdk.api.GtCustomController;
 
+import java.lang.ref.WeakReference;
+
 public class DeviceContextManager {
 
     private static DeviceContextManager gInstance;
+
+    private static WeakReference<Activity> mActivityWeakReference;
 
     private DeviceContextManager() {
 
@@ -171,5 +178,20 @@ public class DeviceContextManager {
 
         return deviceContext;
     }
+
+
+    public static void setTopActivity(Activity activity) {
+        if (activity != null) {
+            mActivityWeakReference = new WeakReference<>(activity);
+        }
+    }
+
+    public static Activity getTopActivity() {
+        if (mActivityWeakReference != null) {
+            return mActivityWeakReference.get();
+        }
+        return null;
+    }
+
 
 }

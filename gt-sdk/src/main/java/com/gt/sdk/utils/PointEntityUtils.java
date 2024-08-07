@@ -9,11 +9,11 @@ import com.gt.sdk.AdError;
 import com.gt.sdk.GtAdSdk;
 import com.gt.sdk.GtSdkConfig;
 import com.gt.sdk.api.GtCustomController;
-import com.gt.sdk.base.BaseAdUnit;
+import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.LoadAdRequest;
-import com.gt.sdk.base.point.GtPointEntityAd;
-import com.gt.sdk.base.point.GtPointEntityAdError;
-import com.gt.sdk.base.point.PointType;
+import com.gt.sdk.base.models.point.GtPointEntityAd;
+import com.gt.sdk.base.models.point.GtPointEntityAdError;
+import com.gt.sdk.base.models.point.PointType;
 
 
 import org.json.JSONObject;

@@ -6,7 +6,7 @@ import com.czhj.sdk.common.track.AdTracker;
 import com.czhj.sdk.common.track.TrackManager;
 import com.czhj.volley.NetworkResponse;
 import com.czhj.volley.VolleyError;
-import com.gt.sdk.base.BaseAdUnit;
+import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.common.SigAdTracker;
 import com.gt.sdk.utils.PointEntityUtils;
 

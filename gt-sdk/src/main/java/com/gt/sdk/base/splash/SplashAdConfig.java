@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.czhj.sdk.common.utils.Preconditions;
 import com.czhj.sdk.common.utils.TouchLocation;
-import com.gt.sdk.base.BaseAdUnit;
+import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.common.BaseAdConfig;
 
 public class SplashAdConfig extends BaseAdConfig {

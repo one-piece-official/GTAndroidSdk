@@ -10,10 +10,9 @@ public enum ImageType {
 
     private int mImageType;
 
-    ImageType(int type){
+    ImageType(int type) {
         mImageType = type;
     }
-
 
     public int getImageType() {
         return mImageType;

@@ -32,6 +32,9 @@ public class GtConstants {
     public static final String BID_FLOOR = "bidFloor";
     public static final String E_CPM = "eCpm";
 
+    public static final String ENABLEJS = "c2V0SmF2YVNjcmlwdEVuYWJsZWQ=";
+    public static final String ENABLEFILE = "c2V0QWxsb3dGaWxlQWNjZXNz";
+
     /**
      * bidding广告类型
      */

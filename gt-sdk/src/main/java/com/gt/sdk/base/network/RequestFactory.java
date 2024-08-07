@@ -7,7 +7,7 @@ import com.czhj.sdk.common.network.SigmobRequestUtil;
 import com.czhj.sdk.logger.SigmobLog;
 import com.gt.sdk.AdError;
 import com.gt.sdk.admanager.GtConfigManager;
-import com.gt.sdk.base.BaseAdUnit;
+import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.LoadAdRequest;
 
 import java.net.URL;
