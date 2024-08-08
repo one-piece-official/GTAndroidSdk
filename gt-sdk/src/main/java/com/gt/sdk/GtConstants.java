@@ -35,6 +35,9 @@ public class GtConstants {
     public static final String ENABLEJS = "c2V0SmF2YVNjcmlwdEVuYWJsZWQ=";
     public static final String ENABLEFILE = "c2V0QWxsb3dGaWxlQWNjZXNz";
 
+    public static final String IS_HALF_INTERSTITIAL = "isHalfInterstitial";
+
+
     /**
      * bidding广告类型
      */

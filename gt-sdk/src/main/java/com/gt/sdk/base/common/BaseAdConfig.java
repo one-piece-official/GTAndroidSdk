@@ -14,6 +14,7 @@ import com.czhj.sdk.logger.SigmobLog;
 import com.czhj.volley.RequestQueue;
 import com.czhj.volley.VolleyError;
 import com.gt.sdk.GtAdSdk;
+import com.gt.sdk.base.activity.AdActivity;
 import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.models.point.GtPointEntityAd;
 import com.gt.sdk.base.models.point.PointCategory;

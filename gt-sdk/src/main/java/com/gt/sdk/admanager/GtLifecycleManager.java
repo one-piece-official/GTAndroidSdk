@@ -6,12 +6,14 @@ import android.text.TextUtils;
 
 import com.czhj.sdk.common.json.JSONSerializer;
 import com.gt.sdk.GtAdSdk;
+import com.gt.sdk.base.activity.AdActivity;
 import com.gt.sdk.base.models.point.PointCategory;
 import com.gt.sdk.base.models.point.GtPointEntityActive;
 import com.gt.sdk.base.models.point.PointType;
 import com.gt.sdk.utils.AdLifecycleManager;
 import com.gt.sdk.utils.WMLogUtil;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -31,6 +33,16 @@ public class GtLifecycleManager implements AdLifecycleManager.LifecycleListener 
     private Map<String, String> map = new HashMap<>();
     private long session_start = 0;
     private String active_id;
+    private boolean isAdShow;
+
+    private static WeakReference<Activity> lastActivity;
+
+    public static Activity getLastActivity() {
+        if (lastActivity != null) {
+            return lastActivity.get();
+        }
+        return null;
+    }
 
     private GtLifecycleManager(Application application) {
         try {
@@ -77,6 +89,14 @@ public class GtLifecycleManager implements AdLifecycleManager.LifecycleListener 
 
     @Override
     public void onResume(Activity activity) {
+        if (activity instanceof AdActivity) {
+            isAdShow = true;
+        } else {
+            if (!isAdShow) {
+                lastActivity = new WeakReference<>(activity);
+            }
+        }
+
         isSwitchActivity = !activity.getClass().getSimpleName().equals(topActivity);
         topActivity = activity.getClass().getSimpleName();
         if (!isAppAlive || isAppExit) {
@@ -108,8 +128,11 @@ public class GtLifecycleManager implements AdLifecycleManager.LifecycleListener 
 
     @Override
     public void onDestroy(Activity activity) {
+        if (activity instanceof AdActivity) {
+            isAdShow = false;
+        }
         map.remove(activity.getClass().getSimpleName());
-        if (map.size() == 0 && isAppAlive) {
+        if (map.isEmpty() && isAppAlive) {
             long session_end = System.currentTimeMillis();
             long duration = (session_end - session_start) / 1000;
             //用户切换到后台
@@ -118,7 +141,7 @@ public class GtLifecycleManager implements AdLifecycleManager.LifecycleListener 
             session_start = System.currentTimeMillis();
             isAppAlive = false;
         }
-        if (map.size() == 0) {
+        if (map.isEmpty()) {
             isAppExit = true;
         }
     }

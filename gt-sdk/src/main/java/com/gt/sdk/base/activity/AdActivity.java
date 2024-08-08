@@ -1,6 +1,5 @@
-package com.gt.sdk.base.common;
+package com.gt.sdk.base.activity;
 
-import static com.sigmob.sdk.base.common.BaseBroadcastReceiver.broadcastAction;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,22 +14,20 @@ import android.view.inputmethod.InputMethodManager;
 import com.czhj.sdk.common.ClientMetadata;
 import com.czhj.sdk.common.Constants;
 import com.czhj.sdk.logger.SigmobLog;
-import com.sigmob.sdk.base.models.BaseAdUnit;
-import com.sigmob.sdk.base.models.IntentActions;
-import com.sigmob.sdk.mraid.MraidViewController;
-import com.sigmob.sdk.mraid2.MraidView2Controller;
-import com.sigmob.sdk.nativead.SigmobDisLikeViewController;
-import com.sigmob.sdk.nativead.SigmobNativeAdLandViewController;
-import com.sigmob.sdk.newInterstitial.NewInterstitialViewController;
-import com.sigmob.sdk.videoAd.BaseAdActivity;
-import com.sigmob.sdk.videoAd.VideoViewController;
-import com.sigmob.sdk.videoplayer.SigUtils;
+import com.gt.sdk.base.common.AdStackManager;
+import com.gt.sdk.base.common.BaseAdViewController;
+import com.gt.sdk.base.common.BaseAdViewControllerListener;
+import com.gt.sdk.base.common.BaseBroadcastReceiver;
+import com.gt.sdk.base.common.IntentUtil;
+import com.gt.sdk.base.common.LandPageViewController;
+import com.gt.sdk.base.common.SigUtils;
+import com.gt.sdk.base.models.BaseAdUnit;
+import com.gt.sdk.base.models.IntentActions;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
 public class AdActivity extends BaseAdActivity implements BaseAdViewControllerListener {
-
 
     private BaseAdViewController mBaseAdViewController;
     private String mBroadcastIdentifier;
@@ -76,10 +73,9 @@ public class AdActivity extends BaseAdActivity implements BaseAdViewControllerLi
             if (mBaseAdViewController != null) {
                 mBaseAdViewController.onStart();
             }
-        }catch (Throwable th){
+        } catch (Throwable ignored) {
 
         }
-
     }
 
     @Override
@@ -98,7 +94,7 @@ public class AdActivity extends BaseAdActivity implements BaseAdViewControllerLi
                 SigmobLog.e("uuid is empty");
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("error", "uuid is empty");
-                broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAYFAIL);
+                BaseBroadcastReceiver.broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAYFAIL);
                 finish();
                 return;
             }
@@ -106,11 +102,10 @@ public class AdActivity extends BaseAdActivity implements BaseAdViewControllerLi
             BaseAdUnit playAdUnit = AdStackManager.getPlayAdUnit(uuid);
 
             if (!mBroadcastIdentifier.equals("dislike_broadcastIdentifier")) {
-
                 if (playAdUnit == null) {
                     HashMap<String, Object> map = new HashMap<>();
                     map.put("error", "playAdUnit is null");
-                    broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAYFAIL);
+                    BaseBroadcastReceiver.broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAYFAIL);
                     finish();
                     return;
                 }
@@ -127,7 +122,7 @@ public class AdActivity extends BaseAdActivity implements BaseAdViewControllerLi
             // mBaseAdViewController set to null, and finish the activity immediately.
             HashMap<String, Object> map = new HashMap<>();
             map.put("error", e.getMessage());
-            broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAYFAIL);
+            BaseBroadcastReceiver.broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAYFAIL);
             finish();
         }
     }
@@ -139,15 +134,13 @@ public class AdActivity extends BaseAdActivity implements BaseAdViewControllerLi
             if (mBaseAdViewController != null) {
                 mBaseAdViewController.onPause();
             }
-
         } catch (Throwable e) {
             SigmobLog.e(e.getMessage());
             HashMap<String, Object> map = new HashMap<>();
             map.put("error", e.getMessage());
-            broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAYFAIL);
+            BaseBroadcastReceiver.broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAYFAIL);
             finish();
         }
-
     }
 
     @Override
@@ -160,17 +153,14 @@ public class AdActivity extends BaseAdActivity implements BaseAdViewControllerLi
         } catch (Throwable e) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("error", e.getMessage());
-            broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAYFAIL);
+            BaseBroadcastReceiver.broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAYFAIL);
             finish();
         }
-
     }
 
     @Override
     protected void onDestroy() {
-
         SigmobLog.d("RewardVideoAdPlayerActivity onDestroy() called");
-
 //        fixInputMethod(this);
 
         if (mBaseAdViewController != null) {
@@ -178,8 +168,6 @@ public class AdActivity extends BaseAdActivity implements BaseAdViewControllerLi
         }
         mBaseAdViewController = null;
         super.onDestroy();
-
-
     }
 
     @Override
@@ -218,28 +206,21 @@ public class AdActivity extends BaseAdActivity implements BaseAdViewControllerLi
         String clazz = getIntent().getStringExtra(AD_CLASS_EXTRAS_KEY);
 
         switch (clazz) {
-
-            case REWARD: {
-                return new VideoViewController(this, baseAdUnit, getIntent().getExtras(), savedInstanceState, mBroadcastIdentifier, this);
-            }
+//            case REWARD: {
+//                return new VideoViewController(this, baseAdUnit, getIntent().getExtras(), savedInstanceState, mBroadcastIdentifier, this);
+//            }
             case LANDPAGE: {
                 return new LandPageViewController(this, baseAdUnit, getIntent().getExtras(), savedInstanceState, mBroadcastIdentifier, this);
             }
-            case MRAID: {
-                return new MraidViewController(this, baseAdUnit, getIntent().getExtras(), savedInstanceState, mBroadcastIdentifier, this);
-            }
-            case MRAID_TWO: {
-                return new MraidView2Controller(this, baseAdUnit, getIntent().getExtras(), savedInstanceState, mBroadcastIdentifier, this);
-            }
-            case LANDNATIVE: {
-                return new SigmobNativeAdLandViewController(this, baseAdUnit, getIntent().getExtras(), savedInstanceState, mBroadcastIdentifier, this);
-            }
-            case DISLIKE: {
-                return new SigmobDisLikeViewController(this, baseAdUnit, getIntent().getExtras(), savedInstanceState, mBroadcastIdentifier, this);
-            }
-            case NEW_INTERSTITIAL: {
-                return new NewInterstitialViewController(this, baseAdUnit, getIntent().getExtras(), savedInstanceState, mBroadcastIdentifier, this);
-            }
+//            case LANDNATIVE: {
+//                return new SigmobNativeAdLandViewController(this, baseAdUnit, getIntent().getExtras(), savedInstanceState, mBroadcastIdentifier, this);
+//            }
+//            case DISLIKE: {
+//                return new SigmobDisLikeViewController(this, baseAdUnit, getIntent().getExtras(), savedInstanceState, mBroadcastIdentifier, this);
+//            }
+//            case NEW_INTERSTITIAL: {
+//                return new NewInterstitialViewController(this, baseAdUnit, getIntent().getExtras(), savedInstanceState, mBroadcastIdentifier, this);
+//            }
         }
 
         return null;
@@ -284,9 +265,7 @@ public class AdActivity extends BaseAdActivity implements BaseAdViewControllerLi
     }
 
     @Override
-    public void onStartActivityForResult(final Class<? extends Activity> clazz,
-                                         final int requestCode,
-                                         final Bundle extras) {
+    public void onStartActivityForResult(final Class<? extends Activity> clazz, final int requestCode, final Bundle extras) {
         if (clazz == null) {
             return;
         }
