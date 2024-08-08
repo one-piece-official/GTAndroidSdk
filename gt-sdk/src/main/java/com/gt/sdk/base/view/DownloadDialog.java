@@ -9,8 +9,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -67,9 +65,7 @@ public class DownloadDialog extends Dialog implements DialogInterface.OnShowList
     private ImageView closeView;
     private String htmlUrl = GtConfigManager.sharedInstance().getAdUrl();
     private File htmlFile;
-    private boolean useCustomClose;
     private RelativeLayout mLayout;
-    private Handler mhandler;
 
 //    @Override
 //    protected void onStart() {
@@ -155,15 +151,7 @@ public class DownloadDialog extends Dialog implements DialogInterface.OnShowList
             mLayout.addView(mWebView, params);
         }
 
-        mhandler = new Handler(Looper.getMainLooper());
-        mhandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!useCustomClose) {
-                    addCloseButton();
-                }
-            }
-        }, 5 * 1000);
+        addCloseButton();
         //点击dialog以外的空白处是否隐藏
         setCanceledOnTouchOutside(true);
         //点击返回键取消
@@ -256,10 +244,7 @@ public class DownloadDialog extends Dialog implements DialogInterface.OnShowList
                     if (StringUtil.scheme().equalsIgnoreCase(uri.getScheme())) {
                         String host = uri.getHost();
                         if (!TextUtils.isEmpty(host)) {
-                            if (("useCustomClose".equals(host))) {
-                                useCustomClose = true;
-                                mhandler.removeCallbacksAndMessages(null);
-                            } else if (("closeFourElements".equals(host))) {
+                            if (("closeFourElements".equals(host))) {
                                 //关闭四要素
                                 if (privacyClickListener != null) {
                                     privacyClickListener.onCloseClick();
@@ -267,7 +252,6 @@ public class DownloadDialog extends Dialog implements DialogInterface.OnShowList
                             } else if (("buttonClick".equals(host))) {
 
                                 Map<String, String> paramMap = ClientMetadata.getQueryParamMap(uri);
-                                String click = paramMap.get("url");
                                 String x = paramMap.get("x");
                                 if (TextUtils.isEmpty(x)) {
                                     x = "0";
@@ -284,7 +268,7 @@ public class DownloadDialog extends Dialog implements DialogInterface.OnShowList
                                 baseMacroCommon.updateClickMarco(x, y, x, y);
 
                                 if (privacyClickListener != null) {
-                                    privacyClickListener.onButtonClick(click, clickCoordinate);
+                                    privacyClickListener.onButtonClick(clickCoordinate);
                                 }
                             }
                             return true;//啥也不干
@@ -407,10 +391,6 @@ public class DownloadDialog extends Dialog implements DialogInterface.OnShowList
             mWebView.destroy();
             mWebView = null;
         }
-        if (mhandler != null) {
-            mhandler.removeCallbacksAndMessages(null);
-            mhandler = null;
-        }
 
         if (closeView != null) {
             ViewUtil.removeFromParent(closeView);
@@ -427,7 +407,7 @@ public class DownloadDialog extends Dialog implements DialogInterface.OnShowList
     public interface onPrivacyClickListener {
         void onCloseClick();
 
-        void onButtonClick(String url, String clickCoordinate);
+        void onButtonClick(String clickCoordinate);
 
         void onShowSuccess();
     }
@@ -456,24 +436,6 @@ public class DownloadDialog extends Dialog implements DialogInterface.OnShowList
             }
             return null;
         }
-
-//        @JavascriptInterface
-//        public void closeFourElements() {
-//            Log.d("WindSDK", "closeFourElements: ");
-//            //关闭四要素
-//            if (privacyClickListener != null) {
-//                privacyClickListener.onCloseClick();
-//            }
-//        }
-//
-//        @JavascriptInterface
-//        public void buttonClick() {
-//            Log.d("WindSDK", "buttonClick: ");
-//            //下载
-//            if (privacyClickListener != null) {
-//                privacyClickListener.onButtonClick();
-//            }
-//        }
 
     }
 }

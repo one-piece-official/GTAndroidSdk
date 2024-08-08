@@ -27,6 +27,8 @@ public class GtPointEntityAd extends PointEntityBase {
     private String admId;//序号
     private String price;
 
+    private String final_url;
+
     public String getCustom_info() {
         return custom_info;
     }
@@ -163,6 +165,14 @@ public class GtPointEntityAd extends PointEntityBase {
     @Override
     public DeviceContext getDeviceContext() {
         return DeviceContextManager.sharedInstance().getDeviceContext();
+    }
+
+    public void setFinal_url(String downloadUrl) {
+        this.final_url=downloadUrl;
+    }
+
+    public String getFinal_url() {
+        return final_url;
     }
 
 }

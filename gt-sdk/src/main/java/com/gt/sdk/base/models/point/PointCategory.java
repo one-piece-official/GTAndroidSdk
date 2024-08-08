@@ -40,5 +40,12 @@ public final class PointCategory {
 
     public static final String DESTROY = "destroy";
 
+    public static final String DOWNLOAD_START = "download_start";
+    public static final String DOWNLOAD_FAILED = "download_failed";
+    public static final String DOWNLOAD_END = "download_end";
+    public static final String APP_INSTALL_START = "app_install_start";
+    public static final String APP_INSTALL_END = "app_install_end";
+    public static final String APP_INSTALL_MONITOR = "app_install_Monitor";
+
 
 }

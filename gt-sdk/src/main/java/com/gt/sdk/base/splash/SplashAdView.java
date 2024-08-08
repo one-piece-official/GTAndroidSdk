@@ -153,7 +153,7 @@ public final class SplashAdView extends RelativeLayout {
             }
 
             @Override
-            public void onButtonClick(String url, String clickCoordinate) {
+            public void onButtonClick(String clickCoordinate) {
                 if (mAdUnit != null) {
                     SessionManager sessionManager = mAdUnit.getSessionManager();
                     if (sessionManager != null) {
