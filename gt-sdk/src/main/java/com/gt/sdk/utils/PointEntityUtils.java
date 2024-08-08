@@ -136,16 +136,6 @@ public class PointEntityUtils {
         }
     }
 
-    public static void updatePointEntity(GtPointEntityAd pointEntity) {
-        GtSdkConfig sdkConfig = GtAdSdk.sharedAds().getSdkConfig();
-        if (sdkConfig != null && sdkConfig.getGtCustomController() != null) {
-            GtCustomController controller = sdkConfig.getGtCustomController();
-            pointEntity.setIs_custom_imei(controller.canUsePhoneState() ? "0" : "1");
-            pointEntity.setIs_custom_android_id(controller.canUseAndroidId() ? "0" : "1");
-            pointEntity.setIs_custom_oaid(TextUtils.isEmpty(controller.getOaid()) ? "0" : "1");
-        }
-    }
-
     public static void eventTracking(final AdTracker tracker, final String url, BaseAdUnit adUnit, final NetworkResponse response, final OnPointEntityExtraInfo onPointEntityExtraInfo) {
 
     }

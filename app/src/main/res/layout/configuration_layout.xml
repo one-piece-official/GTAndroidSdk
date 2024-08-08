@@ -168,37 +168,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="开屏配置:"
-                android:textSize="16sp" />
-
-            <CheckBox
-                android:id="@+id/halfSplash"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="5dp"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:singleLine="true"
-                android:text="全屏" />
-
-            <CheckBox
-                android:id="@+id/appHide"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="5dp"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:singleLine="true"
-                android:text="自定义Logo" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:text="广告加载配置:"
                 android:textSize="16sp" />
 

@@ -13,7 +13,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
 import com.czhj.sdk.common.utils.Dips;
-import com.sigmob.sdk.R;
+import com.czhj.sdk.common.utils.ResourceUtil;
 
 public class ShakeNewView extends MotionView {
 
@@ -62,7 +62,7 @@ public class ShakeNewView extends MotionView {
 
         int size = Dips.dipsToIntPixels(45, getContext());
         mImageView = new ImageView(getContext());
-        Drawable drawable = getResources().getDrawable(R.drawable.sig_image_shake_new);
+        Drawable drawable = getResources().getDrawable(ResourceUtil.getDrawableId(getContext(), "sig_image_shake_new"));
         mImageView.setImageDrawable(drawable);
         mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
         LayoutParams layoutParams = new LayoutParams(size, size);

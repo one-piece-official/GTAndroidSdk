@@ -54,9 +54,6 @@ public class ConfigurationFragment extends Fragment {
 
     private CheckBox sdkRelease;
 
-    private CheckBox halfSplash;
-    private CheckBox selfLogo;
-
     private CheckBox playingLoad;
     private CheckBox newInstance;
 
@@ -113,9 +110,6 @@ public class ConfigurationFragment extends Fragment {
         bannerLayout = view.findViewById(R.id.banner_id_layout);
 
         sdkRelease = view.findViewById(R.id.sdk_is_release);
-
-        halfSplash = view.findViewById(R.id.halfSplash);
-        selfLogo = view.findViewById(R.id.appHide);
 
         playingLoad = view.findViewById(R.id.playing_load);
         newInstance = view.findViewById(R.id.new_instance);
@@ -417,9 +411,6 @@ public class ConfigurationFragment extends Fragment {
 
         sdkRelease.setChecked(sharedPreferences.getBoolean(Constants.CONF_SDK_RELEASE, false));
 
-        selfLogo.setChecked(sharedPreferences.getBoolean(Constants.CONF_SELF_LOGO, false));
-        halfSplash.setChecked(sharedPreferences.getBoolean(Constants.CONF_HALF_SPLASH, false));
-
         playingLoad.setChecked(sharedPreferences.getBoolean(Constants.CONF_PLAYING_LOAD, false));
         newInstance.setChecked(sharedPreferences.getBoolean(Constants.CONF_NEW_INSTANCE, false));
 
@@ -511,9 +502,6 @@ public class ConfigurationFragment extends Fragment {
         editor.putString(Constants.CONF_JSON, configJson.toString());
 
         editor.putBoolean(Constants.CONF_SDK_RELEASE, sdkRelease.isChecked());
-
-        editor.putBoolean(Constants.CONF_SELF_LOGO, selfLogo.isChecked());
-        editor.putBoolean(Constants.CONF_HALF_SPLASH, halfSplash.isChecked());
 
         editor.putBoolean(Constants.CONF_PLAYING_LOAD, playingLoad.isChecked());
         editor.putBoolean(Constants.CONF_NEW_INSTANCE, newInstance.isChecked());

@@ -176,7 +176,7 @@ public class AdsRequest extends SigmobRequest<BidResponse> {
                     mListener.onErrorResponse(AdError.ERROR_AD_INFORMATION_LOSE.getErrorCode(), "SeatBid is null", null, adRequest);
                 }
             } else {
-                mListener.onErrorResponse(bidResponse.code, AdError.ERROR_AD_NETWORK.getMessage(), bidResponse.request_id, adRequest);
+                mListener.onErrorResponse(bidResponse.code, AdError.ERROR_AD_NETWORK.getMessage(), bidResponse.id, adRequest);
             }
         } else {
             mListener.onErrorResponse(AdError.ERROR_AD_INFORMATION_LOSE.getErrorCode(), "bidResponse is null", null, adRequest);

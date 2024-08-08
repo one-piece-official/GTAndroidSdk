@@ -120,11 +120,9 @@ public class SigUtils {
 
     //如果是沉浸式的，全屏前就没有状态栏
     public static void hideStatusBar(Context context) {
-        if (VideoAdView.TOOL_BAR_EXIST) {
-            Window window = SigUtils.getWindow(context);
-            if (window != null) {
-                window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            }
+        Window window = SigUtils.getWindow(context);
+        if (window != null) {
+            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
     }
 
