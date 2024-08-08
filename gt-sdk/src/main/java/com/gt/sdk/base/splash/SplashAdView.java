@@ -909,6 +909,7 @@ public final class SplashAdView extends RelativeLayout {
             mAdConfig = (SplashAdConfig) adUnit.getAdConfig();
 
             initSplashAdComponent(mContext);
+
             addSkipView();
 
 //            int templateId = mAdUnit.getTemplateId();

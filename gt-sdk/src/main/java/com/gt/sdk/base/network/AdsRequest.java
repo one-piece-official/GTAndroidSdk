@@ -163,8 +163,7 @@ public class AdsRequest extends SigmobRequest<BidResponse> {
                         List<BaseAdUnit> adUnits = new ArrayList<>();
                         for (int i = 0; i < bids.size(); i++) {
                             Bid ad = bids.get(i);
-                            BaseAdUnit adUnit = BaseAdUnit.adUnit(ad, bidResponse.id, bidResponse.bidid, adRequest);
-
+                            BaseAdUnit adUnit = new BaseAdUnit(ad, bidResponse.id, bidResponse.bidid, adRequest);
                             adUnits.add(adUnit);
                         }
                         if (mListener != null) {

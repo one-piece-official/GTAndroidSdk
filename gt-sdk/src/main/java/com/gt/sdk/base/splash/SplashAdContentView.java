@@ -6,6 +6,7 @@ import android.widget.RelativeLayout;
 import com.gt.sdk.base.models.BaseAdUnit;
 
 class SplashAdContentView extends RelativeLayout {
+
     protected int mDuration;
 
     public SplashAdContentView(Context context) {
@@ -13,12 +14,12 @@ class SplashAdContentView extends RelativeLayout {
     }
 
     public static SplashAdContentView getSplashAdContentView(Context context, BaseAdUnit adUnit) {
-        if (adUnit.getMaterial().creative_type == null) return null;
-        if (adUnit.getMaterial().creative_type == CreativeType.CreativeTypeSplashVideo.getCreativeType()) {
+        if (adUnit.isVideoAd()) {
             return new SplashAdVideoContentView(context, adUnit);
-        } else {
+        } else if (adUnit.isImageAd()) {
             return new SplashAdImageContentView(context);
         }
+        return null;
     }
 
     public boolean loadResource(BaseAdUnit adUnit) {

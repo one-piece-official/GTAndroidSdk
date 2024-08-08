@@ -396,11 +396,11 @@ public class BaseAdUnit implements Serializable {
         return "";
     }
 
-    private boolean isVideoAd() {
+    public boolean isVideoAd() {
         return video != null && !TextUtils.isEmpty(video.url);
     }
 
-    private boolean isImageAd() {
+    public boolean isImageAd() {
         return image != null && !TextUtils.isEmpty(image.url);
     }
 
