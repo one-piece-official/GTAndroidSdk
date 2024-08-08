@@ -485,7 +485,7 @@ public class GtConfigManager {
 
     public int getRvCacheTop() {
         if (getRvConfig() != null) {
-            return Wire.get(getRvConfig().cacheTop, 5);
+            return Wire.get(getRvConfig().cacheTop, 10);
         }
         return 5;
     }
@@ -509,8 +509,8 @@ public class GtConfigManager {
     }
 
     public int getSplashCacheTop() {
-        if (getSplashConfig() == null) return 50;
-        return Wire.get(getSplashConfig().cacheTop, 50);
+        if (getSplashConfig() == null) return 20;
+        return Wire.get(getSplashConfig().cacheTop, 20);
     }
 
     public long loadSplashAdTimeout() {
@@ -533,9 +533,9 @@ public class GtConfigManager {
 
     public int getNativeAdCacheTop() {
         if (getNativeConfig() != null) {
-            return Wire.get(getNativeConfig().cacheTop, 50);
+            return Wire.get(getNativeConfig().cacheTop, 30);
         }
-        return 50;
+        return 30;
     }
 
     public long loadNativeAdTimeout() {
@@ -559,6 +559,11 @@ public class GtConfigManager {
 
     public int getAdTrackerMaxRetryNum() {
         return 20;
+    }
+
+    public long getAdExpiredTime() {//统一2天
+        int material_expired_time = 2;
+        return (long) material_expired_time * 24 * 60 * 60 * 1000;
     }
 
 }

@@ -501,15 +501,11 @@ public class BaseAdUnit implements Serializable {
     }
 
     public boolean checkVideoValid() {
-
         if (TextUtils.isEmpty(getVideo_url()) || TextUtils.isEmpty(video_md5)) return true;
-
         return checkFileMD5(getVideoPath(), getVideo_OriginMD5());
-
     }
 
     public boolean isVideoExist() {
-
         if (TextUtils.isEmpty(getVideo_url())) return true;
         String path = getVideoPath();
 
@@ -587,7 +583,6 @@ public class BaseAdUnit implements Serializable {
     }
 
     public String getProxyVideoUrl() {
-
         String url = getVideo_url();
         if (!TextUtils.isEmpty(url)) {
             return AdStackManager.getHttProxyCacheServer().getProxyUrl(url);
@@ -596,7 +591,6 @@ public class BaseAdUnit implements Serializable {
     }
 
     public File getVideoProxyFile() {
-
         String url = getVideo_url();
         if (!TextUtils.isEmpty(url)) {
             return AdStackManager.getHttProxyCacheServer().getCacheFile(url);

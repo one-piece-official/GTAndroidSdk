@@ -15,6 +15,7 @@ import android.text.TextUtils;
 
 import com.czhj.sdk.common.ClientMetadata;
 import com.czhj.sdk.common.Constants;
+import com.czhj.sdk.common.ThreadPool.ThreadPoolFactory;
 import com.czhj.sdk.common.exceptions.CrashHandler;
 import com.czhj.sdk.common.json.JSONSerializer;
 import com.czhj.sdk.common.network.Networking;
@@ -24,6 +25,7 @@ import com.gt.sdk.admanager.GtConfigManager;
 import com.gt.sdk.admanager.GtLifecycleManager;
 import com.gt.sdk.admanager.PrivacyDataManager;
 import com.gt.sdk.api.GtCustomController;
+import com.gt.sdk.base.common.AdStackManager;
 import com.gt.sdk.base.models.point.GtPointEntityAd;
 import com.gt.sdk.base.models.point.PointCategory;
 import com.gt.sdk.base.models.point.GtPointEntityCrash;
@@ -167,7 +169,19 @@ public class GtAdSdk {
             });
         }
 
-        clearImageCache();
+        ThreadPoolFactory.BackgroundThreadPool.getInstance().submit(new Runnable() {
+            @Override
+            public void run() {
+                clearAdCache();
+            }
+        });
+    }
+
+    private void clearAdCache() {
+        AdStackManager.clearNativeAdCache();
+        AdStackManager.clearVideoAdCache();
+        AdStackManager.clearSplashAd();
+        AdStackManager.clearDownloadAPK();
     }
 
     private void trackInitEvent() {

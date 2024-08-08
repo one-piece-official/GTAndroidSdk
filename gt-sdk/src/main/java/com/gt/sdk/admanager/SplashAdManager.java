@@ -273,7 +273,7 @@ public class SplashAdManager implements RequestFactory.LoadAdRequestListener, Ad
     public void onAdShow(BaseAdUnit adUnit) {
         adStatus = AdStatus.AdStatusPlaying;
         initSessionManager();
-        AdStackManager.addAdUnit(adUnit);
+        AdStackManager.setPlayAdUnit(adUnit);
         if (mSplashAdView.getDuration() > 0 && mSplashAdView.getDuration() < mDuration) {
             mDuration = mSplashAdView.getDuration();
         }
