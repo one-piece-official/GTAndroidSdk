@@ -21,7 +21,7 @@ import com.czhj.sdk.logger.SigmobLog;
 import com.gt.sdk.AdError;
 import com.gt.sdk.AdRequest;
 import com.gt.sdk.GtAdSdk;
-import com.gt.sdk.GtConstants;
+import com.gt.sdk.WindConstants;
 import com.gt.sdk.api.SplashAdListener;
 import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.LoadAdRequest;
@@ -221,7 +221,7 @@ public class SplashAdManager implements RequestFactory.LoadAdRequestListener, Ad
             adError.setErrorMessage(code, message);
         }
 
-        PointEntityUtils.GtTracking(PointCategory.RESPOND, GtConstants.FAIL, loadAdRequest);
+        PointEntityUtils.GtTracking(PointCategory.RESPOND, WindConstants.FAIL, loadAdRequest);
 
         PointEntityUtils.GtError(PointCategory.REQUEST, null, code, message, loadAdRequest, null, null);
 

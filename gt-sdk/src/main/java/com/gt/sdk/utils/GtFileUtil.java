@@ -85,6 +85,15 @@ public final class GtFileUtil {
         return apkDownload;
     }
 
+    public static String getDownloadAPKLogPath() {
+        String downloadAPKLogPath = cachePath + File.separator + "downloadLog";
+        File file = new File(downloadAPKLogPath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return downloadAPKLogPath;
+    }
+
     public static File getPrivacyHtmlDir() {
         File dir = new File(cacheOutPath, "privacy");
         if (!dir.exists()) {

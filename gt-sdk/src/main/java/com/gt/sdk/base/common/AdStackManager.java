@@ -53,6 +53,10 @@ public class AdStackManager {
     }
 
     public static void setPlayAdUnit(final BaseAdUnit adUnit) {
+        addAdUnit(adUnit);
+    }
+
+    public static void addAdUnit(final BaseAdUnit adUnit) {
         if (adUnit != null && !TextUtils.isEmpty(adUnit.getUuid())) {
             AdUnitMap.put(adUnit.getUuid(), adUnit);
         }
@@ -67,6 +71,7 @@ public class AdStackManager {
     public static BaseAdUnit getPlayAdUnit(String uuid) {
         return AdUnitMap.get(uuid);
     }
+
 
     public static BaseAdUnit getClickAdUnit() {
         return clickAdUnit;

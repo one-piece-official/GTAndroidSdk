@@ -5,13 +5,12 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.czhj.sdk.common.Constants;
 import com.czhj.sdk.common.utils.Preconditions;
-import com.gt.sdk.GtConstants;
+import com.gt.sdk.WindConstants;
 
 public final class GtSharedPreUtil {
 
-    private final static String DEFAULT_PREFERENCE_NAME = "com." + GtConstants.SDK_FOLDER + ".sdk";
+    private final static String DEFAULT_PREFERENCE_NAME = "com." + WindConstants.SDK_FOLDER + ".sdk";
 
     private GtSharedPreUtil() {
 

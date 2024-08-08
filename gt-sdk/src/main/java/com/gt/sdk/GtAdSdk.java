@@ -23,7 +23,7 @@ import com.czhj.sdk.common.utils.ImageManager;
 import com.czhj.sdk.logger.SigmobLog;
 import com.gt.sdk.admanager.WindSDKConfig;
 import com.gt.sdk.admanager.GtLifecycleManager;
-import com.gt.sdk.admanager.PrivacyDataManager;
+import com.gt.sdk.admanager.PrivacyManager;
 import com.gt.sdk.api.GtCustomController;
 import com.gt.sdk.base.common.AdStackManager;
 import com.gt.sdk.base.models.point.GtPointEntityAd;
@@ -31,6 +31,7 @@ import com.gt.sdk.base.models.point.PointCategory;
 import com.gt.sdk.base.models.point.GtPointEntityCrash;
 import com.gt.sdk.base.models.point.PointType;
 import com.gt.sdk.admanager.DeviceContextManager;
+import com.gt.sdk.base.services.ServiceFactory;
 import com.gt.sdk.utils.GtSharedPreUtil;
 import com.gt.sdk.utils.GtFileUtil;
 
@@ -114,20 +115,20 @@ public class GtAdSdk {
                 DeviceContextManager.sharedInstance().init(null);
             }
 
-            GtFileUtil.initSDKCacheFolder(mContext, GtConstants.SDK_FOLDER);
+            GtFileUtil.initSDKCacheFolder(mContext, WindConstants.SDK_FOLDER);
 
             ClientMetadata.getInstance().initialize(mContext);
 
             initNetworking(mContext);
 
-            PrivacyDataManager.getInstance().initialize(mContext);
+            PrivacyManager.getInstance().initialize(mContext);
 
-            PrivacyDataManager.getInstance().setAdult(mIsAdult, false);
-            PrivacyDataManager.getInstance().setPersonalizedAdvertisingOn(mIsPersonalizedAdvertisingOn, false);
-            PrivacyDataManager.getInstance().setUserAge(getUserAge(), false);
-            PrivacyDataManager.getInstance().setAge_restricted(getAgeRestrictedStatus().getValue(), false);
-            PrivacyDataManager.getInstance().setGDPRConsentStatus(getUserGDPRConsentStatus().getValue(), false);
-            PrivacyDataManager.getInstance().setExtGDPRRegion(false);
+            PrivacyManager.getInstance().setAdult(mIsAdult, false);
+            PrivacyManager.getInstance().setPersonalizedAdvertisingOn(mIsPersonalizedAdvertisingOn, false);
+            PrivacyManager.getInstance().setUserAge(getUserAge(), false);
+            PrivacyManager.getInstance().setAge_restricted(getAgeRestrictedStatus().getValue(), false);
+            PrivacyManager.getInstance().setGDPRConsentStatus(getUserGDPRConsentStatus().getValue(), false);
+            PrivacyManager.getInstance().setExtGDPRRegion(false);
 
             GtLifecycleManager.initialize((Application) context.getApplicationContext());
 
@@ -150,12 +151,15 @@ public class GtAdSdk {
         //初始化埋点
         trackInitEvent();
 
-        PrivacyDataManager.getInstance().setAdult(mIsAdult, true);
-        PrivacyDataManager.getInstance().setPersonalizedAdvertisingOn(mIsPersonalizedAdvertisingOn, true);
-        PrivacyDataManager.getInstance().setUserAge(getUserAge(), true);
-        PrivacyDataManager.getInstance().setAge_restricted(getAgeRestrictedStatus().getValue(), true);
+        PrivacyManager.getInstance().setAdult(mIsAdult, true);
+        PrivacyManager.getInstance().setPersonalizedAdvertisingOn(mIsPersonalizedAdvertisingOn, true);
+        PrivacyManager.getInstance().setUserAge(getUserAge(), true);
+        PrivacyManager.getInstance().setAge_restricted(getAgeRestrictedStatus().getValue(), true);
 
         WindSDKConfig.getInstance().startUpdate();
+
+        initDownloadService();
+        initAppInstallService();
 
         if (WindSDKConfig.getInstance().isEnable_report_crash()) {
             CrashHandler.getInstance().add(new CrashHandler.CrashHandlerListener() {
@@ -200,8 +204,8 @@ public class GtAdSdk {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        options.put("is_minor", mIsAdult ? GtConstants.FAIL : GtConstants.SUCCESS);
-        options.put("is_unpersonalized", mIsPersonalizedAdvertisingOn ? GtConstants.FAIL : GtConstants.SUCCESS);
+        options.put("is_minor", mIsAdult ? WindConstants.FAIL : WindConstants.SUCCESS);
+        options.put("is_unpersonalized", mIsPersonalizedAdvertisingOn ? WindConstants.FAIL : WindConstants.SUCCESS);
 
         entityInit.setOptions(options);
         entityInit.commit();
@@ -255,7 +259,7 @@ public class GtAdSdk {
     public void setUserAge(int age) {
         mUserAge = age;
         if (sHasInit.get()) {
-            PrivacyDataManager.getInstance().setUserAge(age, true);
+            PrivacyManager.getInstance().setUserAge(age, true);
         }
     }
 
@@ -278,7 +282,7 @@ public class GtAdSdk {
     public void setIsAgeRestrictedUser(WindMillUserAgeStatus ageRestrictedUserStatus) {
         mAge_restricted = ageRestrictedUserStatus;
         if (sHasInit.get()) {
-            PrivacyDataManager.getInstance().setAge_restricted(mAge_restricted.getValue(), true);
+            PrivacyManager.getInstance().setAge_restricted(mAge_restricted.getValue(), true);
         }
     }
 
@@ -315,7 +319,7 @@ public class GtAdSdk {
     public void setAdult(boolean isAdult) {
         mIsAdult = isAdult;
         if (sHasInit.get()) {
-            PrivacyDataManager.getInstance().setAdult(mIsAdult, true);
+            PrivacyManager.getInstance().setAdult(mIsAdult, true);
         }
     }
 
@@ -331,7 +335,7 @@ public class GtAdSdk {
     public void setPersonalizedAdvertisingOn(boolean isPersonalizedAdvertisingOn) {
         mIsPersonalizedAdvertisingOn = isPersonalizedAdvertisingOn;
         if (sHasInit.get()) {
-            PrivacyDataManager.getInstance().setPersonalizedAdvertisingOn(mIsPersonalizedAdvertisingOn, true);
+            PrivacyManager.getInstance().setPersonalizedAdvertisingOn(mIsPersonalizedAdvertisingOn, true);
         }
     }
 
@@ -359,7 +363,7 @@ public class GtAdSdk {
      * @return
      */
     public static String getVersion() {
-        return GtConstants.SDK_VERSION;
+        return WindConstants.SDK_VERSION;
     }
 
     private void clearImageCache() {
@@ -374,7 +378,7 @@ public class GtAdSdk {
     public void setUserGDPRConsentStatus(WindMillConsentStatus status) {
         mConsentStatus = status;
         if (sHasInit.get()) {
-            PrivacyDataManager.getInstance().setGDPRConsentStatus(status.getValue(), true);
+            PrivacyManager.getInstance().setGDPRConsentStatus(status.getValue(), true);
         }
     }
 
@@ -406,4 +410,29 @@ public class GtAdSdk {
         }
         return null;
     }
+
+    /**
+     * 初始化定位监听
+     */
+    private static void initAppInstallService() {
+        //TODO:初始化定位监听
+        try {
+            ServiceFactory.updateService(ServiceFactory.AppInstallServiceName, true);
+        } catch (Throwable throwable) {
+            SigmobLog.e("initAppInstallService fail", throwable);
+        }
+    }
+
+    /**
+     * 初始化定位监听
+     */
+    private static void initDownloadService() {
+        //TODO:初始化定位监听
+        try {
+            ServiceFactory.updateService(ServiceFactory.DownloadServiceName, true);
+        } catch (Throwable throwable) {
+            SigmobLog.e("initDownloadService fail", throwable);
+        }
+    }
+
 }

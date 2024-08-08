@@ -13,7 +13,7 @@ import com.czhj.sdk.common.track.TrackManager;
 import com.czhj.volley.VolleyError;
 import com.czhj.wire.Wire;
 import com.gt.sdk.GtAdSdk;
-import com.gt.sdk.GtConstants;
+import com.gt.sdk.WindConstants;
 import com.gt.sdk.base.models.config.Android;
 import com.gt.sdk.base.models.config.Common;
 import com.gt.sdk.base.models.config.NativeConfig;
@@ -42,7 +42,7 @@ public class WindSDKConfig {
     private static boolean mIsGDPRRegion = false;
     private final Handler mHandler;
     private final Runnable mRefreshRunnable;
-    private final String ver = "gt-" + GtConstants.SDK_VERSION;
+    private final String ver = "gt-" + WindConstants.SDK_VERSION;
     private boolean mCurrentAutoRefreshStatus;
     private long mRefreshTimeMillis = 0;
     private SdkConfig mSdkConfig = null;
@@ -89,7 +89,7 @@ public class WindSDKConfig {
     }
 
     public static String getServerQueryString() {
-        String sdkVersion = "sdkVersion=" + GtConstants.SDK_VERSION;
+        String sdkVersion = "sdkVersion=" + WindConstants.SDK_VERSION;
         return "appId=" + GtAdSdk.sharedAds().getAppId() + "&" + sdkVersion;
     }
 
@@ -233,7 +233,7 @@ public class WindSDKConfig {
 
         if (ClientMetadata.getInstance() == null) return;
 
-        if (!ClientMetadata.getInstance().isNetworkConnected(getConfigUrl()) || !PrivacyDataManager.canCollectPersonalInformation()) {
+        if (!ClientMetadata.getInstance().isNetworkConnected(getConfigUrl()) || !PrivacyManager.canCollectPersonalInformation()) {
             WMLogUtil.e("Can't load an ad because  is no network or can not CollectPersonalInformation");
             scheduleRefreshTimerIfEnabled();
             return;

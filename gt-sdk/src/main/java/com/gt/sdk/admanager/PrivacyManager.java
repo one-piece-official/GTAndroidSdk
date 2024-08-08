@@ -7,16 +7,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.czhj.sdk.common.Constants;
-import com.gt.sdk.GtConstants;
+import com.gt.sdk.WindConstants;
 import com.gt.sdk.base.models.point.PointCategory;
 import com.gt.sdk.base.models.point.GtPointEntityPrivacy;
 import com.gt.sdk.base.models.point.PointType;
 import com.gt.sdk.utils.GtSharedPreUtil;
 
 
-public class PrivacyDataManager {
+public class PrivacyManager {
 
-    private static volatile PrivacyDataManager sInstance;
+    private static volatile PrivacyManager sInstance;
 
     private Context mContext;
 
@@ -29,11 +29,11 @@ public class PrivacyDataManager {
 
     private Boolean init_personalized_state;
 
-    public static PrivacyDataManager getInstance() {
+    public static PrivacyManager getInstance() {
         if (sInstance == null) {
-            synchronized (PrivacyDataManager.class) {
+            synchronized (PrivacyManager.class) {
                 if (sInstance == null) {
-                    sInstance = new PrivacyDataManager();
+                    sInstance = new PrivacyManager();
                 }
             }
         }
@@ -42,7 +42,7 @@ public class PrivacyDataManager {
 
     public static boolean canCollectPersonalInformation() {
         boolean isAccept = (getGDPRConsentStatus() == 1);
-        if (isAccept || !PrivacyDataManager.getIsGDPRRegion()) {
+        if (isAccept || !PrivacyManager.getIsGDPRRegion()) {
             return true;
         }
         return false;
@@ -99,7 +99,7 @@ public class PrivacyDataManager {
         mIsAdult = isAdult;
         if (isPoint) {
             GtPointEntityPrivacy pointEntityPrivacy = new GtPointEntityPrivacy();
-            pointEntityPrivacy.setIs_minor(mIsAdult ? GtConstants.FAIL : GtConstants.SUCCESS);
+            pointEntityPrivacy.setIs_minor(mIsAdult ? WindConstants.FAIL : WindConstants.SUCCESS);
             pointEntityPrivacy.setAc_type(PointType.GT_ACTIVE);
             pointEntityPrivacy.setSub_category(PointCategory.ADULT);
             pointEntityPrivacy.setCategory(PointCategory.PRIVACY);
@@ -128,7 +128,7 @@ public class PrivacyDataManager {
 
         if (isPoint) {
             GtPointEntityPrivacy pointEntityPrivacy = new GtPointEntityPrivacy();
-            pointEntityPrivacy.setIs_unpersonalized(mIsPersonalizedAdvertisingOn ? GtConstants.FAIL : GtConstants.SUCCESS);
+            pointEntityPrivacy.setIs_unpersonalized(mIsPersonalizedAdvertisingOn ? WindConstants.FAIL : WindConstants.SUCCESS);
             pointEntityPrivacy.setAc_type(PointType.GT_ACTIVE);
             pointEntityPrivacy.setSub_category(PointCategory.PERSONALIZED);
             pointEntityPrivacy.setCategory(PointCategory.PRIVACY);
@@ -175,7 +175,7 @@ public class PrivacyDataManager {
         editor.putBoolean(Constants.EXT_GDPR_REGION, extGDPRRegion);
         editor.apply();
 
-        PrivacyDataManager.extGDPRRegion = extGDPRRegion;
+        PrivacyManager.extGDPRRegion = extGDPRRegion;
         reportGDPRInfoTrack();
     }
 

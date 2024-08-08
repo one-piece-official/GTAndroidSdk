@@ -1,6 +1,6 @@
 package com.gt.sdk;
 
-public class GtConstants {
+public class WindConstants {
 
     public static final String SDK_VERSION = "1.0.0";
     public static final String SDK_FOLDER = "gts";
@@ -34,6 +34,11 @@ public class GtConstants {
 
     public static final String ENABLEJS = "c2V0SmF2YVNjcmlwdEVuYWJsZWQ=";
     public static final String ENABLEFILE = "c2V0QWxsb3dGaWxlQWNjZXNz";
+    public static final String APP_REMOVE = "YW5kcm9pZC5pbnRlbnQuYWN0aW9uLlBBQ0tBR0VfUkVNT1ZFRA==";
+    public static final String APP_ADD = "YW5kcm9pZC5pbnRlbnQuYWN0aW9uLlBBQ0tBR0VfQURERUQ=";
+    public static final String APP_REPLACE = "YW5kcm9pZC5pbnRlbnQuYWN0aW9uLlBBQ0tBR0VfUkVQTEFDRUQ=";
+    public static final String INSTALL_APP = "YW5kcm9pZC5pbnRlbnQuYWN0aW9uLklOU1RBTExfUEFDS0FHRQ==";
+    public static final String APP_INSTALL_FAIL = "YW5kcm9pZC5pbnRlbnQuYWN0aW9uLklOU1RBTExfRkFJTFVSRQ==";
 
     public static final String IS_HALF_INTERSTITIAL = "isHalfInterstitial";
 

@@ -27,8 +27,8 @@ import com.czhj.sdk.common.utils.RomUtils;
 import com.czhj.sdk.common.utils.ViewUtil;
 import com.czhj.sdk.logger.SigmobLog;
 import com.czhj.volley.toolbox.StringUtil;
-import com.gt.sdk.GtConstants;
-import com.gt.sdk.admanager.PrivacyDataManager;
+import com.gt.sdk.WindConstants;
+import com.gt.sdk.admanager.PrivacyManager;
 import com.gt.sdk.base.common.APKStatusBroadcastReceiver;
 import com.gt.sdk.base.common.CustomEventAd;
 import com.gt.sdk.base.models.BaseAdUnit;
@@ -236,14 +236,14 @@ public class BaseWebView extends WebView {
 
     private void webSetting(WebSettings webSettings) {
         try {
-            ReflectionUtil.MethodBuilder methodBuilder = new ReflectionUtil.MethodBuilder(webSettings, new String(Base64.decode(GtConstants.ENABLEJS, Base64.NO_WRAP)));
+            ReflectionUtil.MethodBuilder methodBuilder = new ReflectionUtil.MethodBuilder(webSettings, new String(Base64.decode(WindConstants.ENABLEJS, Base64.NO_WRAP)));
             methodBuilder.addParam(boolean.class, true);
             methodBuilder.execute();
         } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            ReflectionUtil.MethodBuilder methodBuilder = new ReflectionUtil.MethodBuilder(webSettings, new String(Base64.decode(GtConstants.ENABLEFILE, Base64.NO_WRAP)));
+            ReflectionUtil.MethodBuilder methodBuilder = new ReflectionUtil.MethodBuilder(webSettings, new String(Base64.decode(WindConstants.ENABLEFILE, Base64.NO_WRAP)));
             methodBuilder.addParam(boolean.class, true);
             methodBuilder.execute();
         } catch (Exception e) {
@@ -427,7 +427,7 @@ public class BaseWebView extends WebView {
 
     public static void manageWebCookies() {
         CookieManager cookieManager = CookieManager.getInstance();
-        if (PrivacyDataManager.getInstance().canCollectPersonalInformation()) {
+        if (PrivacyManager.getInstance().canCollectPersonalInformation()) {
             cookieManager.setAcceptCookie(true);
             CookieManager.setAcceptFileSchemeCookies(true);
             return;
@@ -450,7 +450,7 @@ public class BaseWebView extends WebView {
 
         CookieManager cookieManager = CookieManager.getInstance();
         if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-            cookieManager.setAcceptThirdPartyCookies(webView, PrivacyDataManager.getInstance().canCollectPersonalInformation());
+            cookieManager.setAcceptThirdPartyCookies(webView, PrivacyManager.getInstance().canCollectPersonalInformation());
         }
     }
 

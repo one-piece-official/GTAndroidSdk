@@ -1,6 +1,7 @@
 package com.gt.sdk.base.common;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
+import static com.sigmob.sdk.base.common.CustomDownloadAPK.useCustomDownloadManager;
 
 import android.app.DownloadManager;
 import android.content.Context;
@@ -29,6 +30,18 @@ import com.gt.sdk.base.models.point.PointCategory;
 import com.gt.sdk.base.network.SigmobTrackingRequest;
 import com.gt.sdk.utils.GtFileUtil;
 import com.gt.sdk.utils.PointEntityUtils;
+import com.sigmob.sdk.SDKContext;
+import com.sigmob.sdk.SigmobFileProvider;
+import com.sigmob.sdk.base.WindSDKConfig;
+import com.sigmob.sdk.base.models.BaseAdUnit;
+import com.sigmob.sdk.base.models.IntentActions;
+import com.sigmob.sdk.base.mta.PointCategory;
+import com.sigmob.sdk.base.mta.PointEntitySigmob;
+import com.sigmob.sdk.base.mta.PointEntitySigmobError;
+import com.sigmob.sdk.base.network.SigmobTrackingRequest;
+import com.sigmob.sdk.base.utils.SigmobFileUtil;
+import com.sigmob.sdk.downloader.StatusUtil;
+import com.sigmob.windad.WindAds;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,7 +53,6 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public class DownloadAPK {
-
     /**
      * 下载Apk, 并设置Apk地址,
      * 默认位置: /storage/sdcard0/Download
@@ -112,6 +124,8 @@ public class DownloadAPK {
             SigmobLog.e(e.getMessage());
         }
         return -1;
+
+
     }
 
     public static boolean getUnInstallApkInfo(Context context, String filePath) {
@@ -154,12 +168,18 @@ public class DownloadAPK {
              */
             final File file = new File(GtFileUtil.getDownloadAPKPathFile(), mApkName);
 
-            Long download_id = isDownloading(-1, file.getAbsolutePath());
-            if (download_id != null && download_id > 0) {
+            Long downloadid = isDownloading(-1, file.getAbsolutePath());
+            if (downloadid != null && downloadid > 0) {
                 try {
                     Toast.makeText(context, "正在下载", Toast.LENGTH_LONG).show();
                     if (adUnit.getDownloadId() == null) {
-                        adUnit.setDownloadId(download_id);
+                        adUnit.setDownloadId(downloadid);
+
+                        File downloadAPKLogFile = new File(GtFileUtil.getDownloadAPKLogPath(), downloadid + ".log");
+                        if (downloadAPKLogFile.exists()) {
+                            downloadAPKLogFile.delete();
+                        }
+                        FileUtil.writeToCache(adUnit, downloadAPKLogFile.getAbsolutePath());
                         OnDownloadStart(context, adUnit, url, file);
                     }
                 } catch (Throwable ignored) {
@@ -167,6 +187,7 @@ public class DownloadAPK {
                 }
                 return;
             }
+
 
             HashMap<String, Object> downloadedMap = getDownloadingTask();
 
@@ -182,6 +203,12 @@ public class DownloadAPK {
                             Object downloadId = downloadedMap.get(filePath);
                             if (downloadId instanceof Long) {
                                 adUnit.setDownloadId((Long) downloadId);
+
+                                File downloadAPKLogFile = new File(GtFileUtil.getDownloadAPKLogPath(), downloadid + ".log");
+                                if (downloadAPKLogFile.exists()) {
+                                    downloadAPKLogFile.delete();
+                                }
+                                FileUtil.writeToCache(adUnit, downloadAPKLogFile.getAbsolutePath());
                                 OnDownloadStart(context, adUnit, url, file);
                             }
                         } catch (Throwable ignored) {
@@ -191,7 +218,6 @@ public class DownloadAPK {
                     }
                 }
             }
-
             /**
              * 判断文件是否存在并且有效
              */
@@ -242,26 +268,25 @@ public class DownloadAPK {
                 } catch (Throwable throwable) {
                     SigmobLog.e(throwable.getMessage());
                 }
-
                 addDownloadItem(downloadId, file.getAbsolutePath());
 
+                File downloadAPKLogFile = new File(GtFileUtil.getDownloadAPKLogPath(), downloadId + ".log");
+
                 adUnit.setDownloadId(downloadId);
+                FileUtil.writeToCache(adUnit, downloadAPKLogFile.getAbsolutePath());
 
                 OnDownloadStart(context, adUnit, url, file);
+
             } else {
                 if (adUnit.isRecord()) {
                     PointEntityUtils.eventRecord(PointCategory.DOWNLOAD_START, Constants.FAIL, adUnit);
                 }
 
-                try {
-                    Toast.makeText(context, "下载失败,错误码 " + downloadId, Toast.LENGTH_SHORT).show();
-                } catch (Throwable ignored) {
-
-                }
-
+                Toast.makeText(context, "下载失败,错误码 " + downloadId, Toast.LENGTH_SHORT).show();
                 HashMap<String, Object> ext = new HashMap<>();
                 ext.put("result", Constants.FAIL);
                 ext.put("downloadId", -1);
+
                 BaseBroadcastReceiver.broadcastAction(context, adUnit.getUuid(), ext, IntentActions.ACTION_AD_DOWNLOAD_START);
             }
 
@@ -271,6 +296,7 @@ public class DownloadAPK {
 
         } catch (Throwable e) {
             SigmobLog.e(e.getMessage());
+
             HashMap<String, Object> ext = new HashMap<>();
             ext.put("result", Constants.FAIL);
             ext.put("downloadId", -1);
@@ -280,11 +306,9 @@ public class DownloadAPK {
             try {
                 Toast.makeText(context, "请先给予应用权限", Toast.LENGTH_LONG).show();
             } catch (Throwable ignored) {
-
             }
         }
     }
-
 
     public static void addDownloadItem(long downloadId, String filePath) {
         if (TextUtils.isEmpty(filePath)) {
@@ -295,6 +319,7 @@ public class DownloadAPK {
 
     public static void removeDownloadItem(long downloadId, String filePath) {
         for (DownloadAPKItem item : downloadAPKList) {
+
             if (item.downloadId == downloadId || item.filePath.equalsIgnoreCase(filePath)) {
                 downloadAPKList.remove(item);
                 return;
@@ -338,6 +363,7 @@ public class DownloadAPK {
 
 
     public static Long isDownloading(long downloadId, String filePath) {
+
         for (DownloadAPKItem item : downloadAPKList) {
             if (item.downloadId == downloadId || item.filePath.equalsIgnoreCase(filePath)) {
 
@@ -380,18 +406,23 @@ public class DownloadAPK {
         }
     }
 
+
     public static void downloadApk(final String url, final BaseAdUnit adUnit) {
         Context context = GtAdSdk.sharedAds().getContext();
         try {
             SigmobLog.i("download apk:" + url);
+
+            AdStackManager.addAdUnit(adUnit);
+
             String apkMd5 = adUnit.getApkMd5();
+
             String apkName;
+
             if (!TextUtils.isEmpty(apkMd5)) {
                 apkName = apkMd5 + ".apk";
             } else {
                 apkName = Md5Util.md5(url) + ".apk";
             }
-
             adUnit.setApkName(apkName);
             adUnit.setDownloadUrl(url);
 
@@ -410,6 +441,7 @@ public class DownloadAPK {
                 SigmobLog.e(throwable.getMessage());
             }
         }
+
     }
 
     /**
@@ -420,6 +452,7 @@ public class DownloadAPK {
         File file = new File(filePath);
 
         SigmobLog.i("installAPK:" + file.getAbsolutePath() + ":" + file.exists());
+
 
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK);
@@ -440,20 +473,27 @@ public class DownloadAPK {
         } else {
             Uri uriForFile = null;
             try {
-                uriForFile = SigmobFileProvider.getUriForFile(context, context.getPackageName() + ".sigprovider", file);
+
+                uriForFile = SigmobFileProvider.getUriForFile(context.getApplicationContext(), context.getApplicationContext().getPackageName() + ".sigprovider", file);
                 if (uriForFile != null) {
                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     intent.setDataAndType(uriForFile, "application/vnd.android.package-archive");
                 }
                 info = ClientMetadata.getPackageInfoWithUri(context, filePath);
+
             } catch (Exception e) {
                 SigmobLog.e(e.getMessage());
             }
         }
 
         if (info != null) {
+            File downloadAPKLogFile = new File(GtFileUtil.getDownloadAPKLogPath(), info.packageName + ".log");
+
             try {
+                FileUtil.writeToCache(adUnit, downloadAPKLogFile.getAbsolutePath());
+
                 context.startActivity(intent);
+
                 SigmobTrackingRequest.sendTracking(adUnit, ADEvent.AD_INSTALL_START);
                 HashMap<String, Object> ext = new HashMap<>();
                 ext.put("result", Constants.SUCCESS);
@@ -463,8 +503,12 @@ public class DownloadAPK {
                 }
                 return;
             } catch (Throwable e) {
+                if (downloadAPKLogFile != null && downloadAPKLogFile.exists()) {
+                    downloadAPKLogFile.delete();
+                }
                 SigmobLog.e("install apk fail", e);
             }
+
         }
 
         FileUtil.deleteFile(filePath);
@@ -486,14 +530,12 @@ public class DownloadAPK {
     }
 
     public static boolean isValidApk(File file) {
-
         if (file != null && file.exists()) {
             PackageInfo info = ClientMetadata.getPackageInfoWithUri(GtAdSdk.sharedAds().getContext(), file.getAbsolutePath());
             if (info != null) {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -566,6 +608,7 @@ public class DownloadAPK {
 
                 HashMap<String, Object> downloadMap = new HashMap<>();
 
+
                 while (true) {
                     Long downloadId = cursor.getLong(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_ID));
                     String downloadFileLocalUri = cursor.getString(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_LOCAL_URI));
@@ -591,6 +634,7 @@ public class DownloadAPK {
         }
 
         return null;
+
     }
 
     public static Map<String, Object> getDownloadInfoWithDownloadID(long downloadID) {
