@@ -21,7 +21,7 @@ import com.czhj.sdk.common.json.JSONSerializer;
 import com.czhj.sdk.common.network.Networking;
 import com.czhj.sdk.common.utils.ImageManager;
 import com.czhj.sdk.logger.SigmobLog;
-import com.gt.sdk.admanager.GtConfigManager;
+import com.gt.sdk.admanager.WindSDKConfig;
 import com.gt.sdk.admanager.GtLifecycleManager;
 import com.gt.sdk.admanager.PrivacyDataManager;
 import com.gt.sdk.api.GtCustomController;
@@ -155,9 +155,9 @@ public class GtAdSdk {
         PrivacyDataManager.getInstance().setUserAge(getUserAge(), true);
         PrivacyDataManager.getInstance().setAge_restricted(getAgeRestrictedStatus().getValue(), true);
 
-        GtConfigManager.sharedInstance().startUpdate();
+        WindSDKConfig.getInstance().startUpdate();
 
-        if (GtConfigManager.sharedInstance().isEnable_report_crash()) {
+        if (WindSDKConfig.getInstance().isEnable_report_crash()) {
             CrashHandler.getInstance().add(new CrashHandler.CrashHandlerListener() {
                 @Override
                 public void reportCrash(String crash) {
@@ -211,9 +211,9 @@ public class GtAdSdk {
      * 初始化网络监听
      */
     private static void initNetworking(Context context) {
-        Networking.AddSigmobServerURL(GtConfigManager.getConfigUrl());
-        Networking.AddSigmobServerURL(GtConfigManager.sharedInstance().getLogUrl());
-        Networking.AddSigmobServerURL(GtConfigManager.sharedInstance().getAdUrl());
+        Networking.AddSigmobServerURL(WindSDKConfig.getConfigUrl());
+        Networking.AddSigmobServerURL(WindSDKConfig.getInstance().getLogUrl());
+        Networking.AddSigmobServerURL(WindSDKConfig.getInstance().getAdUrl());
 
         Networking.initializeMill(context);
     }

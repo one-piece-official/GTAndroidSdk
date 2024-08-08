@@ -5,7 +5,7 @@ import com.czhj.sdk.common.mta.DeviceContext;
 import com.czhj.sdk.common.mta.PointEntitySuper;
 import com.gt.sdk.GtAdSdk;
 import com.gt.sdk.GtConstants;
-import com.gt.sdk.admanager.GtConfigManager;
+import com.gt.sdk.admanager.WindSDKConfig;
 import com.gt.sdk.admanager.PrivacyDataManager;
 import com.gt.sdk.admanager.DeviceContextManager;
 
@@ -41,7 +41,7 @@ public class GtPointEntityActive extends PointEntitySuper {
         if (!PrivacyDataManager.canCollectPersonalInformation()) {
             return true;
         }
-        List<Integer> blackList = GtConfigManager.sharedInstance().getLogBlackList();
+        List<Integer> blackList = WindSDKConfig.getInstance().getLogBlackList();
 
         for (Integer acType : blackList) {
             if (getAc_type().equals(String.valueOf(acType))) {

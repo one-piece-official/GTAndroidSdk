@@ -11,7 +11,7 @@ import com.czhj.volley.toolbox.DownloadItem;
 import com.czhj.volley.toolbox.FileDownloadRequest;
 import com.czhj.volley.toolbox.FileDownloader;
 import com.gt.sdk.GtAdSdk;
-import com.gt.sdk.admanager.GtConfigManager;
+import com.gt.sdk.admanager.WindSDKConfig;
 import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.utils.GtFileUtil;
 
@@ -79,8 +79,8 @@ public class AdStackManager {
     public static void clearSplashAd() {
         try {
             File[] files = FileUtil.orderByDate(GtFileUtil.getSplashCachePath());
-            files = clearCacheFileByDate(files, System.currentTimeMillis(), GtConfigManager.sharedInstance().getAdExpiredTime());
-            files = FileUtil.clearCacheFileByCount(files, GtConfigManager.sharedInstance().getSplashCacheTop());
+            files = clearCacheFileByDate(files, System.currentTimeMillis(), WindSDKConfig.getInstance().getAdExpiredTime());
+            files = FileUtil.clearCacheFileByCount(files, WindSDKConfig.getInstance().getSplashCacheTop());
             if (files == null) {
                 SigmobLog.i("splash ad file list is null");
             } else {
@@ -95,7 +95,7 @@ public class AdStackManager {
         try {
             File[] files = FileUtil.orderByDate(GtFileUtil.getVideoCachePath());
 
-            files = FileUtil.clearCacheFileByCount(files, GtConfigManager.sharedInstance().getRvCacheTop());
+            files = FileUtil.clearCacheFileByCount(files, WindSDKConfig.getInstance().getRvCacheTop());
 
             if (files == null) {
                 SigmobLog.i("splash ad file list is null");
@@ -112,7 +112,7 @@ public class AdStackManager {
         try {
             File[] files = FileUtil.orderByDate(GtFileUtil.getNativeCachePath());
 
-            files = FileUtil.clearCacheFileByCount(files, GtConfigManager.sharedInstance().getNativeAdCacheTop());
+            files = FileUtil.clearCacheFileByCount(files, WindSDKConfig.getInstance().getNativeAdCacheTop());
 
             if (files == null) {
                 SigmobLog.i("native ad file list is null");
@@ -164,7 +164,7 @@ public class AdStackManager {
     private void AdCache(final BaseAdUnit adUnit, final AdStackStatusListener adStackStatusListener) {
         if (adUnit != null) {
             //下载隐私协议模板
-            String privacy_template_url = GtConfigManager.sharedInstance().getPrivacyUrl();
+            String privacy_template_url = WindSDKConfig.getInstance().getPrivacyUrl();
             if (!TextUtils.isEmpty(privacy_template_url)) {
                 String fileName = Md5Util.md5(privacy_template_url);
                 File sigHtmlDir = GtFileUtil.getPrivacyHtmlDir();

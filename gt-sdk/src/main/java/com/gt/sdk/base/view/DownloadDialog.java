@@ -33,7 +33,7 @@ import com.czhj.sdk.common.utils.Md5Util;
 import com.czhj.sdk.common.utils.ViewUtil;
 import com.czhj.sdk.logger.SigmobLog;
 import com.czhj.volley.toolbox.StringUtil;
-import com.gt.sdk.admanager.GtConfigManager;
+import com.gt.sdk.admanager.WindSDKConfig;
 import com.gt.sdk.base.common.SigMacroCommon;
 import com.gt.sdk.base.common.SigmobRes;
 import com.gt.sdk.base.models.BaseAdUnit;
@@ -63,7 +63,7 @@ public class DownloadDialog extends Dialog implements DialogInterface.OnShowList
     private boolean isRenderSuccess = false;
 
     private ImageView closeView;
-    private String htmlUrl = GtConfigManager.sharedInstance().getAdUrl();
+    private String htmlUrl = WindSDKConfig.getInstance().getAdUrl();
     private File htmlFile;
     private RelativeLayout mLayout;
 
@@ -179,7 +179,7 @@ public class DownloadDialog extends Dialog implements DialogInterface.OnShowList
 
             privacyMap = mAdUnit.getPrivacyMap();
 
-            String privacyUrl = GtConfigManager.sharedInstance().getPrivacyUrl();
+            String privacyUrl = WindSDKConfig.getInstance().getPrivacyUrl();
 
             if (!TextUtils.isEmpty(privacyUrl)) {
                 String fileName = Md5Util.md5(privacyUrl);

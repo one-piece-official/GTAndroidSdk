@@ -1603,11 +1603,6 @@ public class BaseAdUnit implements Serializable {
     }
 
     public int getApkDownloadType() {
-        SlotAdSetting slotAdSetting = getSlotAdSetting();
-
-        if (slotAdSetting != null) {
-            return Wire.get(slotAdSetting.apk_download_type, 0);
-        }
         return 0;
     }
 

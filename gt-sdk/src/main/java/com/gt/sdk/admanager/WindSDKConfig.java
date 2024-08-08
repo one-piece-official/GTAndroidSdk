@@ -35,10 +35,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
-public class GtConfigManager {
+public class WindSDKConfig {
     private static final String SDK_CONFIG_VER = "sdkConfigVer";
     private static final String CONFIG_FILE_NAME = "/config";
-    private static GtConfigManager gInstance;
+    private static WindSDKConfig gInstance;
     private static boolean mIsGDPRRegion = false;
     private final Handler mHandler;
     private final Runnable mRefreshRunnable;
@@ -60,7 +60,7 @@ public class GtConfigManager {
 
     private String SDK_LOG_URL = "https://dc.sigmob.cn/log";
 
-    private GtConfigManager() {
+    private WindSDKConfig() {
         mHandler = new Handler(Looper.getMainLooper());
         mRefreshRunnable = new Runnable() {
             @Override
@@ -73,11 +73,11 @@ public class GtConfigManager {
         loadFromFile();
     }
 
-    public static GtConfigManager sharedInstance() {
+    public static WindSDKConfig getInstance() {
         if (gInstance == null) {
-            synchronized (GtConfigManager.class) {
+            synchronized (WindSDKConfig.class) {
                 if (gInstance == null) {
-                    gInstance = new GtConfigManager();
+                    gInstance = new WindSDKConfig();
                 }
             }
         }

@@ -20,7 +20,15 @@ import com.czhj.sdk.common.network.Networking;
 import com.czhj.sdk.common.utils.FileUtil;
 import com.czhj.sdk.common.utils.Md5Util;
 import com.czhj.sdk.logger.SigmobLog;
+import com.gt.sdk.GtAdSdk;
+import com.gt.sdk.SigmobFileProvider;
+import com.gt.sdk.admanager.WindSDKConfig;
 import com.gt.sdk.base.models.BaseAdUnit;
+import com.gt.sdk.base.models.IntentActions;
+import com.gt.sdk.base.models.point.PointCategory;
+import com.gt.sdk.base.network.SigmobTrackingRequest;
+import com.gt.sdk.utils.GtFileUtil;
+import com.gt.sdk.utils.PointEntityUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,6 +40,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public class DownloadAPK {
+
     /**
      * 下载Apk, 并设置Apk地址,
      * 默认位置: /storage/sdcard0/Download
@@ -44,6 +53,7 @@ public class DownloadAPK {
     private static final Set<DownloadAPKItem> downloadAPKList = new CopyOnWriteArraySet<>();
 
     private static long downloadApk(String downLoadUrl, String apkName, String title) {
+
         try {
             String appUrl = downLoadUrl;
             if (appUrl == null || appUrl.isEmpty()) {
@@ -97,6 +107,7 @@ public class DownloadAPK {
             DownloadManager manager = getDownloadManger();
 
             return manager.enqueue(request);
+
         } catch (Throwable e) {
             SigmobLog.e(e.getMessage());
         }
@@ -119,70 +130,43 @@ public class DownloadAPK {
 
     private static void OnDownloadStart(Context context, BaseAdUnit adUnit, String url, File file) {
         if (adUnit.isRecord()) {
-            PointEntitySigmobUtils.SigmobTracking(PointCategory.DOWNLOAD_START, Constants.SUCCESS, adUnit, new PointEntitySigmobUtils.OnPointEntityExtraInfo() {
-                @Override
-                public void onAddExtra(Object pointEntityBase) {
-
-                    if (pointEntityBase instanceof PointEntitySigmob) {
-                        PointEntitySigmob entitySigmob = (PointEntitySigmob) pointEntityBase;
-                        entitySigmob.setFinal_url(url);
-                        Map<String, String> options = new HashMap<>();
-
-                        options.put("apkfile", file.getAbsolutePath());
-                        options.put("apkurl", url);
-                        entitySigmob.setOptions(options);
-                    }
-                }
-            });
+            PointEntityUtils.eventRecord(PointCategory.DOWNLOAD_START, Constants.SUCCESS, adUnit);
         }
 
-        HashMap ext = new HashMap<>();
+        HashMap<String, Object> ext = new HashMap<>();
         ext.put("result", Constants.SUCCESS);
         ext.put("downloadId", adUnit.getDownloadId());
 
-        BaseBroadcastReceiver.broadcastAction(context, adUnit.getUuid(), ext, IntentActions.ACTION_INTERSTITIAL_DOWNLOAD_START);
+        BaseBroadcastReceiver.broadcastAction(context, adUnit.getUuid(), ext, IntentActions.ACTION_AD_DOWNLOAD_START);
     }
 
     private static void downloadAPK(String apkName, final String url, BaseAdUnit adUnit) {
 
-        Context context = SDKContext.getApplicationContext();
-
+        Context context = GtAdSdk.sharedAds().getContext();
         try {
-
-
             String mApkName = apkName;
 
             if (TextUtils.isEmpty(apkName)) {
-                mApkName = Md5Util.md5(adUnit.getLanding_page()) + ".apk";
+                mApkName = Md5Util.md5(url) + ".apk";
             }
-
             /**
              * 检查当前文件是否在下载中
              */
+            final File file = new File(GtFileUtil.getDownloadAPKPathFile(), mApkName);
 
-
-            final File file = new File(SigmobFileUtil.getDownloadAPKPathFile(context), mApkName);
-
-            Long downloadid = isDownloading(-1, file.getAbsolutePath());
-            if (downloadid != null && downloadid > 0) {
+            Long download_id = isDownloading(-1, file.getAbsolutePath());
+            if (download_id != null && download_id > 0) {
                 try {
-                    SigToast.makeText(context, "正在下载", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "正在下载", Toast.LENGTH_LONG).show();
                     if (adUnit.getDownloadId() == null) {
-                        adUnit.setDownloadId(downloadid);
-
-                        File downloadAPKLogFile = new File(SigmobFileUtil.getDownloadAPKLogPath(), downloadid + ".log");
-                        if (downloadAPKLogFile.exists()) {
-                            downloadAPKLogFile.delete();
-                        }
-                        FileUtil.writeToCache(adUnit, downloadAPKLogFile.getAbsolutePath());
+                        adUnit.setDownloadId(download_id);
                         OnDownloadStart(context, adUnit, url, file);
                     }
-                } catch (Throwable throwable) {
+                } catch (Throwable ignored) {
 
                 }
                 return;
             }
-
 
             HashMap<String, Object> downloadedMap = getDownloadingTask();
 
@@ -190,29 +174,19 @@ public class DownloadAPK {
                 for (String filePath : downloadedMap.keySet()) {
                     if (!TextUtils.isEmpty(filePath) && filePath.equals(file.getAbsolutePath())) {
                         try {
-                            SigToast.makeText(context, "正在下载", Toast.LENGTH_LONG).show();
-                        } catch (Throwable throwable) {
+                            Toast.makeText(context, "正在下载", Toast.LENGTH_LONG).show();
+                        } catch (Throwable ignored) {
 
                         }
                         try {
                             Object downloadId = downloadedMap.get(filePath);
                             if (downloadId instanceof Long) {
                                 adUnit.setDownloadId((Long) downloadId);
-
-                                File downloadAPKLogFile = new File(SigmobFileUtil.getDownloadAPKLogPath(), downloadid + ".log");
-                                if (downloadAPKLogFile.exists()) {
-                                    downloadAPKLogFile.delete();
-                                }
-                                FileUtil.writeToCache(adUnit, downloadAPKLogFile.getAbsolutePath());
                                 OnDownloadStart(context, adUnit, url, file);
-
                             }
-
-
-                        } catch (Throwable throwable) {
+                        } catch (Throwable ignored) {
 
                         }
-
                         return;
                     }
                 }
@@ -221,8 +195,6 @@ public class DownloadAPK {
             /**
              * 判断文件是否存在并且有效
              */
-
-
             boolean containsKey = downloadMap.containsKey(adUnit.getUuid());
 
             if (file.exists() && !containsKey && !getUnInstallApkInfo(context, file.getAbsolutePath())) {//删除以前因为种种原因异常残留的缓存文件
@@ -244,7 +216,7 @@ public class DownloadAPK {
                         boolean deleteFile = FileUtil.deleteFile(file.getAbsolutePath());
                         SigmobLog.i("default deleteFile:" + deleteFile);
                     } else {
-                        if ((System.currentTimeMillis() - modified) > (apk_expired_time * 1000)) {//过期
+                        if ((System.currentTimeMillis() - modified) > (apk_expired_time * 1000L)) {//过期
                             //删除文件
                             boolean deleteFile = FileUtil.deleteFile(file.getAbsolutePath());
                             SigmobLog.i("timeOut deleteFile:" + deleteFile);
@@ -256,7 +228,6 @@ public class DownloadAPK {
                 }
             }
 
-
             downloadMap.put(adUnit.getUuid(), mApkName);
             String title = adUnit.getAppName();
 
@@ -267,114 +238,63 @@ public class DownloadAPK {
 
             if (downloadId >= 0) {
                 try {
-                    SigToast.makeText(context, "已开始下载，可在通知栏尝试取消", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "已开始下载，可在通知栏尝试取消", Toast.LENGTH_LONG).show();
                 } catch (Throwable throwable) {
                     SigmobLog.e(throwable.getMessage());
                 }
+
                 addDownloadItem(downloadId, file.getAbsolutePath());
 
-                File downloadAPKLogFile = new File(SigmobFileUtil.getDownloadAPKLogPath(), downloadId + ".log");
-
                 adUnit.setDownloadId(downloadId);
-                FileUtil.writeToCache(adUnit, downloadAPKLogFile.getAbsolutePath());
 
                 OnDownloadStart(context, adUnit, url, file);
-
             } else {
                 if (adUnit.isRecord()) {
-                    PointEntitySigmobUtils.SigmobTracking(PointCategory.DOWNLOAD_START, Constants.FAIL, adUnit, new PointEntitySigmobUtils.OnPointEntityExtraInfo() {
-                        @Override
-                        public void onAddExtra(Object pointEntityBase) {
+                    PointEntityUtils.eventRecord(PointCategory.DOWNLOAD_START, Constants.FAIL, adUnit);
+                }
 
-                            if (pointEntityBase instanceof PointEntitySigmob) {
-                                PointEntitySigmob entitySigmob = (PointEntitySigmob) pointEntityBase;
-                                entitySigmob.setFinal_url(url);
-
-                                Map<String, String> options = new HashMap<>();
-
-                                options.put("apkfile", file.getAbsolutePath());
-                                options.put("apkurl", url);
-                                entitySigmob.setOptions(options);
-                            }
-
-                        }
-                    });
-                    PointEntitySigmobUtils.SigmobError(PointCategory.DOWNLOAD_FAILED, (int) downloadId, "下载失败,错误码 " + downloadId, adUnit);
+                try {
+                    Toast.makeText(context, "下载失败,错误码 " + downloadId, Toast.LENGTH_SHORT).show();
+                } catch (Throwable ignored) {
 
                 }
 
-                SigToast.makeText(context, "下载失败,错误码 " + downloadId, Toast.LENGTH_SHORT).show();
-
-
-                HashMap ext = new HashMap<>();
+                HashMap<String, Object> ext = new HashMap<>();
                 ext.put("result", Constants.FAIL);
                 ext.put("downloadId", -1);
-
-                BaseBroadcastReceiver.broadcastAction(context, adUnit.getUuid(), ext, IntentActions.ACTION_INTERSTITIAL_DOWNLOAD_START);
+                BaseBroadcastReceiver.broadcastAction(context, adUnit.getUuid(), ext, IntentActions.ACTION_AD_DOWNLOAD_START);
             }
 
             if (adUnit.isRecord()) {
-                SigmobTrackingRequest.sendTrackings(adUnit, ADEvent.AD_DOWNLOAD_START);
+                SigmobTrackingRequest.sendTracking(adUnit, ADEvent.AD_DOWNLOAD_START);
             }
 
         } catch (Throwable e) {
             SigmobLog.e(e.getMessage());
-
-            if (adUnit.isRecord()) {
-                PointEntitySigmobUtils.SigmobTracking(PointCategory.DOWNLOAD_START, Constants.FAIL, adUnit, new PointEntitySigmobUtils.OnPointEntityExtraInfo() {
-                    @Override
-                    public void onAddExtra(Object pointEntityBase) {
-
-                        if (pointEntityBase instanceof PointEntitySigmob) {
-                            PointEntitySigmob entitySigmob = (PointEntitySigmob) pointEntityBase;
-                            entitySigmob.setFinal_url(url);
-                        }
-
-                    }
-                });
-
-                PointEntitySigmobUtils.SigmobError(PointCategory.DOWNLOAD_START, 0, e.getMessage(), adUnit, new PointEntitySigmobUtils.OnPointEntityExtraInfo() {
-                    @Override
-                    public void onAddExtra(Object pointEntityBase) {
-                        if (pointEntityBase instanceof PointEntitySigmobError) {
-                            PointEntitySigmobError entitySigmob = (PointEntitySigmobError) pointEntityBase;
-                            entitySigmob.setFinal_url(url);
-                        }
-                    }
-                });
-            }
-
-            HashMap ext = new HashMap<>();
+            HashMap<String, Object> ext = new HashMap<>();
             ext.put("result", Constants.FAIL);
             ext.put("downloadId", -1);
 
-            BaseBroadcastReceiver.broadcastAction(context, adUnit.getUuid(), ext, IntentActions.ACTION_INTERSTITIAL_DOWNLOAD_START);
+            BaseBroadcastReceiver.broadcastAction(context, adUnit.getUuid(), ext, IntentActions.ACTION_AD_DOWNLOAD_START);
 
             try {
-                SigToast.makeText(context, "请先给予应用权限", Toast.LENGTH_LONG).show();
-
-            } catch (Throwable throwable) {
+                Toast.makeText(context, "请先给予应用权限", Toast.LENGTH_LONG).show();
+            } catch (Throwable ignored) {
 
             }
         }
     }
 
 
-    public static boolean addDownloadItem(long downloadId, String filePath) {
-
+    public static void addDownloadItem(long downloadId, String filePath) {
         if (TextUtils.isEmpty(filePath)) {
-            return false;
+            return;
         }
-
         downloadAPKList.add(new DownloadAPKItem(filePath, null, downloadId));
-
-        return true;
     }
 
     public static void removeDownloadItem(long downloadId, String filePath) {
-
         for (DownloadAPKItem item : downloadAPKList) {
-
             if (item.downloadId == downloadId || item.filePath.equalsIgnoreCase(filePath)) {
                 downloadAPKList.remove(item);
                 return;
@@ -389,7 +309,6 @@ public class DownloadAPK {
      * @return
      */
     public static long[] getDownloadIdBytesAndStatus(Context context, Long downloadId) {
-
 
         long[] bytesAndStatus = new long[]{-1, -1, 0};
 
@@ -419,7 +338,6 @@ public class DownloadAPK {
 
 
     public static Long isDownloading(long downloadId, String filePath) {
-
         for (DownloadAPKItem item : downloadAPKList) {
             if (item.downloadId == downloadId || item.filePath.equalsIgnoreCase(filePath)) {
 
@@ -462,104 +380,36 @@ public class DownloadAPK {
         }
     }
 
-
     public static void downloadApk(final String url, final BaseAdUnit adUnit) {
-        Context context = SDKContext.getApplicationContext();
-
+        Context context = GtAdSdk.sharedAds().getContext();
         try {
-            PointEntitySigmobUtils.SigmobTracking(PointCategory.APK_CLICK, "download", adUnit);
-
             SigmobLog.i("download apk:" + url);
-
-            AdStackManager.addAdUnit(adUnit);
-
             String apkMd5 = adUnit.getApkMd5();
-
-
             String apkName;
-
             if (!TextUtils.isEmpty(apkMd5)) {
                 apkName = apkMd5 + ".apk";
-
-                File file = new File(SigmobFileUtil.getDownloadAPKPathFile(context.getApplicationContext()), apkName);
-                boolean isComplete = true;
-                boolean exists = file.exists();
-                if (adUnit.getApkDownloadType() != 0) {
-                    isComplete = StatusUtil.isCompleted(url, SigmobFileUtil.getDownloadAPKPathFile(context.getApplicationContext()).getAbsolutePath(), apkName);
-                }
-
-                if (exists && isComplete && adUnit.canUseDownloadApk() && isValidApk(file)) {
-
-                    adUnit.setApkName(apkName);
-                    if (adUnit.getDownloadId() == null) {
-                        PointEntitySigmobUtils.eventRecord(PointCategory.EXIT_APK_INSTALL, "", adUnit);
-                    }
-                    WindAds.sharedAds().getHandler().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            installAPK(context, file.getAbsolutePath(), adUnit);
-                        }
-                    });
-                    return;
-
-                }
             } else {
                 apkName = Md5Util.md5(url) + ".apk";
             }
+
             adUnit.setApkName(apkName);
             adUnit.setDownloadUrl(url);
 
             int type = adUnit.getApkDownloadType();
-            switch (type) {
-                case 0: {
-                    downloadAPK(apkName, url, adUnit);
-                }
-                break;
-                case 1: {
-                    useCustomDownloadManager(url, adUnit, false);
-                }
-                break;
-                case 2: {
-                    useCustomDownloadManager(url, adUnit, true);
-                }
-                break;
-                default: {
-                    SigmobLog.e("not support Download Type: " + type);
-                    throw new Exception("not support Download Type: " + type);
-                }
+            if (type == 0) {
+                downloadAPK(apkName, url, adUnit);
+            } else {
+                SigmobLog.e("not support Download Type: " + type);
+                throw new Exception("not support Download Type: " + type);
             }
-
         } catch (Throwable e) {
             SigmobLog.e(e.getMessage());
-
-            if (adUnit.isRecord()) {
-                PointEntitySigmobUtils.SigmobTracking(PointCategory.DOWNLOAD_START, Constants.FAIL, adUnit, new PointEntitySigmobUtils.OnPointEntityExtraInfo() {
-                    @Override
-                    public void onAddExtra(Object pointEntityBase) {
-                        if (pointEntityBase instanceof PointEntitySigmob) {
-                            PointEntitySigmob entitySigmob = (PointEntitySigmob) pointEntityBase;
-                            entitySigmob.setFinal_url(url);
-                        }
-                    }
-                });
-
-                PointEntitySigmobUtils.SigmobError(PointCategory.DOWNLOAD_START, 0, e.getMessage(), adUnit, new PointEntitySigmobUtils.OnPointEntityExtraInfo() {
-                    @Override
-                    public void onAddExtra(Object pointEntityBase) {
-                        if (pointEntityBase instanceof PointEntitySigmobError) {
-                            PointEntitySigmobError entitySigmob = (PointEntitySigmobError) pointEntityBase;
-                            entitySigmob.setFinal_url(url);
-                        }
-                    }
-                });
-            }
             try {
-                SigToast.makeText(context, "下载失败", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "下载失败", Toast.LENGTH_LONG).show();
             } catch (Throwable throwable) {
                 SigmobLog.e(throwable.getMessage());
             }
         }
-
     }
 
     /**
@@ -571,13 +421,12 @@ public class DownloadAPK {
 
         SigmobLog.i("installAPK:" + file.getAbsolutePath() + ":" + file.exists());
 
-
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK);
         intent.setAction(Intent.ACTION_VIEW);
 
         try {
-            SigToast.makeText(context, "开始安装", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "开始安装", Toast.LENGTH_LONG).show();
         } catch (Throwable throwable) {
             SigmobLog.e(throwable.getMessage());
         }
@@ -589,62 +438,43 @@ public class DownloadAPK {
             info = ClientMetadata.getPackageInfoWithUri(context, filePath);
 
         } else {
-
             Uri uriForFile = null;
             try {
-
-                uriForFile = SigmobFileProvider.getUriForFile(SDKContext.getApplicationContext(), SDKContext.getApplicationContext().getPackageName() + ".sigprovider", file);
+                uriForFile = SigmobFileProvider.getUriForFile(context, context.getPackageName() + ".sigprovider", file);
                 if (uriForFile != null) {
                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     intent.setDataAndType(uriForFile, "application/vnd.android.package-archive");
                 }
                 info = ClientMetadata.getPackageInfoWithUri(context, filePath);
-
             } catch (Exception e) {
                 SigmobLog.e(e.getMessage());
-                PointEntitySigmobUtils.SigmobError(PointCategory.APP_INSTALL_START, 0, e.getMessage(), adUnit, null);
             }
-
         }
 
-
         if (info != null) {
-            File downloadAPKLogFile = new File(SigmobFileUtil.getDownloadAPKLogPath(), info.packageName + ".log");
-
             try {
-                FileUtil.writeToCache(adUnit, downloadAPKLogFile.getAbsolutePath());
-
                 context.startActivity(intent);
-
-                SigmobTrackingRequest.sendTrackings(adUnit, ADEvent.AD_INSTALL_START);
-                HashMap ext = new HashMap<>();
+                SigmobTrackingRequest.sendTracking(adUnit, ADEvent.AD_INSTALL_START);
+                HashMap<String, Object> ext = new HashMap<>();
                 ext.put("result", Constants.SUCCESS);
-                BaseBroadcastReceiver.broadcastAction(context, adUnit.getUuid(), ext, IntentActions.ACTION_INTERSTITIAL_INSTALL_START);
+                BaseBroadcastReceiver.broadcastAction(context, adUnit.getUuid(), ext, IntentActions.ACTION_AD_INSTALL_START);
                 if (adUnit.isRecord()) {
-                    PointEntitySigmobUtils.eventRecord(adUnit, PointCategory.APP_INSTALL_START, info, Constants.SUCCESS);
+                    PointEntityUtils.eventRecord(PointCategory.APP_INSTALL_START, Constants.SUCCESS, adUnit);
                 }
                 return;
             } catch (Throwable e) {
-
-                if (downloadAPKLogFile != null && downloadAPKLogFile.exists()) {
-                    downloadAPKLogFile.delete();
-                }
-                PointEntitySigmobUtils.SigmobError(PointCategory.APP_INSTALL_START, 0, e.getMessage(), adUnit, null);
-
                 SigmobLog.e("install apk fail", e);
             }
-
         }
 
         FileUtil.deleteFile(filePath);
-        SigmobTrackingRequest.sendTrackings(adUnit, ADEvent.AD_INSTALL_START);
-        HashMap ext = new HashMap<>();
+        SigmobTrackingRequest.sendTracking(adUnit, ADEvent.AD_INSTALL_START);
+        HashMap<String, Object> ext = new HashMap<>();
         ext.put("result", Constants.FAIL);
-        BaseBroadcastReceiver.broadcastAction(context, adUnit.getUuid(), ext, IntentActions.ACTION_INTERSTITIAL_INSTALL_START);
+        BaseBroadcastReceiver.broadcastAction(context, adUnit.getUuid(), ext, IntentActions.ACTION_AD_INSTALL_START);
         if (adUnit.isRecord()) {
-            PointEntitySigmobUtils.eventRecord(adUnit, PointCategory.APP_INSTALL_START, info, Constants.FAIL);
+            PointEntityUtils.eventRecord(PointCategory.APP_INSTALL_START, Constants.FAIL, adUnit);
         }
-
     }
 
     public static String getMIMEType(File file) {
@@ -658,7 +488,7 @@ public class DownloadAPK {
     public static boolean isValidApk(File file) {
 
         if (file != null && file.exists()) {
-            PackageInfo info = ClientMetadata.getPackageInfoWithUri(SDKContext.getApplicationContext(), file.getAbsolutePath());
+            PackageInfo info = ClientMetadata.getPackageInfoWithUri(GtAdSdk.sharedAds().getContext(), file.getAbsolutePath());
             if (info != null) {
                 return true;
             }
@@ -668,18 +498,14 @@ public class DownloadAPK {
     }
 
     public static DownloadManager getDownloadManger() {
-        Context context = SDKContext.getApplicationContext();
-
+        Context context = GtAdSdk.sharedAds().getContext();
         if (context != null) {
             return (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         }
-
         return null;
-
     }
 
     public static boolean isDownloading(String downloadUrl) {
-
 
         if (TextUtils.isEmpty(downloadUrl)) return false;
 
@@ -740,7 +566,6 @@ public class DownloadAPK {
 
                 HashMap<String, Object> downloadMap = new HashMap<>();
 
-
                 while (true) {
                     Long downloadId = cursor.getLong(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_ID));
                     String downloadFileLocalUri = cursor.getString(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_LOCAL_URI));
@@ -766,7 +591,6 @@ public class DownloadAPK {
         }
 
         return null;
-
     }
 
     public static Map<String, Object> getDownloadInfoWithDownloadID(long downloadID) {
