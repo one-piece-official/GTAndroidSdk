@@ -16,12 +16,6 @@ public class LoadAdRequest implements Serializable {
     private int width;
     private int height;
 
-    private String bidId;//本次响应标识 ID，用于日志和后续调试
-    private String logId;//用于记录日志或行为追踪
-    private String adId;//生成的素材校验 id
-    private String impId;//对应请求中的 imp 的 id
-    private String admId;//序号
-
 
     public LoadAdRequest(AdRequest adRequest, int adType) {
         this.userId = adRequest.getUserID();
@@ -85,44 +79,5 @@ public class LoadAdRequest implements Serializable {
         this.height = height;
     }
 
-    public void setBidId(String bidId) {
-
-    }
-
-    public String getBidId() {
-        return bidId;
-    }
-
-    public String getLogId() {
-        return logId;
-    }
-
-    public void setLogId(String logId) {
-        this.logId = logId;
-    }
-
-    public String getAdId() {
-        return adId;
-    }
-
-    public void setAdId(String adId) {
-        this.adId = adId;
-    }
-
-    public String getImpId() {
-        return impId;
-    }
-
-    public void setImpId(String impId) {
-        this.impId = impId;
-    }
-
-    public String getAdmId() {
-        return admId;
-    }
-
-    public void setAdmId(String admId) {
-        this.admId = admId;
-    }
 
 }

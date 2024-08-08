@@ -1,7 +1,6 @@
 package com.gt.sdk.base.common;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
-import static com.sigmob.sdk.base.common.CustomDownloadAPK.useCustomDownloadManager;
 
 import android.app.DownloadManager;
 import android.content.Context;
@@ -30,18 +29,6 @@ import com.gt.sdk.base.models.point.PointCategory;
 import com.gt.sdk.base.network.SigmobTrackingRequest;
 import com.gt.sdk.utils.GtFileUtil;
 import com.gt.sdk.utils.PointEntityUtils;
-import com.sigmob.sdk.SDKContext;
-import com.sigmob.sdk.SigmobFileProvider;
-import com.sigmob.sdk.base.WindSDKConfig;
-import com.sigmob.sdk.base.models.BaseAdUnit;
-import com.sigmob.sdk.base.models.IntentActions;
-import com.sigmob.sdk.base.mta.PointCategory;
-import com.sigmob.sdk.base.mta.PointEntitySigmob;
-import com.sigmob.sdk.base.mta.PointEntitySigmobError;
-import com.sigmob.sdk.base.network.SigmobTrackingRequest;
-import com.sigmob.sdk.base.utils.SigmobFileUtil;
-import com.sigmob.sdk.downloader.StatusUtil;
-import com.sigmob.windad.WindAds;
 
 import java.io.File;
 import java.util.ArrayList;

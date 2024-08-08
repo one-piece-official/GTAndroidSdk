@@ -59,7 +59,7 @@ public class BaseAdConfig implements Serializable {
 
         if (getBaseAdUnit() == null) return false;
 
-        if (context != null && getBaseAdUnit().getadPrivacy() != null) {
+        if (context != null && getBaseAdUnit().getAdPrivacy() != null) {
             if (downloadDialog == null) {
                 downloadDialog = new DownloadDialog(context, getBaseAdUnit());
                 downloadDialog.setOnPrivacyClickListener(new DownloadDialog.onPrivacyClickListener() {
@@ -171,7 +171,7 @@ public class BaseAdConfig implements Serializable {
         }
         tempUrl = baseAdUnit.getMacroCommon().macroProcess(tempUrl);
 
-        if (baseAdUnit.getsubInteractionType() == 1) {
+        if (baseAdUnit.getSubInteractionType() == 1) {
 
             JsonRequest request = new JsonRequest(tempUrl, new JsonRequest.Listener() {
 

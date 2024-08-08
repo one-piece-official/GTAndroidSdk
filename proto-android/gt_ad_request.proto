@@ -7,26 +7,27 @@ option java_package = "com.gt.sdk.base.models.rtb";
 option objc_class_prefix = "gt";
 option optimize_for = LITE_RUNTIME;
 
-// 内部竞价请求
 message BidRequest {
-  string                 token = 1;              // 内部生成；请求唯一标识，[a-zA-Z0-9]{32}
-  string                 id = 2;              // 内部生成；请求唯一标识，[a-zA-Z0-9]{32}
-  repeated  Imp          imp = 3;              // 内部生成；请求唯一标识，[a-zA-Z0-9]{32}
-  App                    app = 4;                        // 必填！应用信息
-  Device                 device = 5;                  // 必填！设备信息
-  User                   user = 6;                     // 用户信息
+  App app = 1; //展示广告内容的应用相关信息，查看 App 对象
+  Device device = 2; // 展示广告内容的设备信息对象，查看 Device 对象
+  string id = 3; // 请求标识 ID，由媒体生成，请确保全局唯一
+  repeated Imp imp = 4; // 展现广告资源位描述，查看 Imp 对象
+  User user = 5; // 展示广告内容的用户信息对象，查看 User 对象
+  string token = 6; //由商务提供，dsp侧无需使用
 }
 
 message Imp {
-  string                 id = 1;
-  string                 tagid = 2;
-  string                 subtagid = 3;
-  uint32                 style = 4;
-  uint32                 secure = 5;
-  map<string, string>    ext = 6;
-  uint32                 bidfloor = 7;
-  uint32                 width = 8;
-  uint32                 height = 9;
-  uint32                 deeplink = 10;
-  uint32                 ul = 11;
+  bool deeplink = 1; // 是否支持唤醒广告主 App，1 代表支持，0 代表不支持
+  bool ul = 2; // iOS 流量使用，是否需要返回 iOS 流量使用，在 is_deeplink 为 1 时有效 如需返回 Universal Link 时传 1，否则不传
+  string id = 3; // 曝光标识 ID，只在多次曝光有意义，媒体生成，请确保全局唯一
+  string tagid = 4; // 广告代码位
+  string subtagid = 5; // 媒体自己的广告位ID
+  int32 bidfloor = 6; // 底价，单位 分/CPM 采用 RTB 模式需要传入正整数的底价，不传或传 0 代表非 RTB 模式
+  int32 width = 7; // 广告位宽
+  int32 height = 8; //广告位高
+  int32 style = 9; // 广告位类型，广告位类型，不填表示类型由广告位中信息表示，1 开屏 2 插屏 3 横幅 4 原生 5 激励视频 6 全屏视频 7 品牌元素视频 8 sdk广告
+  int32 secure = 10; // 是否需要返回 https，0 不需要，1 需要，默认为 0
+  map<string, string>    ext = 11;
 }
+
+

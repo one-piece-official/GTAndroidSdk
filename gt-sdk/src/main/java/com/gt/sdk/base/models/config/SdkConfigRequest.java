@@ -13,9 +13,6 @@ import com.czhj.wire.ProtoWriter;
 import com.czhj.wire.WireField;
 import com.czhj.wire.internal.Internal;
 import com.czhj.wire.okio.ByteString;
-import com.gt.sdk.base.models.rtb.App;
-import com.gt.sdk.base.models.rtb.Device;
-import com.gt.sdk.base.models.rtb.User;
 
 import java.io.IOException;
 import java.lang.Object;

@@ -62,17 +62,14 @@ public class PointEntityUtils {
         if (adUnit != null) {
             try {
                 pointEntity.setAdType(String.valueOf(adUnit.getAd_type()));
-                pointEntity.setCampaign_id(adUnit.getCamp_id());
-                pointEntity.setCreative_id(adUnit.getCrid());
-                pointEntity.setRequest_id(adUnit.getRequestId());
-                pointEntity.setPlacement_id(adUnit.getAdslot_id());
+                pointEntity.setBidId(adUnit.getBidId());
+                pointEntity.setLogId(adUnit.getLogId());
+                pointEntity.setAdId(adUnit.getAdId());
+                pointEntity.setPlacement_id(adUnit.getAdSlot_id());
                 pointEntity.setLoad_id(adUnit.getLoad_id());
-                pointEntity.setVid(adUnit.getVid());
-                pointEntity.setScene_id(adUnit.getAd_scene_id());
-                pointEntity.setScene_desc(adUnit.getAd_scene_desc());
-                pointEntity.setPlay_mode(String.valueOf(adUnit.getPlayMode()));
-                pointEntity.setCreative_type(String.valueOf(adUnit.getCreativeType()));
-                pointEntity.setPrice(adUnit.getAd().settlement_price_enc);
+                pointEntity.setImpId(adUnit.getImpId());
+                pointEntity.setAdmId(adUnit.getAdmId());
+                pointEntity.setPrice(String.valueOf(adUnit.getPrice()));
             } catch (Throwable ignored) {
 
             }
@@ -122,7 +119,6 @@ public class PointEntityUtils {
             }
         }
     }
-
 
     public static void eventTracking(AdTracker tracker, String url, BaseAdUnit adUnit, final VolleyError volleyError) {
         NetworkResponse response = null;

@@ -15,15 +15,21 @@ import com.czhj.wire.internal.Internal;
 import com.czhj.wire.okio.ByteString;
 
 import java.io.IOException;
+import java.lang.Object;
+import java.lang.Override;
+import java.lang.String;
+import java.lang.StringBuilder;
 import java.util.List;
 
-public final class App extends AndroidMessage<App, App.Builder> {
 
+public final class App extends AndroidMessage<App, App.Builder> {
     public static final ProtoAdapter<App> ADAPTER = new ProtoAdapter_App();
 
     public static final Parcelable.Creator<App> CREATOR = AndroidMessage.newCreator(ADAPTER);
 
     private static final long serialVersionUID = 0L;
+
+    public static final String DEFAULT_BUNDLE = "";
 
     public static final String DEFAULT_ID = "";
 
@@ -31,33 +37,31 @@ public final class App extends AndroidMessage<App, App.Builder> {
 
     public static final String DEFAULT_VER = "";
 
-    public static final String DEFAULT_BUNDLE = "";
-
     public static final String DEFAULT_STORE_VER = "";
+
+    /**
+     * application bundle 或 package name
+     */
+    @WireField(tag = 1, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String bundle;
 
     /**
      * 应用标识
      */
-    @WireField(tag = 1, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    @WireField(tag = 2, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String id;
 
     /**
      * 应⽤名称
      */
-    @WireField(tag = 2, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    @WireField(tag = 3, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String name;
 
     /**
      * 应⽤版本
      */
-    @WireField(tag = 3, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String ver;
-
-    /**
-     * 必填！应用包名。IOS设备为bundle id
-     */
     @WireField(tag = 4, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String bundle;
+    public final String ver;
 
     /**
      * app 所属类别
@@ -66,7 +70,7 @@ public final class App extends AndroidMessage<App, App.Builder> {
     public final List<String> cat;
 
     /**
-     * app当前页面的分类信息标签列表
+     * 当前页面的分类信息标签列表
      */
     @WireField(tag = 6, adapter = "com.squareup.wire.ProtoAdapter#STRING", label = WireField.Label.REPEATED)
     public final List<String> pagecat;
@@ -78,21 +82,21 @@ public final class App extends AndroidMessage<App, App.Builder> {
     public final List<String> keywords;
 
     /**
-     * App的应用商店版本
+     * App 的应用商店版本
      */
     @WireField(tag = 8, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String store_ver;
 
-    public App(String id, String name, String ver, String bundle, List<String> cat, List<String> pagecat, List<String> keywords, String store_ver) {
-        this(id, name, ver, bundle, cat, pagecat, keywords, store_ver, ByteString.EMPTY);
+    public App(String bundle, String id, String name, String ver, List<String> cat, List<String> pagecat, List<String> keywords, String store_ver) {
+        this(bundle, id, name, ver, cat, pagecat, keywords, store_ver, ByteString.EMPTY);
     }
 
-    public App(String id, String name, String ver, String bundle, List<String> cat, List<String> pagecat, List<String> keywords, String store_ver, ByteString unknownFields) {
+    public App(String bundle, String id, String name, String ver, List<String> cat, List<String> pagecat, List<String> keywords, String store_ver, ByteString unknownFields) {
         super(ADAPTER, unknownFields);
+        this.bundle = bundle;
         this.id = id;
         this.name = name;
         this.ver = ver;
-        this.bundle = bundle;
         this.cat = Internal.immutableCopyOf("cat", cat);
         this.pagecat = Internal.immutableCopyOf("pagecat", pagecat);
         this.keywords = Internal.immutableCopyOf("keywords", keywords);
@@ -102,10 +106,10 @@ public final class App extends AndroidMessage<App, App.Builder> {
     @Override
     public Builder newBuilder() {
         Builder builder = new Builder();
+        builder.bundle = bundle;
         builder.id = id;
         builder.name = name;
         builder.ver = ver;
-        builder.bundle = bundle;
         builder.cat = Internal.copyOf("cat", cat);
         builder.pagecat = Internal.copyOf("pagecat", pagecat);
         builder.keywords = Internal.copyOf("keywords", keywords);
@@ -119,7 +123,7 @@ public final class App extends AndroidMessage<App, App.Builder> {
         if (other == this) return true;
         if (!(other instanceof App)) return false;
         App o = (App) other;
-        return unknownFields().equals(o.unknownFields()) && Internal.equals(id, o.id) && Internal.equals(name, o.name) && Internal.equals(ver, o.ver) && Internal.equals(bundle, o.bundle) && cat.equals(o.cat) && pagecat.equals(o.pagecat) && keywords.equals(o.keywords) && Internal.equals(store_ver, o.store_ver);
+        return unknownFields().equals(o.unknownFields()) && Internal.equals(bundle, o.bundle) && Internal.equals(id, o.id) && Internal.equals(name, o.name) && Internal.equals(ver, o.ver) && cat.equals(o.cat) && pagecat.equals(o.pagecat) && keywords.equals(o.keywords) && Internal.equals(store_ver, o.store_ver);
     }
 
     @Override
@@ -127,10 +131,10 @@ public final class App extends AndroidMessage<App, App.Builder> {
         int result = super.hashCode;
         if (result == 0) {
             result = unknownFields().hashCode();
+            result = result * 37 + (bundle != null ? bundle.hashCode() : 0);
             result = result * 37 + (id != null ? id.hashCode() : 0);
             result = result * 37 + (name != null ? name.hashCode() : 0);
             result = result * 37 + (ver != null ? ver.hashCode() : 0);
-            result = result * 37 + (bundle != null ? bundle.hashCode() : 0);
             result = result * 37 + cat.hashCode();
             result = result * 37 + pagecat.hashCode();
             result = result * 37 + keywords.hashCode();
@@ -143,10 +147,10 @@ public final class App extends AndroidMessage<App, App.Builder> {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
+        if (bundle != null) builder.append(", bundle=").append(bundle);
         if (id != null) builder.append(", id=").append(id);
         if (name != null) builder.append(", name=").append(name);
         if (ver != null) builder.append(", ver=").append(ver);
-        if (bundle != null) builder.append(", bundle=").append(bundle);
         if (!cat.isEmpty()) builder.append(", cat=").append(cat);
         if (!pagecat.isEmpty()) builder.append(", pagecat=").append(pagecat);
         if (!keywords.isEmpty()) builder.append(", keywords=").append(keywords);
@@ -155,13 +159,13 @@ public final class App extends AndroidMessage<App, App.Builder> {
     }
 
     public static final class Builder extends Message.Builder<App, Builder> {
-        public String id = DEFAULT_ID;
+        public String bundle;
 
-        public String name = DEFAULT_NAME;
+        public String id;
 
-        public String ver = DEFAULT_VER;
+        public String name;
 
-        public String bundle = DEFAULT_BUNDLE;
+        public String ver;
 
         public List<String> cat;
 
@@ -169,12 +173,20 @@ public final class App extends AndroidMessage<App, App.Builder> {
 
         public List<String> keywords;
 
-        public String store_ver = DEFAULT_STORE_VER;
+        public String store_ver;
 
         public Builder() {
             cat = Internal.newMutableList();
             pagecat = Internal.newMutableList();
             keywords = Internal.newMutableList();
+        }
+
+        /**
+         * application bundle 或 package name
+         */
+        public Builder bundle(String bundle) {
+            this.bundle = bundle;
+            return this;
         }
 
         /**
@@ -202,14 +214,6 @@ public final class App extends AndroidMessage<App, App.Builder> {
         }
 
         /**
-         * 必填！应用包名。IOS设备为bundle id
-         */
-        public Builder bundle(String bundle) {
-            this.bundle = bundle;
-            return this;
-        }
-
-        /**
          * app 所属类别
          */
         public Builder cat(List<String> cat) {
@@ -219,7 +223,7 @@ public final class App extends AndroidMessage<App, App.Builder> {
         }
 
         /**
-         * app当前页面的分类信息标签列表
+         * 当前页面的分类信息标签列表
          */
         public Builder pagecat(List<String> pagecat) {
             Internal.checkElementsNotNull(pagecat);
@@ -237,7 +241,7 @@ public final class App extends AndroidMessage<App, App.Builder> {
         }
 
         /**
-         * App的应用商店版本
+         * App 的应用商店版本
          */
         public Builder store_ver(String store_ver) {
             this.store_ver = store_ver;
@@ -246,7 +250,7 @@ public final class App extends AndroidMessage<App, App.Builder> {
 
         @Override
         public App build() {
-            return new App(id, name, ver, bundle, cat, pagecat, keywords, store_ver, super.buildUnknownFields());
+            return new App(bundle, id, name, ver, cat, pagecat, keywords, store_ver, super.buildUnknownFields());
         }
     }
 
@@ -257,15 +261,15 @@ public final class App extends AndroidMessage<App, App.Builder> {
 
         @Override
         public int encodedSize(App value) {
-            return ProtoAdapter.STRING.encodedSizeWithTag(1, value.id) + ProtoAdapter.STRING.encodedSizeWithTag(2, value.name) + ProtoAdapter.STRING.encodedSizeWithTag(3, value.ver) + ProtoAdapter.STRING.encodedSizeWithTag(4, value.bundle) + ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(5, value.cat) + ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(6, value.pagecat) + ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(7, value.keywords) + ProtoAdapter.STRING.encodedSizeWithTag(8, value.store_ver) + value.unknownFields().size();
+            return ProtoAdapter.STRING.encodedSizeWithTag(1, value.bundle) + ProtoAdapter.STRING.encodedSizeWithTag(2, value.id) + ProtoAdapter.STRING.encodedSizeWithTag(3, value.name) + ProtoAdapter.STRING.encodedSizeWithTag(4, value.ver) + ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(5, value.cat) + ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(6, value.pagecat) + ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(7, value.keywords) + ProtoAdapter.STRING.encodedSizeWithTag(8, value.store_ver) + value.unknownFields().size();
         }
 
         @Override
         public void encode(ProtoWriter writer, App value) throws IOException {
-            ProtoAdapter.STRING.encodeWithTag(writer, 1, value.id);
-            ProtoAdapter.STRING.encodeWithTag(writer, 2, value.name);
-            ProtoAdapter.STRING.encodeWithTag(writer, 3, value.ver);
-            ProtoAdapter.STRING.encodeWithTag(writer, 4, value.bundle);
+            ProtoAdapter.STRING.encodeWithTag(writer, 1, value.bundle);
+            ProtoAdapter.STRING.encodeWithTag(writer, 2, value.id);
+            ProtoAdapter.STRING.encodeWithTag(writer, 3, value.name);
+            ProtoAdapter.STRING.encodeWithTag(writer, 4, value.ver);
             ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 5, value.cat);
             ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 6, value.pagecat);
             ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 7, value.keywords);
@@ -280,16 +284,16 @@ public final class App extends AndroidMessage<App, App.Builder> {
             for (int tag; (tag = reader.nextTag()) != -1; ) {
                 switch (tag) {
                     case 1:
-                        builder.id(ProtoAdapter.STRING.decode(reader));
+                        builder.bundle(ProtoAdapter.STRING.decode(reader));
                         break;
                     case 2:
-                        builder.name(ProtoAdapter.STRING.decode(reader));
+                        builder.id(ProtoAdapter.STRING.decode(reader));
                         break;
                     case 3:
-                        builder.ver(ProtoAdapter.STRING.decode(reader));
+                        builder.name(ProtoAdapter.STRING.decode(reader));
                         break;
                     case 4:
-                        builder.bundle(ProtoAdapter.STRING.decode(reader));
+                        builder.ver(ProtoAdapter.STRING.decode(reader));
                         break;
                     case 5:
                         builder.cat.add(ProtoAdapter.STRING.decode(reader));

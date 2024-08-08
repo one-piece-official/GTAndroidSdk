@@ -12,12 +12,13 @@ import com.czhj.volley.toolbox.HttpHeaderParser;
 import com.gt.sdk.AdError;
 import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.LoadAdRequest;
+import com.gt.sdk.base.models.ModelBuilderCreator;
+import com.gt.sdk.admanager.DeviceContextManager;
+import com.gt.sdk.base.models.rtb.Bid;
 import com.gt.sdk.base.models.rtb.BidRequest;
 import com.gt.sdk.base.models.rtb.BidResponse;
 import com.gt.sdk.base.models.rtb.Imp;
-import com.gt.sdk.base.models.ModelBuilderCreator;
 import com.gt.sdk.base.models.rtb.SeatBid;
-import com.gt.sdk.admanager.DeviceContextManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +63,7 @@ public class AdsRequest extends SigmobRequest<BidResponse> {
             impBuild.bidfloor(loadAdRequest.getBidFloor());
             impBuild.width(loadAdRequest.getWidth());
             impBuild.height(loadAdRequest.getHeight());
-            impBuild.deeplink(1);
+            impBuild.deeplink(true);
 
             List<Imp> impList = new ArrayList<>();
             impList.add(impBuild.build());
@@ -152,22 +153,28 @@ public class AdsRequest extends SigmobRequest<BidResponse> {
     protected void deliverResponse(final BidResponse bidResponse) {
         if (bidResponse != null) {
 
-            if (bidResponse.code == 0 && !bidResponse.bids.isEmpty()) {
-                try {
-                    List<BaseAdUnit> adUnits = new ArrayList<>();
-                    for (int i = 0; i < bidResponse.bids.size(); i++) {
-                        SeatBid ad = bidResponse.bids.get(i);
-                        BaseAdUnit adUnit = BaseAdUnit.adUnit(ad, bidResponse.request_id, adRequest, bidResponse.bidId);
-                        adUnit.setAd_type(adRequest.getAdType());
-                        adUnit.setAdslot_id(adRequest.getPlacementId());
-                        adUnits.add(adUnit);
-                    }
 
-                    if (mListener != null) {
-                        mListener.onSuccess(adUnits, adRequest);
+            if (bidResponse.code == 0 && bidResponse.seatbid != null) {
+
+                SeatBid seatbid = bidResponse.seatbid;
+                List<Bid> bids = seatbid.bid;
+                if (bids != null && !bids.isEmpty()) {
+                    try {
+                        List<BaseAdUnit> adUnits = new ArrayList<>();
+                        for (int i = 0; i < bids.size(); i++) {
+                            Bid ad = bids.get(i);
+                            BaseAdUnit adUnit = BaseAdUnit.adUnit(ad, bidResponse.id, bidResponse.bidid, adRequest);
+
+                            adUnits.add(adUnit);
+                        }
+                        if (mListener != null) {
+                            mListener.onSuccess(adUnits, adRequest);
+                        }
+                    } catch (Throwable e) {
+                        SigmobLog.e("ads Response: error ", e);
                     }
-                } catch (Throwable e) {
-                    SigmobLog.e("ads Response: error ", e);
+                } else {
+                    mListener.onErrorResponse(AdError.ERROR_AD_INFORMATION_LOSE.getErrorCode(), "SeatBid is null", null, adRequest);
                 }
             } else {
                 mListener.onErrorResponse(bidResponse.code, AdError.ERROR_AD_NETWORK.getMessage(), bidResponse.request_id, adRequest);

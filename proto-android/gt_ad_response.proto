@@ -9,21 +9,87 @@ option optimize_for = LITE_RUNTIME;
 
 
 message BidResponse {
-  string          request_id = 1;              // 对应请的request_id(内部生成的)
-  repeated SeatBid     bids = 2;                // 广告信息
-  string          bidId = 3;
-  uint32          code = 4;         // 广告有效截止日期。Unix时间戳，单位秒。
-  uint32          nbs = 5;         // 广告有效截止日期。Unix时间戳，单位秒。
-  uint32          nbt = 6;         // 广告有效截止日期。Unix时间戳，单位秒。
+  string id = 1; // 对应请求中的 Bid Request 的 id
+  string bidid = 2; // 本次响应标识 ID，用于日志和后续调试
+  SeatBid seatbid = 3; // 响应交易对象，查看 SeatBid 对象， 没有且code为0表示未填充
+  int32 code = 4; // 状态码
+  int32 nbs = 5; // 短时屏蔽状态
+  int32 nbt = 6; // 短时屏蔽时间，单位s
 }
 
-// 广告信息
 message SeatBid {
-  string                adslot_id = 1;                       // 对应请求时填写的广告位ID
-  string                vid = 2;                             // 广告曝光id.
-  string                cust_id = 3;                         // 客户ID
-  string                camp_id = 4;                         // 推广计划ID
-  string                crid = 5;                            // 创意ID
+  repeated Bid bid = 1; // 对应 imp 的 bid 信息，查看 Bid 对象
 }
+
+message Bid {
+  string id = 1; // 用于记录日志或行为追踪
+  string adid = 2; // 生成的素材校验 id
+  string impid = 3; // 对应请求中的 imp 的 id
+  int32 price = 4; // 实际出价。如果是RTB，则必填，否则请忽略
+  Tracking tracking = 5; //统计上报地址，查看 Tracking 对象
+
+  int32 action = 6; // 广告动作类型：1 代表点击跳转，2 代表唤醒，3代表下载
+  string target_url = 7; // deeplink 对应的吊起链接或 App 的下载链接
+  string landing_url = 9; // 落地页的 H5 链接
+  string ad_logo = 8; // 广告主logo
+  Adm adm = 10; // 广告素材，查看 Adm 对象
+
+  int32 protocol_type = 11 ; // 下载相关，可选值：0 正常下载类型，1 广点通
+  string app_name = 12; // 下载相关，应用名
+  string brand_name = 13; // 下载相关，应用品牌名
+  string package_name = 14; //下载相关，应用包名
+  int32 app_size = 15; // 下载相关，应用大小
+  string app_version = 16; //下载相关，应用版本
+  string developer = 17; // 下载相关，应用开发者
+  string privacy_url = 18; // 下载相关，隐私协议
+  string permission_url = 19; // 下载相关，用户权限
+}
+
+message Tracking {
+  repeated string click_trackers = 1; // 点击跟踪器
+  repeated string imp_trackers = 2; // 展示跟踪器
+  repeated string dplk_trackers = 3; // 用 deeplink 唤醒成功后上报
+  repeated string nurls = 4; // 竞胜时候上报
+  repeated string lurls = 5; // 竞败时候上报
+  repeated string dplk_fail_trackers = 6; // 用 deeplink 唤醒失败后上报
+  repeated string dplk_try_trackers = 7; // 开始用 deeplink 尝试唤醒时上报
+  repeated string player_start_trackers = 8; // 视频开始播放监测 URL，在视频开始播放时上报
+  string nurl = 9; // 兼容旧的
+  repeated string player_end_trackers = 10; // 视频播放完成监测 URL，在视频播放完成时上报
+  repeated string player_valid_trackers = 11;  // 视频有效播放监测 URL，在视频播放时长过半时上报
+  repeated string player_first_quartile_trackers = 12; // 视频播放 1/4 追踪 url 数组
+  repeated string player_midpoint_trackers = 13; // 视频播放 1/2 追踪 url 数组
+  repeated string player_third_quartile_trackers = 14;  // 视频播放 3/4 追踪 url 数组
+  repeated string download_trackers = 15; // 通过广告开始下载时上报
+  repeated string downloaded_trackers = 16; // 通过广告完成下载时上报
+  repeated string installed_trackers = 17; // 通过广告下载并完成安装时上报
+  repeated string install_trackers = 18; // 开始安装上报数组
+  repeated string active_trackers = 19; // 安装后激活打开App后上报数组
+}
+
+message Adm {
+  string id = 1; // 序号
+  repeated Image img = 2; // 图片素材，查看 Image 对象
+  Video video = 3; // 图片素材，查看 Image 对象
+  string title = 4; // 返回标题
+  string desc = 5; // 返回描述
+  string button = 6; //按钮文案
+  string icon = 7; //图标地址
+}
+
+message Image {
+  int32 w = 1; // 图片宽度
+  int32 h = 2; // 图片高度
+  string url = 3; // 图片 URL
+}
+
+message Video {
+  int32 w = 1; // 视频宽度
+  int32 h = 2; // 视频高度
+  string url = 3; // 视频 URL
+  int32 duration = 4; // 视频时长
+  string cover = 5; // 视频封面图
+}
+
 
 

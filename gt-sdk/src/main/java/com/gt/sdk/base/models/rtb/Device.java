@@ -15,69 +15,68 @@ import com.czhj.wire.internal.Internal;
 import com.czhj.wire.okio.ByteString;
 
 import java.io.IOException;
+import java.lang.Integer;
+import java.lang.Object;
+import java.lang.Override;
+import java.lang.String;
+import java.lang.StringBuilder;
 import java.util.List;
 
-public final class Device extends AndroidMessage<Device, Device.Builder> {
 
+public final class Device extends AndroidMessage<Device, Device.Builder> {
     public static final ProtoAdapter<Device> ADAPTER = new ProtoAdapter_Device();
 
     public static final Parcelable.Creator<Device> CREATOR = AndroidMessage.newCreator(ADAPTER);
 
     private static final long serialVersionUID = 0L;
 
-    public static final Integer DEFAULT_OS = 0;
-
-    public static final Integer DEFAULT_OSV = 0;
-
-    public static final String DEFAULT_DID = "";
-
-    public static final String DEFAULT_DIDMD5 = "";
-
-    public static final String DEFAULT_DIDSHA1 = "";
-
-    public static final String DEFAULT_OID = "";
-
-    public static final String DEFAULT_OIDMD5 = "";
-
-    public static final String DEFAULT_DPID = "";
-
-    public static final String DEFAULT_DPIDMD5 = "";
-
-    public static final String DEFAULT_DPIDSHA1 = "";
-
-    public static final String DEFAULT_IFA = "";
-
-    public static final String DEFAULT_IFAMD5 = "";
-
-    public static final String DEFAULT_IP = "";
-
-    public static final String DEFAULT_IPV6 = "";
-
-    public static final String DEFAULT_UA = "";
+    public static final Integer DEFAULT_CARRIER = 0;
 
     public static final Integer DEFAULT_CONNECTIONTYPE = 0;
 
     public static final Integer DEFAULT_DEVICETYPE = 0;
 
+    public static final String DEFAULT_DID = "";
+
+    public static final String DEFAULT_DIDMD5 = "";
+
+    public static final String DEFAULT_IFAMD5 = "";
+
+    public static final String DEFAULT_DPID = "";
+
+    public static final String DEFAULT_DPIDMD5 = "";
+
+    public static final Integer DEFAULT_H = 0;
+
+    public static final String DEFAULT_HWV = "";
+
+    public static final String DEFAULT_IP = "";
+
+    public static final String DEFAULT_OID = "";
+
+    public static final String DEFAULT_OIDMD5 = "";
+
+    public static final String DEFAULT_IFA = "";
+
+    public static final String DEFAULT_IPV6 = "";
+
     public static final String DEFAULT_MAKE = "";
 
     public static final String DEFAULT_MODEL = "";
 
-    public static final String DEFAULT_HWV = "";
+    public static final Integer DEFAULT_OS = 0;
 
-    public static final Integer DEFAULT_CARRIER = 0;
+    public static final String DEFAULT_OSV = "";
 
-    public static final String DEFAULT_MACMD5 = "";
+    public static final Integer DEFAULT_PPI = 0;
 
-    public static final String DEFAULT_MACSHA1 = "";
-
-    public static final String DEFAULT_MAC = "";
-
-    public static final Integer DEFAULT_H = 0;
+    public static final String DEFAULT_UA = "";
 
     public static final Integer DEFAULT_W = 0;
 
-    public static final Integer DEFAULT_PPI = 0;
+    public static final String DEFAULT_MAC = "";
+
+    public static final String DEFAULT_MACMD5 = "";
 
     public static final String DEFAULT_SSID = "";
 
@@ -123,204 +122,330 @@ public final class Device extends AndroidMessage<Device, Device.Builder> {
 
     public static final String DEFAULT_TIME_ZONE = "";
 
-    public static final Integer DEFAULT_CPU_NUM = 0;
+    public static final String DEFAULT_CPU_NUM = "";
 
     /**
-     * 操作系统类型. 1=IOS；2=Android
+     * 运营商名称 - 1：中国移动 2：联通 3：电信 0：未知
      */
-    @WireField(tag = 1, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
+    @WireField(tag = 1, adapter = "com.squareup.wire.ProtoAdapter#INT32")
+    public final Integer carrier;
+
+    /**
+     * 设备链接类型 - 0：Unknown 1：Ethernet 2：WiFi 3：Cellular Network-Unk 4：2G 5：3G 6：4G 7：5G
+     */
+    @WireField(tag = 2, adapter = "com.squareup.wire.ProtoAdapter#INT32")
+    public final Integer connectiontype;
+
+    /**
+     * 设备类型 - 1：手机 2：平板 3:  电脑 4:  智能电视 0:  未知
+     */
+    @WireField(tag = 3, adapter = "com.squareup.wire.ProtoAdapter#INT32")
+    public final Integer devicetype;
+
+    /**
+     * Android 设备的 IMEI
+     */
+    @WireField(tag = 4, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String did;
+
+    /**
+     * Android 设备的 IMEI 使用 MD5 后的值
+     */
+    @WireField(tag = 5, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String didmd5;
+
+    /**
+     * iOS设备的IDFA使用MD5后的值
+     */
+    @WireField(tag = 6, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String ifamd5;
+
+    /**
+     * Android 设备 Android ID
+     */
+    @WireField(tag = 7, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String dpid;
+
+    /**
+     * Android 设备 Android ID 使用 MD5 后的值
+     */
+    @WireField(tag = 8, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String dpidmd5;
+
+    /**
+     * 设备的位置信息
+     */
+    @WireField(tag = 9, adapter = "com.gt.sdk.base.models.rtb.Geo#ADAPTER")
+    public final Geo geo;
+
+    /**
+     * 屏幕的物理高度，单位：px
+     */
+    @WireField(tag = 10, adapter = "com.squareup.wire.ProtoAdapter#INT32")
+    public final Integer h;
+
+    /**
+     * 硬件版本, 如 "HUAWEI R9"
+     */
+    @WireField(tag = 11, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String hwv;
+
+    /**
+     * 设备 IP 地址
+     */
+    @WireField(tag = 12, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String ip;
+
+    /**
+     * Android 设备的 OAID 明文
+     */
+    @WireField(tag = 13, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String oid;
+
+    /**
+     * Android 设备的 OAID 使用MD5后的值
+     */
+    @WireField(tag = 14, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String oidmd5;
+
+    /**
+     * iOS 设备的 IDFA，需大写
+     */
+    @WireField(tag = 15, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String ifa;
+
+    /**
+     * 设备 IPv6 地址
+     */
+    @WireField(tag = 16, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String ipv6;
+
+    /**
+     * 设备品牌 Android取Build.BRAND，可用Build.MANUFACTURE代替，但效果会变差；iOS使用默认值Apple Android例子：Honor
+     */
+    @WireField(tag = 17, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String make;
+
+    /**
+     * 设备型号，Android取Build.MODEL Android例子：Che1-CL20 iOS例子：iPhone4,1
+     */
+    @WireField(tag = 18, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String model;
+
+    /**
+     * 操作系统 1 :Android, 2 : ios
+     */
+    @WireField(tag = 19, adapter = "com.squareup.wire.ProtoAdapter#INT32")
     public final Integer os;
 
     /**
-     * Android API level
+     * 操作系统硬件版本，Android API 等级（例如：28）
      */
-    @WireField(tag = 2, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
-    public final Integer osv;
+    @WireField(tag = 20, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String osv;
 
-    @WireField(tag = 3, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String did;
+    /**
+     * 每英寸像素个数，单位：ppi
+     */
+    @WireField(tag = 21, adapter = "com.squareup.wire.ProtoAdapter#INT32")
+    public final Integer ppi;
 
-    @WireField(tag = 4, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String didmd5;
-
-    @WireField(tag = 5, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String didsha1;
-
-    @WireField(tag = 6, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String oid;
-
-    @WireField(tag = 7, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String oidmd5;
-
-    @WireField(tag = 8, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String dpid;
-
-    @WireField(tag = 9, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String dpidmd5;
-
-    @WireField(tag = 10, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String dpidsha1;
-
-    @WireField(tag = 11, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String ifa;
-
-    @WireField(tag = 12, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String ifamd5;
-
-    @WireField(tag = 13, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String ip;
-
-    @WireField(tag = 14, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String ipv6;
-
-    @WireField(tag = 15, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * User Agent，需使用系统 webview 的 ua
+     */
+    @WireField(tag = 22, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String ua;
 
-    @WireField(tag = 16, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
-    public final Integer connectiontype;
+    /**
+     * 屏幕的物理宽度，单位：px
+     */
+    @WireField(tag = 23, adapter = "com.squareup.wire.ProtoAdapter#INT32")
+    public final Integer w;
 
-    @WireField(tag = 17, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
-    public final Integer devicetype;
-
-    @WireField(tag = 18, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String make;
-
-    @WireField(tag = 19, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String model;
-
-    @WireField(tag = 20, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String hwv;
-
-    @WireField(tag = 21, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
-    public final Integer carrier;
-
-    @WireField(tag = 22, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String macmd5;
-
-    @WireField(tag = 23, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String macsha1;
-
+    /**
+     * 设备 MAC 地址的 原值
+     */
     @WireField(tag = 24, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String mac;
 
-    @WireField(tag = 25, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
-    public final Integer h;
+    /**
+     * 设备 MAC 地址使用 MD5 后的值
+     */
+    @WireField(tag = 25, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String macmd5;
 
-    @WireField(tag = 26, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
-    public final Integer w;
-
-    @WireField(tag = 27, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
-    public final Integer ppi;
-
-    @WireField(tag = 28, adapter = "com.gt.sdk.base.models.rtb.Geo#ADAPTER")
-    public final Geo geo;
-
-    @WireField(tag = 29, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 无线网 ssid 名称
+     */
+    @WireField(tag = 26, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String ssid;
 
-    @WireField(tag = 30, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * wifi 路由器的 Mac 地址
+     */
+    @WireField(tag = 27, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String wifi_mac;
 
-    @WireField(tag = 31, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 手机 ROM 版本
+     */
+    @WireField(tag = 28, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String rom_version;
 
-    @WireField(tag = 32, adapter = "com.squareup.wire.ProtoAdapter#STRING", label = WireField.Label.REPEATED)
+    /**
+     * 用户已安装的app
+     */
+    @WireField(tag = 29, adapter = "com.squareup.wire.ProtoAdapter#STRING", label = WireField.Label.REPEATED)
     public final List<String> installed_app;
 
-    @WireField(tag = 33, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 系统更新标识
+     */
+    @WireField(tag = 30, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String update_mark;
 
-    @WireField(tag = 34, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 系统更新时间
+     */
+    @WireField(tag = 31, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String update_time;
 
-    @WireField(tag = 35, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 系统启动标识
+     */
+    @WireField(tag = 32, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String boot_mark;
 
-    @WireField(tag = 36, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 系统启动时间
+     */
+    @WireField(tag = 33, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String boot_time;
 
-    @WireField(tag = 37, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    @WireField(tag = 34, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String sys_compiling_time;
 
-    @WireField(tag = 38, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 设备启动时间
+     */
+    @WireField(tag = 35, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String birth_time;
 
-    @WireField(tag = 39, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 拼多多设备ID
+     */
+    @WireField(tag = 36, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String paid_1_4;
 
-    @WireField(tag = 40, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 华为安卓设备的 HMS Core的版本号，保留原始值
+     */
+    @WireField(tag = 37, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String hms_ver;
 
-    @WireField(tag = 41, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 华为安卓设备的 AG（应用市场）的版本号，保留原始值
+     */
+    @WireField(tag = 38, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String hwag_ver;
 
-    @WireField(tag = 42, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * Caid 原值
+     */
+    @WireField(tag = 39, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String caid;
 
-    @WireField(tag = 43, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * Caid md5 值
+     */
+    @WireField(tag = 40, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String caid_md5;
 
-    @WireField(tag = 44, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * Caid 的版本
+     */
+    @WireField(tag = 41, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String caid_version;
 
-    @WireField(tag = 45, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 设备名称的md5值
+     */
+    @WireField(tag = 42, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String device_name_md5;
 
-    @WireField(tag = 46, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 设备machine值，对应model，示例："iPhone10,3"
+     */
+    @WireField(tag = 43, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String hardware_machine;
 
-    @WireField(tag = 47, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 物理内存，单位：字节
+     */
+    @WireField(tag = 44, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String physical_memory;
 
-    @WireField(tag = 48, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 硬盘大小，单位：字节
+     */
+    @WireField(tag = 45, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String hard_disk_size;
 
-    @WireField(tag = 49, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 国家，示例："CN"
+     */
+    @WireField(tag = 46, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String country;
 
-    @WireField(tag = 50, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 语言，示例："zh-Hans-CN"
+     */
+    @WireField(tag = 47, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String language;
 
-    @WireField(tag = 51, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 时区，示例："28800"
+     */
+    @WireField(tag = 48, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String time_zone;
 
-    @WireField(tag = 52, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
-    public final Integer cpu_num;
+    /**
+     * CPU数目
+     */
+    @WireField(tag = 49, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String cpu_num;
 
-    public Device(Integer os, Integer osv, String did, String didmd5, String didsha1, String oid, String oidmd5, String dpid, String dpidmd5, String dpidsha1, String ifa, String ifamd5, String ip, String ipv6, String ua, Integer connectiontype, Integer devicetype, String make, String model, String hwv, Integer carrier, String macmd5, String macsha1, String mac, Integer h, Integer w, Integer ppi, Geo geo, String ssid, String wifi_mac, String rom_version, List<String> installed_app, String update_mark, String update_time, String boot_mark, String boot_time, String sys_compiling_time, String birth_time, String paid_1_4, String hms_ver, String hwag_ver, String caid, String caid_md5, String caid_version, String device_name_md5, String hardware_machine, String physical_memory, String hard_disk_size, String country, String language, String time_zone, Integer cpu_num) {
-        this(os, osv, did, didmd5, didsha1, oid, oidmd5, dpid, dpidmd5, dpidsha1, ifa, ifamd5, ip, ipv6, ua, connectiontype, devicetype, make, model, hwv, carrier, macmd5, macsha1, mac, h, w, ppi, geo, ssid, wifi_mac, rom_version, installed_app, update_mark, update_time, boot_mark, boot_time, sys_compiling_time, birth_time, paid_1_4, hms_ver, hwag_ver, caid, caid_md5, caid_version, device_name_md5, hardware_machine, physical_memory, hard_disk_size, country, language, time_zone, cpu_num, ByteString.EMPTY);
+    public Device(Integer carrier, Integer connectiontype, Integer devicetype, String did, String didmd5, String ifamd5, String dpid, String dpidmd5, Geo geo, Integer h, String hwv, String ip, String oid, String oidmd5, String ifa, String ipv6, String make, String model, Integer os, String osv, Integer ppi, String ua, Integer w, String mac, String macmd5, String ssid, String wifi_mac, String rom_version, List<String> installed_app, String update_mark, String update_time, String boot_mark, String boot_time, String sys_compiling_time, String birth_time, String paid_1_4, String hms_ver, String hwag_ver, String caid, String caid_md5, String caid_version, String device_name_md5, String hardware_machine, String physical_memory, String hard_disk_size, String country, String language, String time_zone, String cpu_num) {
+        this(carrier, connectiontype, devicetype, did, didmd5, ifamd5, dpid, dpidmd5, geo, h, hwv, ip, oid, oidmd5, ifa, ipv6, make, model, os, osv, ppi, ua, w, mac, macmd5, ssid, wifi_mac, rom_version, installed_app, update_mark, update_time, boot_mark, boot_time, sys_compiling_time, birth_time, paid_1_4, hms_ver, hwag_ver, caid, caid_md5, caid_version, device_name_md5, hardware_machine, physical_memory, hard_disk_size, country, language, time_zone, cpu_num, ByteString.EMPTY);
     }
 
-    public Device(Integer os, Integer osv, String did, String didmd5, String didsha1, String oid, String oidmd5, String dpid, String dpidmd5, String dpidsha1, String ifa, String ifamd5, String ip, String ipv6, String ua, Integer connectiontype, Integer devicetype, String make, String model, String hwv, Integer carrier, String macmd5, String macsha1, String mac, Integer h, Integer w, Integer ppi, Geo geo, String ssid, String wifi_mac, String rom_version, List<String> installed_app, String update_mark, String update_time, String boot_mark, String boot_time, String sys_compiling_time, String birth_time, String paid_1_4, String hms_ver, String hwag_ver, String caid, String caid_md5, String caid_version, String device_name_md5, String hardware_machine, String physical_memory, String hard_disk_size, String country, String language, String time_zone, Integer cpu_num, ByteString unknownFields) {
+    public Device(Integer carrier, Integer connectiontype, Integer devicetype, String did, String didmd5, String ifamd5, String dpid, String dpidmd5, Geo geo, Integer h, String hwv, String ip, String oid, String oidmd5, String ifa, String ipv6, String make, String model, Integer os, String osv, Integer ppi, String ua, Integer w, String mac, String macmd5, String ssid, String wifi_mac, String rom_version, List<String> installed_app, String update_mark, String update_time, String boot_mark, String boot_time, String sys_compiling_time, String birth_time, String paid_1_4, String hms_ver, String hwag_ver, String caid, String caid_md5, String caid_version, String device_name_md5, String hardware_machine, String physical_memory, String hard_disk_size, String country, String language, String time_zone, String cpu_num, ByteString unknownFields) {
         super(ADAPTER, unknownFields);
-        this.os = os;
-        this.osv = osv;
-        this.did = did;
-        this.didmd5 = didmd5;
-        this.didsha1 = didsha1;
-        this.oid = oid;
-        this.oidmd5 = oidmd5;
-        this.dpid = dpid;
-        this.dpidmd5 = dpidmd5;
-        this.dpidsha1 = dpidsha1;
-        this.ifa = ifa;
-        this.ifamd5 = ifamd5;
-        this.ip = ip;
-        this.ipv6 = ipv6;
-        this.ua = ua;
+        this.carrier = carrier;
         this.connectiontype = connectiontype;
         this.devicetype = devicetype;
+        this.did = did;
+        this.didmd5 = didmd5;
+        this.ifamd5 = ifamd5;
+        this.dpid = dpid;
+        this.dpidmd5 = dpidmd5;
+        this.geo = geo;
+        this.h = h;
+        this.hwv = hwv;
+        this.ip = ip;
+        this.oid = oid;
+        this.oidmd5 = oidmd5;
+        this.ifa = ifa;
+        this.ipv6 = ipv6;
         this.make = make;
         this.model = model;
-        this.hwv = hwv;
-        this.carrier = carrier;
-        this.macmd5 = macmd5;
-        this.macsha1 = macsha1;
-        this.mac = mac;
-        this.h = h;
-        this.w = w;
+        this.os = os;
+        this.osv = osv;
         this.ppi = ppi;
-        this.geo = geo;
+        this.ua = ua;
+        this.w = w;
+        this.mac = mac;
+        this.macmd5 = macmd5;
         this.ssid = ssid;
         this.wifi_mac = wifi_mac;
         this.rom_version = rom_version;
@@ -350,34 +475,31 @@ public final class Device extends AndroidMessage<Device, Device.Builder> {
     @Override
     public Builder newBuilder() {
         Builder builder = new Builder();
-        builder.os = os;
-        builder.osv = osv;
-        builder.did = did;
-        builder.didmd5 = didmd5;
-        builder.didsha1 = didsha1;
-        builder.oid = oid;
-        builder.oidmd5 = oidmd5;
-        builder.dpid = dpid;
-        builder.dpidmd5 = dpidmd5;
-        builder.dpidsha1 = dpidsha1;
-        builder.ifa = ifa;
-        builder.ifamd5 = ifamd5;
-        builder.ip = ip;
-        builder.ipv6 = ipv6;
-        builder.ua = ua;
+        builder.carrier = carrier;
         builder.connectiontype = connectiontype;
         builder.devicetype = devicetype;
+        builder.did = did;
+        builder.didmd5 = didmd5;
+        builder.ifamd5 = ifamd5;
+        builder.dpid = dpid;
+        builder.dpidmd5 = dpidmd5;
+        builder.geo = geo;
+        builder.h = h;
+        builder.hwv = hwv;
+        builder.ip = ip;
+        builder.oid = oid;
+        builder.oidmd5 = oidmd5;
+        builder.ifa = ifa;
+        builder.ipv6 = ipv6;
         builder.make = make;
         builder.model = model;
-        builder.hwv = hwv;
-        builder.carrier = carrier;
-        builder.macmd5 = macmd5;
-        builder.macsha1 = macsha1;
-        builder.mac = mac;
-        builder.h = h;
-        builder.w = w;
+        builder.os = os;
+        builder.osv = osv;
         builder.ppi = ppi;
-        builder.geo = geo;
+        builder.ua = ua;
+        builder.w = w;
+        builder.mac = mac;
+        builder.macmd5 = macmd5;
         builder.ssid = ssid;
         builder.wifi_mac = wifi_mac;
         builder.rom_version = rom_version;
@@ -411,7 +533,7 @@ public final class Device extends AndroidMessage<Device, Device.Builder> {
         if (other == this) return true;
         if (!(other instanceof Device)) return false;
         Device o = (Device) other;
-        return unknownFields().equals(o.unknownFields()) && Internal.equals(os, o.os) && Internal.equals(osv, o.osv) && Internal.equals(did, o.did) && Internal.equals(didmd5, o.didmd5) && Internal.equals(didsha1, o.didsha1) && Internal.equals(oid, o.oid) && Internal.equals(oidmd5, o.oidmd5) && Internal.equals(dpid, o.dpid) && Internal.equals(dpidmd5, o.dpidmd5) && Internal.equals(dpidsha1, o.dpidsha1) && Internal.equals(ifa, o.ifa) && Internal.equals(ifamd5, o.ifamd5) && Internal.equals(ip, o.ip) && Internal.equals(ipv6, o.ipv6) && Internal.equals(ua, o.ua) && Internal.equals(connectiontype, o.connectiontype) && Internal.equals(devicetype, o.devicetype) && Internal.equals(make, o.make) && Internal.equals(model, o.model) && Internal.equals(hwv, o.hwv) && Internal.equals(carrier, o.carrier) && Internal.equals(macmd5, o.macmd5) && Internal.equals(macsha1, o.macsha1) && Internal.equals(mac, o.mac) && Internal.equals(h, o.h) && Internal.equals(w, o.w) && Internal.equals(ppi, o.ppi) && Internal.equals(geo, o.geo) && Internal.equals(ssid, o.ssid) && Internal.equals(wifi_mac, o.wifi_mac) && Internal.equals(rom_version, o.rom_version) && installed_app.equals(o.installed_app) && Internal.equals(update_mark, o.update_mark) && Internal.equals(update_time, o.update_time) && Internal.equals(boot_mark, o.boot_mark) && Internal.equals(boot_time, o.boot_time) && Internal.equals(sys_compiling_time, o.sys_compiling_time) && Internal.equals(birth_time, o.birth_time) && Internal.equals(paid_1_4, o.paid_1_4) && Internal.equals(hms_ver, o.hms_ver) && Internal.equals(hwag_ver, o.hwag_ver) && Internal.equals(caid, o.caid) && Internal.equals(caid_md5, o.caid_md5) && Internal.equals(caid_version, o.caid_version) && Internal.equals(device_name_md5, o.device_name_md5) && Internal.equals(hardware_machine, o.hardware_machine) && Internal.equals(physical_memory, o.physical_memory) && Internal.equals(hard_disk_size, o.hard_disk_size) && Internal.equals(country, o.country) && Internal.equals(language, o.language) && Internal.equals(time_zone, o.time_zone) && Internal.equals(cpu_num, o.cpu_num);
+        return unknownFields().equals(o.unknownFields()) && Internal.equals(carrier, o.carrier) && Internal.equals(connectiontype, o.connectiontype) && Internal.equals(devicetype, o.devicetype) && Internal.equals(did, o.did) && Internal.equals(didmd5, o.didmd5) && Internal.equals(ifamd5, o.ifamd5) && Internal.equals(dpid, o.dpid) && Internal.equals(dpidmd5, o.dpidmd5) && Internal.equals(geo, o.geo) && Internal.equals(h, o.h) && Internal.equals(hwv, o.hwv) && Internal.equals(ip, o.ip) && Internal.equals(oid, o.oid) && Internal.equals(oidmd5, o.oidmd5) && Internal.equals(ifa, o.ifa) && Internal.equals(ipv6, o.ipv6) && Internal.equals(make, o.make) && Internal.equals(model, o.model) && Internal.equals(os, o.os) && Internal.equals(osv, o.osv) && Internal.equals(ppi, o.ppi) && Internal.equals(ua, o.ua) && Internal.equals(w, o.w) && Internal.equals(mac, o.mac) && Internal.equals(macmd5, o.macmd5) && Internal.equals(ssid, o.ssid) && Internal.equals(wifi_mac, o.wifi_mac) && Internal.equals(rom_version, o.rom_version) && installed_app.equals(o.installed_app) && Internal.equals(update_mark, o.update_mark) && Internal.equals(update_time, o.update_time) && Internal.equals(boot_mark, o.boot_mark) && Internal.equals(boot_time, o.boot_time) && Internal.equals(sys_compiling_time, o.sys_compiling_time) && Internal.equals(birth_time, o.birth_time) && Internal.equals(paid_1_4, o.paid_1_4) && Internal.equals(hms_ver, o.hms_ver) && Internal.equals(hwag_ver, o.hwag_ver) && Internal.equals(caid, o.caid) && Internal.equals(caid_md5, o.caid_md5) && Internal.equals(caid_version, o.caid_version) && Internal.equals(device_name_md5, o.device_name_md5) && Internal.equals(hardware_machine, o.hardware_machine) && Internal.equals(physical_memory, o.physical_memory) && Internal.equals(hard_disk_size, o.hard_disk_size) && Internal.equals(country, o.country) && Internal.equals(language, o.language) && Internal.equals(time_zone, o.time_zone) && Internal.equals(cpu_num, o.cpu_num);
     }
 
     @Override
@@ -419,34 +541,31 @@ public final class Device extends AndroidMessage<Device, Device.Builder> {
         int result = super.hashCode;
         if (result == 0) {
             result = unknownFields().hashCode();
-            result = result * 37 + (os != null ? os.hashCode() : 0);
-            result = result * 37 + (osv != null ? osv.hashCode() : 0);
-            result = result * 37 + (did != null ? did.hashCode() : 0);
-            result = result * 37 + (didmd5 != null ? didmd5.hashCode() : 0);
-            result = result * 37 + (didsha1 != null ? didsha1.hashCode() : 0);
-            result = result * 37 + (oid != null ? oid.hashCode() : 0);
-            result = result * 37 + (oidmd5 != null ? oidmd5.hashCode() : 0);
-            result = result * 37 + (dpid != null ? dpid.hashCode() : 0);
-            result = result * 37 + (dpidmd5 != null ? dpidmd5.hashCode() : 0);
-            result = result * 37 + (dpidsha1 != null ? dpidsha1.hashCode() : 0);
-            result = result * 37 + (ifa != null ? ifa.hashCode() : 0);
-            result = result * 37 + (ifamd5 != null ? ifamd5.hashCode() : 0);
-            result = result * 37 + (ip != null ? ip.hashCode() : 0);
-            result = result * 37 + (ipv6 != null ? ipv6.hashCode() : 0);
-            result = result * 37 + (ua != null ? ua.hashCode() : 0);
+            result = result * 37 + (carrier != null ? carrier.hashCode() : 0);
             result = result * 37 + (connectiontype != null ? connectiontype.hashCode() : 0);
             result = result * 37 + (devicetype != null ? devicetype.hashCode() : 0);
+            result = result * 37 + (did != null ? did.hashCode() : 0);
+            result = result * 37 + (didmd5 != null ? didmd5.hashCode() : 0);
+            result = result * 37 + (ifamd5 != null ? ifamd5.hashCode() : 0);
+            result = result * 37 + (dpid != null ? dpid.hashCode() : 0);
+            result = result * 37 + (dpidmd5 != null ? dpidmd5.hashCode() : 0);
+            result = result * 37 + (geo != null ? geo.hashCode() : 0);
+            result = result * 37 + (h != null ? h.hashCode() : 0);
+            result = result * 37 + (hwv != null ? hwv.hashCode() : 0);
+            result = result * 37 + (ip != null ? ip.hashCode() : 0);
+            result = result * 37 + (oid != null ? oid.hashCode() : 0);
+            result = result * 37 + (oidmd5 != null ? oidmd5.hashCode() : 0);
+            result = result * 37 + (ifa != null ? ifa.hashCode() : 0);
+            result = result * 37 + (ipv6 != null ? ipv6.hashCode() : 0);
             result = result * 37 + (make != null ? make.hashCode() : 0);
             result = result * 37 + (model != null ? model.hashCode() : 0);
-            result = result * 37 + (hwv != null ? hwv.hashCode() : 0);
-            result = result * 37 + (carrier != null ? carrier.hashCode() : 0);
-            result = result * 37 + (macmd5 != null ? macmd5.hashCode() : 0);
-            result = result * 37 + (macsha1 != null ? macsha1.hashCode() : 0);
-            result = result * 37 + (mac != null ? mac.hashCode() : 0);
-            result = result * 37 + (h != null ? h.hashCode() : 0);
-            result = result * 37 + (w != null ? w.hashCode() : 0);
+            result = result * 37 + (os != null ? os.hashCode() : 0);
+            result = result * 37 + (osv != null ? osv.hashCode() : 0);
             result = result * 37 + (ppi != null ? ppi.hashCode() : 0);
-            result = result * 37 + (geo != null ? geo.hashCode() : 0);
+            result = result * 37 + (ua != null ? ua.hashCode() : 0);
+            result = result * 37 + (w != null ? w.hashCode() : 0);
+            result = result * 37 + (mac != null ? mac.hashCode() : 0);
+            result = result * 37 + (macmd5 != null ? macmd5.hashCode() : 0);
             result = result * 37 + (ssid != null ? ssid.hashCode() : 0);
             result = result * 37 + (wifi_mac != null ? wifi_mac.hashCode() : 0);
             result = result * 37 + (rom_version != null ? rom_version.hashCode() : 0);
@@ -479,34 +598,31 @@ public final class Device extends AndroidMessage<Device, Device.Builder> {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        if (os != null) builder.append(", os=").append(os);
-        if (osv != null) builder.append(", osv=").append(osv);
-        if (did != null) builder.append(", did=").append(did);
-        if (didmd5 != null) builder.append(", didmd5=").append(didmd5);
-        if (didsha1 != null) builder.append(", didsha1=").append(didsha1);
-        if (oid != null) builder.append(", oid=").append(oid);
-        if (oidmd5 != null) builder.append(", oidmd5=").append(oidmd5);
-        if (dpid != null) builder.append(", dpid=").append(dpid);
-        if (dpidmd5 != null) builder.append(", dpidmd5=").append(dpidmd5);
-        if (dpidsha1 != null) builder.append(", dpidsha1=").append(dpidsha1);
-        if (ifa != null) builder.append(", ifa=").append(ifa);
-        if (ifamd5 != null) builder.append(", ifamd5=").append(ifamd5);
-        if (ip != null) builder.append(", ip=").append(ip);
-        if (ipv6 != null) builder.append(", ipv6=").append(ipv6);
-        if (ua != null) builder.append(", ua=").append(ua);
+        if (carrier != null) builder.append(", carrier=").append(carrier);
         if (connectiontype != null) builder.append(", connectiontype=").append(connectiontype);
         if (devicetype != null) builder.append(", devicetype=").append(devicetype);
+        if (did != null) builder.append(", did=").append(did);
+        if (didmd5 != null) builder.append(", didmd5=").append(didmd5);
+        if (ifamd5 != null) builder.append(", ifamd5=").append(ifamd5);
+        if (dpid != null) builder.append(", dpid=").append(dpid);
+        if (dpidmd5 != null) builder.append(", dpidmd5=").append(dpidmd5);
+        if (geo != null) builder.append(", geo=").append(geo);
+        if (h != null) builder.append(", h=").append(h);
+        if (hwv != null) builder.append(", hwv=").append(hwv);
+        if (ip != null) builder.append(", ip=").append(ip);
+        if (oid != null) builder.append(", oid=").append(oid);
+        if (oidmd5 != null) builder.append(", oidmd5=").append(oidmd5);
+        if (ifa != null) builder.append(", ifa=").append(ifa);
+        if (ipv6 != null) builder.append(", ipv6=").append(ipv6);
         if (make != null) builder.append(", make=").append(make);
         if (model != null) builder.append(", model=").append(model);
-        if (hwv != null) builder.append(", hwv=").append(hwv);
-        if (carrier != null) builder.append(", carrier=").append(carrier);
-        if (macmd5 != null) builder.append(", macmd5=").append(macmd5);
-        if (macsha1 != null) builder.append(", macsha1=").append(macsha1);
-        if (mac != null) builder.append(", mac=").append(mac);
-        if (h != null) builder.append(", h=").append(h);
-        if (w != null) builder.append(", w=").append(w);
+        if (os != null) builder.append(", os=").append(os);
+        if (osv != null) builder.append(", osv=").append(osv);
         if (ppi != null) builder.append(", ppi=").append(ppi);
-        if (geo != null) builder.append(", geo=").append(geo);
+        if (ua != null) builder.append(", ua=").append(ua);
+        if (w != null) builder.append(", w=").append(w);
+        if (mac != null) builder.append(", mac=").append(mac);
+        if (macmd5 != null) builder.append(", macmd5=").append(macmd5);
         if (ssid != null) builder.append(", ssid=").append(ssid);
         if (wifi_mac != null) builder.append(", wifi_mac=").append(wifi_mac);
         if (rom_version != null) builder.append(", rom_version=").append(rom_version);
@@ -537,116 +653,254 @@ public final class Device extends AndroidMessage<Device, Device.Builder> {
     }
 
     public static final class Builder extends Message.Builder<Device, Builder> {
-        public Integer os = DEFAULT_OS;
+        public Integer carrier;
 
-        public Integer osv = DEFAULT_OSV;
+        public Integer connectiontype;
 
-        public String did = DEFAULT_DID;
+        public Integer devicetype;
 
-        public String didmd5 = DEFAULT_DIDMD5;
+        public String did;
 
-        public String didsha1 = DEFAULT_DIDSHA1;
+        public String didmd5;
 
-        public String oid = DEFAULT_OID;
+        public String ifamd5;
 
-        public String oidmd5 = DEFAULT_OIDMD5;
+        public String dpid;
 
-        public String dpid = DEFAULT_DPID;
-
-        public String dpidmd5 = DEFAULT_DPIDMD5;
-
-        public String dpidsha1 = DEFAULT_DPIDSHA1;
-
-        public String ifa = DEFAULT_IFA;
-
-        public String ifamd5 = DEFAULT_IFAMD5;
-
-        public String ip = DEFAULT_IP;
-
-        public String ipv6 = DEFAULT_IPV6;
-
-        public String ua = DEFAULT_UA;
-
-        public Integer connectiontype = DEFAULT_CONNECTIONTYPE;
-
-        public Integer devicetype = DEFAULT_DEVICETYPE;
-
-        public String make = DEFAULT_MAKE;
-
-        public String model = DEFAULT_MODEL;
-
-        public String hwv = DEFAULT_HWV;
-
-        public Integer carrier = DEFAULT_CARRIER;
-
-        public String macmd5 = DEFAULT_MACMD5;
-
-        public String macsha1 = DEFAULT_MACSHA1;
-
-        public String mac = DEFAULT_MAC;
-
-        public Integer h = DEFAULT_H;
-
-        public Integer w = DEFAULT_W;
-
-        public Integer ppi = DEFAULT_PPI;
+        public String dpidmd5;
 
         public Geo geo;
 
-        public String ssid = DEFAULT_SSID;
+        public Integer h;
 
-        public String wifi_mac = DEFAULT_WIFI_MAC;
+        public String hwv;
 
-        public String rom_version = DEFAULT_ROM_VERSION;
+        public String ip;
+
+        public String oid;
+
+        public String oidmd5;
+
+        public String ifa;
+
+        public String ipv6;
+
+        public String make;
+
+        public String model;
+
+        public Integer os;
+
+        public String osv;
+
+        public Integer ppi;
+
+        public String ua;
+
+        public Integer w;
+
+        public String mac;
+
+        public String macmd5;
+
+        public String ssid;
+
+        public String wifi_mac;
+
+        public String rom_version;
 
         public List<String> installed_app;
 
-        public String update_mark = DEFAULT_UPDATE_MARK;
+        public String update_mark;
 
-        public String update_time = DEFAULT_UPDATE_TIME;
+        public String update_time;
 
-        public String boot_mark = DEFAULT_BOOT_MARK;
+        public String boot_mark;
 
-        public String boot_time = DEFAULT_BOOT_TIME;
+        public String boot_time;
 
-        public String sys_compiling_time = DEFAULT_SYS_COMPILING_TIME;
+        public String sys_compiling_time;
 
-        public String birth_time = DEFAULT_BIRTH_TIME;
+        public String birth_time;
 
-        public String paid_1_4 = DEFAULT_PAID_1_4;
+        public String paid_1_4;
 
-        public String hms_ver = DEFAULT_HMS_VER;
+        public String hms_ver;
 
-        public String hwag_ver = DEFAULT_HWAG_VER;
+        public String hwag_ver;
 
-        public String caid = DEFAULT_CAID;
+        public String caid;
 
-        public String caid_md5 = DEFAULT_CAID_MD5;
+        public String caid_md5;
 
-        public String caid_version = DEFAULT_CAID_VERSION;
+        public String caid_version;
 
-        public String device_name_md5 = DEFAULT_DEVICE_NAME_MD5;
+        public String device_name_md5;
 
-        public String hardware_machine = DEFAULT_HARDWARE_MACHINE;
+        public String hardware_machine;
 
-        public String physical_memory = DEFAULT_PHYSICAL_MEMORY;
+        public String physical_memory;
 
-        public String hard_disk_size = DEFAULT_HARD_DISK_SIZE;
+        public String hard_disk_size;
 
-        public String country = DEFAULT_COUNTRY;
+        public String country;
 
-        public String language = DEFAULT_LANGUAGE;
+        public String language;
 
-        public String time_zone = DEFAULT_TIME_ZONE;
+        public String time_zone;
 
-        public Integer cpu_num = DEFAULT_CPU_NUM;
+        public String cpu_num;
 
         public Builder() {
             installed_app = Internal.newMutableList();
         }
 
         /**
-         * 操作系统类型. 1=IOS；2=Android
+         * 运营商名称 - 1：中国移动 2：联通 3：电信 0：未知
+         */
+        public Builder carrier(Integer carrier) {
+            this.carrier = carrier;
+            return this;
+        }
+
+        /**
+         * 设备链接类型 - 0：Unknown 1：Ethernet 2：WiFi 3：Cellular Network-Unk 4：2G 5：3G 6：4G 7：5G
+         */
+        public Builder connectiontype(Integer connectiontype) {
+            this.connectiontype = connectiontype;
+            return this;
+        }
+
+        /**
+         * 设备类型 - 1：手机 2：平板 3:  电脑 4:  智能电视 0:  未知
+         */
+        public Builder devicetype(Integer devicetype) {
+            this.devicetype = devicetype;
+            return this;
+        }
+
+        /**
+         * Android 设备的 IMEI
+         */
+        public Builder did(String did) {
+            this.did = did;
+            return this;
+        }
+
+        /**
+         * Android 设备的 IMEI 使用 MD5 后的值
+         */
+        public Builder didmd5(String didmd5) {
+            this.didmd5 = didmd5;
+            return this;
+        }
+
+        /**
+         * iOS设备的IDFA使用MD5后的值
+         */
+        public Builder ifamd5(String ifamd5) {
+            this.ifamd5 = ifamd5;
+            return this;
+        }
+
+        /**
+         * Android 设备 Android ID
+         */
+        public Builder dpid(String dpid) {
+            this.dpid = dpid;
+            return this;
+        }
+
+        /**
+         * Android 设备 Android ID 使用 MD5 后的值
+         */
+        public Builder dpidmd5(String dpidmd5) {
+            this.dpidmd5 = dpidmd5;
+            return this;
+        }
+
+        /**
+         * 设备的位置信息
+         */
+        public Builder geo(Geo geo) {
+            this.geo = geo;
+            return this;
+        }
+
+        /**
+         * 屏幕的物理高度，单位：px
+         */
+        public Builder h(Integer h) {
+            this.h = h;
+            return this;
+        }
+
+        /**
+         * 硬件版本, 如 "HUAWEI R9"
+         */
+        public Builder hwv(String hwv) {
+            this.hwv = hwv;
+            return this;
+        }
+
+        /**
+         * 设备 IP 地址
+         */
+        public Builder ip(String ip) {
+            this.ip = ip;
+            return this;
+        }
+
+        /**
+         * Android 设备的 OAID 明文
+         */
+        public Builder oid(String oid) {
+            this.oid = oid;
+            return this;
+        }
+
+        /**
+         * Android 设备的 OAID 使用MD5后的值
+         */
+        public Builder oidmd5(String oidmd5) {
+            this.oidmd5 = oidmd5;
+            return this;
+        }
+
+        /**
+         * iOS 设备的 IDFA，需大写
+         */
+        public Builder ifa(String ifa) {
+            this.ifa = ifa;
+            return this;
+        }
+
+        /**
+         * 设备 IPv6 地址
+         */
+        public Builder ipv6(String ipv6) {
+            this.ipv6 = ipv6;
+            return this;
+        }
+
+        /**
+         * 设备品牌 Android取Build.BRAND，可用Build.MANUFACTURE代替，但效果会变差；iOS使用默认值Apple Android例子：Honor
+         */
+        public Builder make(String make) {
+            this.make = make;
+            return this;
+        }
+
+        /**
+         * 设备型号，Android取Build.MODEL Android例子：Che1-CL20 iOS例子：iPhone4,1
+         */
+        public Builder model(String model) {
+            this.model = model;
+            return this;
+        }
+
+        /**
+         * 操作系统 1 :Android, 2 : ios
          */
         public Builder os(Integer os) {
             this.os = os;
@@ -654,179 +908,113 @@ public final class Device extends AndroidMessage<Device, Device.Builder> {
         }
 
         /**
-         * Android API level
+         * 操作系统硬件版本，Android API 等级（例如：28）
          */
-        public Builder osv(Integer osv) {
+        public Builder osv(String osv) {
             this.osv = osv;
             return this;
         }
 
-        public Builder did(String did) {
-            this.did = did;
-            return this;
-        }
-
-        public Builder didmd5(String didmd5) {
-            this.didmd5 = didmd5;
-            return this;
-        }
-
-        public Builder didsha1(String didsha1) {
-            this.didsha1 = didsha1;
-            return this;
-        }
-
-        public Builder oid(String oid) {
-            this.oid = oid;
-            return this;
-        }
-
-        public Builder oidmd5(String oidmd5) {
-            this.oidmd5 = oidmd5;
-            return this;
-        }
-
-        public Builder dpid(String dpid) {
-            this.dpid = dpid;
-            return this;
-        }
-
-        public Builder dpidmd5(String dpidmd5) {
-            this.dpidmd5 = dpidmd5;
-            return this;
-        }
-
-        public Builder dpidsha1(String dpidsha1) {
-            this.dpidsha1 = dpidsha1;
-            return this;
-        }
-
-        public Builder ifa(String ifa) {
-            this.ifa = ifa;
-            return this;
-        }
-
-        public Builder ifamd5(String ifamd5) {
-            this.ifamd5 = ifamd5;
-            return this;
-        }
-
-        public Builder ip(String ip) {
-            this.ip = ip;
-            return this;
-        }
-
-        public Builder ipv6(String ipv6) {
-            this.ipv6 = ipv6;
-            return this;
-        }
-
-        public Builder ua(String ua) {
-            this.ua = ua;
-            return this;
-        }
-
-        public Builder connectiontype(Integer connectiontype) {
-            this.connectiontype = connectiontype;
-            return this;
-        }
-
-        public Builder devicetype(Integer devicetype) {
-            this.devicetype = devicetype;
-            return this;
-        }
-
-        public Builder make(String make) {
-            this.make = make;
-            return this;
-        }
-
-        public Builder model(String model) {
-            this.model = model;
-            return this;
-        }
-
-        public Builder hwv(String hwv) {
-            this.hwv = hwv;
-            return this;
-        }
-
-        public Builder carrier(Integer carrier) {
-            this.carrier = carrier;
-            return this;
-        }
-
-        public Builder macmd5(String macmd5) {
-            this.macmd5 = macmd5;
-            return this;
-        }
-
-        public Builder macsha1(String macsha1) {
-            this.macsha1 = macsha1;
-            return this;
-        }
-
-        public Builder mac(String mac) {
-            this.mac = mac;
-            return this;
-        }
-
-        public Builder h(Integer h) {
-            this.h = h;
-            return this;
-        }
-
-        public Builder w(Integer w) {
-            this.w = w;
-            return this;
-        }
-
+        /**
+         * 每英寸像素个数，单位：ppi
+         */
         public Builder ppi(Integer ppi) {
             this.ppi = ppi;
             return this;
         }
 
-        public Builder geo(Geo geo) {
-            this.geo = geo;
+        /**
+         * User Agent，需使用系统 webview 的 ua
+         */
+        public Builder ua(String ua) {
+            this.ua = ua;
             return this;
         }
 
+        /**
+         * 屏幕的物理宽度，单位：px
+         */
+        public Builder w(Integer w) {
+            this.w = w;
+            return this;
+        }
+
+        /**
+         * 设备 MAC 地址的 原值
+         */
+        public Builder mac(String mac) {
+            this.mac = mac;
+            return this;
+        }
+
+        /**
+         * 设备 MAC 地址使用 MD5 后的值
+         */
+        public Builder macmd5(String macmd5) {
+            this.macmd5 = macmd5;
+            return this;
+        }
+
+        /**
+         * 无线网 ssid 名称
+         */
         public Builder ssid(String ssid) {
             this.ssid = ssid;
             return this;
         }
 
+        /**
+         * wifi 路由器的 Mac 地址
+         */
         public Builder wifi_mac(String wifi_mac) {
             this.wifi_mac = wifi_mac;
             return this;
         }
 
+        /**
+         * 手机 ROM 版本
+         */
         public Builder rom_version(String rom_version) {
             this.rom_version = rom_version;
             return this;
         }
 
+        /**
+         * 用户已安装的app
+         */
         public Builder installed_app(List<String> installed_app) {
             Internal.checkElementsNotNull(installed_app);
             this.installed_app = installed_app;
             return this;
         }
 
+        /**
+         * 系统更新标识
+         */
         public Builder update_mark(String update_mark) {
             this.update_mark = update_mark;
             return this;
         }
 
+        /**
+         * 系统更新时间
+         */
         public Builder update_time(String update_time) {
             this.update_time = update_time;
             return this;
         }
 
+        /**
+         * 系统启动标识
+         */
         public Builder boot_mark(String boot_mark) {
             this.boot_mark = boot_mark;
             return this;
         }
 
+        /**
+         * 系统启动时间
+         */
         public Builder boot_time(String boot_time) {
             this.boot_time = boot_time;
             return this;
@@ -837,84 +1025,129 @@ public final class Device extends AndroidMessage<Device, Device.Builder> {
             return this;
         }
 
+        /**
+         * 设备启动时间
+         */
         public Builder birth_time(String birth_time) {
             this.birth_time = birth_time;
             return this;
         }
 
+        /**
+         * 拼多多设备ID
+         */
         public Builder paid_1_4(String paid_1_4) {
             this.paid_1_4 = paid_1_4;
             return this;
         }
 
+        /**
+         * 华为安卓设备的 HMS Core的版本号，保留原始值
+         */
         public Builder hms_ver(String hms_ver) {
             this.hms_ver = hms_ver;
             return this;
         }
 
+        /**
+         * 华为安卓设备的 AG（应用市场）的版本号，保留原始值
+         */
         public Builder hwag_ver(String hwag_ver) {
             this.hwag_ver = hwag_ver;
             return this;
         }
 
+        /**
+         * Caid 原值
+         */
         public Builder caid(String caid) {
             this.caid = caid;
             return this;
         }
 
+        /**
+         * Caid md5 值
+         */
         public Builder caid_md5(String caid_md5) {
             this.caid_md5 = caid_md5;
             return this;
         }
 
+        /**
+         * Caid 的版本
+         */
         public Builder caid_version(String caid_version) {
             this.caid_version = caid_version;
             return this;
         }
 
+        /**
+         * 设备名称的md5值
+         */
         public Builder device_name_md5(String device_name_md5) {
             this.device_name_md5 = device_name_md5;
             return this;
         }
 
+        /**
+         * 设备machine值，对应model，示例："iPhone10,3"
+         */
         public Builder hardware_machine(String hardware_machine) {
             this.hardware_machine = hardware_machine;
             return this;
         }
 
+        /**
+         * 物理内存，单位：字节
+         */
         public Builder physical_memory(String physical_memory) {
             this.physical_memory = physical_memory;
             return this;
         }
 
+        /**
+         * 硬盘大小，单位：字节
+         */
         public Builder hard_disk_size(String hard_disk_size) {
             this.hard_disk_size = hard_disk_size;
             return this;
         }
 
+        /**
+         * 国家，示例："CN"
+         */
         public Builder country(String country) {
             this.country = country;
             return this;
         }
 
+        /**
+         * 语言，示例："zh-Hans-CN"
+         */
         public Builder language(String language) {
             this.language = language;
             return this;
         }
 
+        /**
+         * 时区，示例："28800"
+         */
         public Builder time_zone(String time_zone) {
             this.time_zone = time_zone;
             return this;
         }
 
-        public Builder cpu_num(Integer cpu_num) {
+        /**
+         * CPU数目
+         */
+        public Builder cpu_num(String cpu_num) {
             this.cpu_num = cpu_num;
             return this;
         }
 
         @Override
         public Device build() {
-            return new Device(os, osv, did, didmd5, didsha1, oid, oidmd5, dpid, dpidmd5, dpidsha1, ifa, ifamd5, ip, ipv6, ua, connectiontype, devicetype, make, model, hwv, carrier, macmd5, macsha1, mac, h, w, ppi, geo, ssid, wifi_mac, rom_version, installed_app, update_mark, update_time, boot_mark, boot_time, sys_compiling_time, birth_time, paid_1_4, hms_ver, hwag_ver, caid, caid_md5, caid_version, device_name_md5, hardware_machine, physical_memory, hard_disk_size, country, language, time_zone, cpu_num, super.buildUnknownFields());
+            return new Device(carrier, connectiontype, devicetype, did, didmd5, ifamd5, dpid, dpidmd5, geo, h, hwv, ip, oid, oidmd5, ifa, ipv6, make, model, os, osv, ppi, ua, w, mac, macmd5, ssid, wifi_mac, rom_version, installed_app, update_mark, update_time, boot_mark, boot_time, sys_compiling_time, birth_time, paid_1_4, hms_ver, hwag_ver, caid, caid_md5, caid_version, device_name_md5, hardware_machine, physical_memory, hard_disk_size, country, language, time_zone, cpu_num, super.buildUnknownFields());
         }
     }
 
@@ -925,63 +1158,60 @@ public final class Device extends AndroidMessage<Device, Device.Builder> {
 
         @Override
         public int encodedSize(Device value) {
-            return ProtoAdapter.UINT32.encodedSizeWithTag(1, value.os) + ProtoAdapter.UINT32.encodedSizeWithTag(2, value.osv) + ProtoAdapter.STRING.encodedSizeWithTag(3, value.did) + ProtoAdapter.STRING.encodedSizeWithTag(4, value.didmd5) + ProtoAdapter.STRING.encodedSizeWithTag(5, value.didsha1) + ProtoAdapter.STRING.encodedSizeWithTag(6, value.oid) + ProtoAdapter.STRING.encodedSizeWithTag(7, value.oidmd5) + ProtoAdapter.STRING.encodedSizeWithTag(8, value.dpid) + ProtoAdapter.STRING.encodedSizeWithTag(9, value.dpidmd5) + ProtoAdapter.STRING.encodedSizeWithTag(10, value.dpidsha1) + ProtoAdapter.STRING.encodedSizeWithTag(11, value.ifa) + ProtoAdapter.STRING.encodedSizeWithTag(12, value.ifamd5) + ProtoAdapter.STRING.encodedSizeWithTag(13, value.ip) + ProtoAdapter.STRING.encodedSizeWithTag(14, value.ipv6) + ProtoAdapter.STRING.encodedSizeWithTag(15, value.ua) + ProtoAdapter.UINT32.encodedSizeWithTag(16, value.connectiontype) + ProtoAdapter.UINT32.encodedSizeWithTag(17, value.devicetype) + ProtoAdapter.STRING.encodedSizeWithTag(18, value.make) + ProtoAdapter.STRING.encodedSizeWithTag(19, value.model) + ProtoAdapter.STRING.encodedSizeWithTag(20, value.hwv) + ProtoAdapter.UINT32.encodedSizeWithTag(21, value.carrier) + ProtoAdapter.STRING.encodedSizeWithTag(22, value.macmd5) + ProtoAdapter.STRING.encodedSizeWithTag(23, value.macsha1) + ProtoAdapter.STRING.encodedSizeWithTag(24, value.mac) + ProtoAdapter.UINT32.encodedSizeWithTag(25, value.h) + ProtoAdapter.UINT32.encodedSizeWithTag(26, value.w) + ProtoAdapter.UINT32.encodedSizeWithTag(27, value.ppi) + Geo.ADAPTER.encodedSizeWithTag(28, value.geo) + ProtoAdapter.STRING.encodedSizeWithTag(29, value.ssid) + ProtoAdapter.STRING.encodedSizeWithTag(30, value.wifi_mac) + ProtoAdapter.STRING.encodedSizeWithTag(31, value.rom_version) + ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(32, value.installed_app) + ProtoAdapter.STRING.encodedSizeWithTag(33, value.update_mark) + ProtoAdapter.STRING.encodedSizeWithTag(34, value.update_time) + ProtoAdapter.STRING.encodedSizeWithTag(35, value.boot_mark) + ProtoAdapter.STRING.encodedSizeWithTag(36, value.boot_time) + ProtoAdapter.STRING.encodedSizeWithTag(37, value.sys_compiling_time) + ProtoAdapter.STRING.encodedSizeWithTag(38, value.birth_time) + ProtoAdapter.STRING.encodedSizeWithTag(39, value.paid_1_4) + ProtoAdapter.STRING.encodedSizeWithTag(40, value.hms_ver) + ProtoAdapter.STRING.encodedSizeWithTag(41, value.hwag_ver) + ProtoAdapter.STRING.encodedSizeWithTag(42, value.caid) + ProtoAdapter.STRING.encodedSizeWithTag(43, value.caid_md5) + ProtoAdapter.STRING.encodedSizeWithTag(44, value.caid_version) + ProtoAdapter.STRING.encodedSizeWithTag(45, value.device_name_md5) + ProtoAdapter.STRING.encodedSizeWithTag(46, value.hardware_machine) + ProtoAdapter.STRING.encodedSizeWithTag(47, value.physical_memory) + ProtoAdapter.STRING.encodedSizeWithTag(48, value.hard_disk_size) + ProtoAdapter.STRING.encodedSizeWithTag(49, value.country) + ProtoAdapter.STRING.encodedSizeWithTag(50, value.language) + ProtoAdapter.STRING.encodedSizeWithTag(51, value.time_zone) + ProtoAdapter.UINT32.encodedSizeWithTag(52, value.cpu_num) + value.unknownFields().size();
+            return ProtoAdapter.INT32.encodedSizeWithTag(1, value.carrier) + ProtoAdapter.INT32.encodedSizeWithTag(2, value.connectiontype) + ProtoAdapter.INT32.encodedSizeWithTag(3, value.devicetype) + ProtoAdapter.STRING.encodedSizeWithTag(4, value.did) + ProtoAdapter.STRING.encodedSizeWithTag(5, value.didmd5) + ProtoAdapter.STRING.encodedSizeWithTag(6, value.ifamd5) + ProtoAdapter.STRING.encodedSizeWithTag(7, value.dpid) + ProtoAdapter.STRING.encodedSizeWithTag(8, value.dpidmd5) + Geo.ADAPTER.encodedSizeWithTag(9, value.geo) + ProtoAdapter.INT32.encodedSizeWithTag(10, value.h) + ProtoAdapter.STRING.encodedSizeWithTag(11, value.hwv) + ProtoAdapter.STRING.encodedSizeWithTag(12, value.ip) + ProtoAdapter.STRING.encodedSizeWithTag(13, value.oid) + ProtoAdapter.STRING.encodedSizeWithTag(14, value.oidmd5) + ProtoAdapter.STRING.encodedSizeWithTag(15, value.ifa) + ProtoAdapter.STRING.encodedSizeWithTag(16, value.ipv6) + ProtoAdapter.STRING.encodedSizeWithTag(17, value.make) + ProtoAdapter.STRING.encodedSizeWithTag(18, value.model) + ProtoAdapter.INT32.encodedSizeWithTag(19, value.os) + ProtoAdapter.STRING.encodedSizeWithTag(20, value.osv) + ProtoAdapter.INT32.encodedSizeWithTag(21, value.ppi) + ProtoAdapter.STRING.encodedSizeWithTag(22, value.ua) + ProtoAdapter.INT32.encodedSizeWithTag(23, value.w) + ProtoAdapter.STRING.encodedSizeWithTag(24, value.mac) + ProtoAdapter.STRING.encodedSizeWithTag(25, value.macmd5) + ProtoAdapter.STRING.encodedSizeWithTag(26, value.ssid) + ProtoAdapter.STRING.encodedSizeWithTag(27, value.wifi_mac) + ProtoAdapter.STRING.encodedSizeWithTag(28, value.rom_version) + ProtoAdapter.STRING.asRepeated().encodedSizeWithTag(29, value.installed_app) + ProtoAdapter.STRING.encodedSizeWithTag(30, value.update_mark) + ProtoAdapter.STRING.encodedSizeWithTag(31, value.update_time) + ProtoAdapter.STRING.encodedSizeWithTag(32, value.boot_mark) + ProtoAdapter.STRING.encodedSizeWithTag(33, value.boot_time) + ProtoAdapter.STRING.encodedSizeWithTag(34, value.sys_compiling_time) + ProtoAdapter.STRING.encodedSizeWithTag(35, value.birth_time) + ProtoAdapter.STRING.encodedSizeWithTag(36, value.paid_1_4) + ProtoAdapter.STRING.encodedSizeWithTag(37, value.hms_ver) + ProtoAdapter.STRING.encodedSizeWithTag(38, value.hwag_ver) + ProtoAdapter.STRING.encodedSizeWithTag(39, value.caid) + ProtoAdapter.STRING.encodedSizeWithTag(40, value.caid_md5) + ProtoAdapter.STRING.encodedSizeWithTag(41, value.caid_version) + ProtoAdapter.STRING.encodedSizeWithTag(42, value.device_name_md5) + ProtoAdapter.STRING.encodedSizeWithTag(43, value.hardware_machine) + ProtoAdapter.STRING.encodedSizeWithTag(44, value.physical_memory) + ProtoAdapter.STRING.encodedSizeWithTag(45, value.hard_disk_size) + ProtoAdapter.STRING.encodedSizeWithTag(46, value.country) + ProtoAdapter.STRING.encodedSizeWithTag(47, value.language) + ProtoAdapter.STRING.encodedSizeWithTag(48, value.time_zone) + ProtoAdapter.STRING.encodedSizeWithTag(49, value.cpu_num) + value.unknownFields().size();
         }
 
         @Override
         public void encode(ProtoWriter writer, Device value) throws IOException {
-            ProtoAdapter.UINT32.encodeWithTag(writer, 1, value.os);
-            ProtoAdapter.UINT32.encodeWithTag(writer, 2, value.osv);
-            ProtoAdapter.STRING.encodeWithTag(writer, 3, value.did);
-            ProtoAdapter.STRING.encodeWithTag(writer, 4, value.didmd5);
-            ProtoAdapter.STRING.encodeWithTag(writer, 5, value.didsha1);
-            ProtoAdapter.STRING.encodeWithTag(writer, 6, value.oid);
-            ProtoAdapter.STRING.encodeWithTag(writer, 7, value.oidmd5);
-            ProtoAdapter.STRING.encodeWithTag(writer, 8, value.dpid);
-            ProtoAdapter.STRING.encodeWithTag(writer, 9, value.dpidmd5);
-            ProtoAdapter.STRING.encodeWithTag(writer, 10, value.dpidsha1);
-            ProtoAdapter.STRING.encodeWithTag(writer, 11, value.ifa);
-            ProtoAdapter.STRING.encodeWithTag(writer, 12, value.ifamd5);
-            ProtoAdapter.STRING.encodeWithTag(writer, 13, value.ip);
-            ProtoAdapter.STRING.encodeWithTag(writer, 14, value.ipv6);
-            ProtoAdapter.STRING.encodeWithTag(writer, 15, value.ua);
-            ProtoAdapter.UINT32.encodeWithTag(writer, 16, value.connectiontype);
-            ProtoAdapter.UINT32.encodeWithTag(writer, 17, value.devicetype);
-            ProtoAdapter.STRING.encodeWithTag(writer, 18, value.make);
-            ProtoAdapter.STRING.encodeWithTag(writer, 19, value.model);
-            ProtoAdapter.STRING.encodeWithTag(writer, 20, value.hwv);
-            ProtoAdapter.UINT32.encodeWithTag(writer, 21, value.carrier);
-            ProtoAdapter.STRING.encodeWithTag(writer, 22, value.macmd5);
-            ProtoAdapter.STRING.encodeWithTag(writer, 23, value.macsha1);
+            ProtoAdapter.INT32.encodeWithTag(writer, 1, value.carrier);
+            ProtoAdapter.INT32.encodeWithTag(writer, 2, value.connectiontype);
+            ProtoAdapter.INT32.encodeWithTag(writer, 3, value.devicetype);
+            ProtoAdapter.STRING.encodeWithTag(writer, 4, value.did);
+            ProtoAdapter.STRING.encodeWithTag(writer, 5, value.didmd5);
+            ProtoAdapter.STRING.encodeWithTag(writer, 6, value.ifamd5);
+            ProtoAdapter.STRING.encodeWithTag(writer, 7, value.dpid);
+            ProtoAdapter.STRING.encodeWithTag(writer, 8, value.dpidmd5);
+            Geo.ADAPTER.encodeWithTag(writer, 9, value.geo);
+            ProtoAdapter.INT32.encodeWithTag(writer, 10, value.h);
+            ProtoAdapter.STRING.encodeWithTag(writer, 11, value.hwv);
+            ProtoAdapter.STRING.encodeWithTag(writer, 12, value.ip);
+            ProtoAdapter.STRING.encodeWithTag(writer, 13, value.oid);
+            ProtoAdapter.STRING.encodeWithTag(writer, 14, value.oidmd5);
+            ProtoAdapter.STRING.encodeWithTag(writer, 15, value.ifa);
+            ProtoAdapter.STRING.encodeWithTag(writer, 16, value.ipv6);
+            ProtoAdapter.STRING.encodeWithTag(writer, 17, value.make);
+            ProtoAdapter.STRING.encodeWithTag(writer, 18, value.model);
+            ProtoAdapter.INT32.encodeWithTag(writer, 19, value.os);
+            ProtoAdapter.STRING.encodeWithTag(writer, 20, value.osv);
+            ProtoAdapter.INT32.encodeWithTag(writer, 21, value.ppi);
+            ProtoAdapter.STRING.encodeWithTag(writer, 22, value.ua);
+            ProtoAdapter.INT32.encodeWithTag(writer, 23, value.w);
             ProtoAdapter.STRING.encodeWithTag(writer, 24, value.mac);
-            ProtoAdapter.UINT32.encodeWithTag(writer, 25, value.h);
-            ProtoAdapter.UINT32.encodeWithTag(writer, 26, value.w);
-            ProtoAdapter.UINT32.encodeWithTag(writer, 27, value.ppi);
-            Geo.ADAPTER.encodeWithTag(writer, 28, value.geo);
-            ProtoAdapter.STRING.encodeWithTag(writer, 29, value.ssid);
-            ProtoAdapter.STRING.encodeWithTag(writer, 30, value.wifi_mac);
-            ProtoAdapter.STRING.encodeWithTag(writer, 31, value.rom_version);
-            ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 32, value.installed_app);
-            ProtoAdapter.STRING.encodeWithTag(writer, 33, value.update_mark);
-            ProtoAdapter.STRING.encodeWithTag(writer, 34, value.update_time);
-            ProtoAdapter.STRING.encodeWithTag(writer, 35, value.boot_mark);
-            ProtoAdapter.STRING.encodeWithTag(writer, 36, value.boot_time);
-            ProtoAdapter.STRING.encodeWithTag(writer, 37, value.sys_compiling_time);
-            ProtoAdapter.STRING.encodeWithTag(writer, 38, value.birth_time);
-            ProtoAdapter.STRING.encodeWithTag(writer, 39, value.paid_1_4);
-            ProtoAdapter.STRING.encodeWithTag(writer, 40, value.hms_ver);
-            ProtoAdapter.STRING.encodeWithTag(writer, 41, value.hwag_ver);
-            ProtoAdapter.STRING.encodeWithTag(writer, 42, value.caid);
-            ProtoAdapter.STRING.encodeWithTag(writer, 43, value.caid_md5);
-            ProtoAdapter.STRING.encodeWithTag(writer, 44, value.caid_version);
-            ProtoAdapter.STRING.encodeWithTag(writer, 45, value.device_name_md5);
-            ProtoAdapter.STRING.encodeWithTag(writer, 46, value.hardware_machine);
-            ProtoAdapter.STRING.encodeWithTag(writer, 47, value.physical_memory);
-            ProtoAdapter.STRING.encodeWithTag(writer, 48, value.hard_disk_size);
-            ProtoAdapter.STRING.encodeWithTag(writer, 49, value.country);
-            ProtoAdapter.STRING.encodeWithTag(writer, 50, value.language);
-            ProtoAdapter.STRING.encodeWithTag(writer, 51, value.time_zone);
-            ProtoAdapter.UINT32.encodeWithTag(writer, 52, value.cpu_num);
+            ProtoAdapter.STRING.encodeWithTag(writer, 25, value.macmd5);
+            ProtoAdapter.STRING.encodeWithTag(writer, 26, value.ssid);
+            ProtoAdapter.STRING.encodeWithTag(writer, 27, value.wifi_mac);
+            ProtoAdapter.STRING.encodeWithTag(writer, 28, value.rom_version);
+            ProtoAdapter.STRING.asRepeated().encodeWithTag(writer, 29, value.installed_app);
+            ProtoAdapter.STRING.encodeWithTag(writer, 30, value.update_mark);
+            ProtoAdapter.STRING.encodeWithTag(writer, 31, value.update_time);
+            ProtoAdapter.STRING.encodeWithTag(writer, 32, value.boot_mark);
+            ProtoAdapter.STRING.encodeWithTag(writer, 33, value.boot_time);
+            ProtoAdapter.STRING.encodeWithTag(writer, 34, value.sys_compiling_time);
+            ProtoAdapter.STRING.encodeWithTag(writer, 35, value.birth_time);
+            ProtoAdapter.STRING.encodeWithTag(writer, 36, value.paid_1_4);
+            ProtoAdapter.STRING.encodeWithTag(writer, 37, value.hms_ver);
+            ProtoAdapter.STRING.encodeWithTag(writer, 38, value.hwag_ver);
+            ProtoAdapter.STRING.encodeWithTag(writer, 39, value.caid);
+            ProtoAdapter.STRING.encodeWithTag(writer, 40, value.caid_md5);
+            ProtoAdapter.STRING.encodeWithTag(writer, 41, value.caid_version);
+            ProtoAdapter.STRING.encodeWithTag(writer, 42, value.device_name_md5);
+            ProtoAdapter.STRING.encodeWithTag(writer, 43, value.hardware_machine);
+            ProtoAdapter.STRING.encodeWithTag(writer, 44, value.physical_memory);
+            ProtoAdapter.STRING.encodeWithTag(writer, 45, value.hard_disk_size);
+            ProtoAdapter.STRING.encodeWithTag(writer, 46, value.country);
+            ProtoAdapter.STRING.encodeWithTag(writer, 47, value.language);
+            ProtoAdapter.STRING.encodeWithTag(writer, 48, value.time_zone);
+            ProtoAdapter.STRING.encodeWithTag(writer, 49, value.cpu_num);
             writer.writeBytes(value.unknownFields());
         }
 
@@ -992,160 +1222,151 @@ public final class Device extends AndroidMessage<Device, Device.Builder> {
             for (int tag; (tag = reader.nextTag()) != -1; ) {
                 switch (tag) {
                     case 1:
-                        builder.os(ProtoAdapter.UINT32.decode(reader));
+                        builder.carrier(ProtoAdapter.INT32.decode(reader));
                         break;
                     case 2:
-                        builder.osv(ProtoAdapter.UINT32.decode(reader));
+                        builder.connectiontype(ProtoAdapter.INT32.decode(reader));
                         break;
                     case 3:
-                        builder.did(ProtoAdapter.STRING.decode(reader));
+                        builder.devicetype(ProtoAdapter.INT32.decode(reader));
                         break;
                     case 4:
-                        builder.didmd5(ProtoAdapter.STRING.decode(reader));
+                        builder.did(ProtoAdapter.STRING.decode(reader));
                         break;
                     case 5:
-                        builder.didsha1(ProtoAdapter.STRING.decode(reader));
+                        builder.didmd5(ProtoAdapter.STRING.decode(reader));
                         break;
                     case 6:
-                        builder.oid(ProtoAdapter.STRING.decode(reader));
-                        break;
-                    case 7:
-                        builder.oidmd5(ProtoAdapter.STRING.decode(reader));
-                        break;
-                    case 8:
-                        builder.dpid(ProtoAdapter.STRING.decode(reader));
-                        break;
-                    case 9:
-                        builder.dpidmd5(ProtoAdapter.STRING.decode(reader));
-                        break;
-                    case 10:
-                        builder.dpidsha1(ProtoAdapter.STRING.decode(reader));
-                        break;
-                    case 11:
-                        builder.ifa(ProtoAdapter.STRING.decode(reader));
-                        break;
-                    case 12:
                         builder.ifamd5(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 13:
-                        builder.ip(ProtoAdapter.STRING.decode(reader));
+                    case 7:
+                        builder.dpid(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 14:
-                        builder.ipv6(ProtoAdapter.STRING.decode(reader));
+                    case 8:
+                        builder.dpidmd5(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 15:
-                        builder.ua(ProtoAdapter.STRING.decode(reader));
+                    case 9:
+                        builder.geo(Geo.ADAPTER.decode(reader));
                         break;
-                    case 16:
-                        builder.connectiontype(ProtoAdapter.UINT32.decode(reader));
+                    case 10:
+                        builder.h(ProtoAdapter.INT32.decode(reader));
                         break;
-                    case 17:
-                        builder.devicetype(ProtoAdapter.UINT32.decode(reader));
-                        break;
-                    case 18:
-                        builder.make(ProtoAdapter.STRING.decode(reader));
-                        break;
-                    case 19:
-                        builder.model(ProtoAdapter.STRING.decode(reader));
-                        break;
-                    case 20:
+                    case 11:
                         builder.hwv(ProtoAdapter.STRING.decode(reader));
                         break;
+                    case 12:
+                        builder.ip(ProtoAdapter.STRING.decode(reader));
+                        break;
+                    case 13:
+                        builder.oid(ProtoAdapter.STRING.decode(reader));
+                        break;
+                    case 14:
+                        builder.oidmd5(ProtoAdapter.STRING.decode(reader));
+                        break;
+                    case 15:
+                        builder.ifa(ProtoAdapter.STRING.decode(reader));
+                        break;
+                    case 16:
+                        builder.ipv6(ProtoAdapter.STRING.decode(reader));
+                        break;
+                    case 17:
+                        builder.make(ProtoAdapter.STRING.decode(reader));
+                        break;
+                    case 18:
+                        builder.model(ProtoAdapter.STRING.decode(reader));
+                        break;
+                    case 19:
+                        builder.os(ProtoAdapter.INT32.decode(reader));
+                        break;
+                    case 20:
+                        builder.osv(ProtoAdapter.STRING.decode(reader));
+                        break;
                     case 21:
-                        builder.carrier(ProtoAdapter.UINT32.decode(reader));
+                        builder.ppi(ProtoAdapter.INT32.decode(reader));
                         break;
                     case 22:
-                        builder.macmd5(ProtoAdapter.STRING.decode(reader));
+                        builder.ua(ProtoAdapter.STRING.decode(reader));
                         break;
                     case 23:
-                        builder.macsha1(ProtoAdapter.STRING.decode(reader));
+                        builder.w(ProtoAdapter.INT32.decode(reader));
                         break;
                     case 24:
                         builder.mac(ProtoAdapter.STRING.decode(reader));
                         break;
                     case 25:
-                        builder.h(ProtoAdapter.UINT32.decode(reader));
+                        builder.macmd5(ProtoAdapter.STRING.decode(reader));
                         break;
                     case 26:
-                        builder.w(ProtoAdapter.UINT32.decode(reader));
-                        break;
-                    case 27:
-                        builder.ppi(ProtoAdapter.UINT32.decode(reader));
-                        break;
-                    case 28:
-                        builder.geo(Geo.ADAPTER.decode(reader));
-                        break;
-                    case 29:
                         builder.ssid(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 30:
+                    case 27:
                         builder.wifi_mac(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 31:
+                    case 28:
                         builder.rom_version(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 32:
+                    case 29:
                         builder.installed_app.add(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 33:
+                    case 30:
                         builder.update_mark(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 34:
+                    case 31:
                         builder.update_time(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 35:
+                    case 32:
                         builder.boot_mark(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 36:
+                    case 33:
                         builder.boot_time(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 37:
+                    case 34:
                         builder.sys_compiling_time(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 38:
+                    case 35:
                         builder.birth_time(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 39:
+                    case 36:
                         builder.paid_1_4(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 40:
+                    case 37:
                         builder.hms_ver(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 41:
+                    case 38:
                         builder.hwag_ver(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 42:
+                    case 39:
                         builder.caid(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 43:
+                    case 40:
                         builder.caid_md5(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 44:
+                    case 41:
                         builder.caid_version(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 45:
+                    case 42:
                         builder.device_name_md5(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 46:
+                    case 43:
                         builder.hardware_machine(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 47:
+                    case 44:
                         builder.physical_memory(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 48:
+                    case 45:
                         builder.hard_disk_size(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 49:
+                    case 46:
                         builder.country(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 50:
+                    case 47:
                         builder.language(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 51:
+                    case 48:
                         builder.time_zone(ProtoAdapter.STRING.decode(reader));
                         break;
-                    case 52:
-                        builder.cpu_num(ProtoAdapter.UINT32.decode(reader));
+                    case 49:
+                        builder.cpu_num(ProtoAdapter.STRING.decode(reader));
                         break;
                     default: {
                         FieldEncoding fieldEncoding = reader.peekFieldEncoding();

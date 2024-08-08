@@ -15,82 +15,83 @@ import com.czhj.wire.internal.Internal;
 import com.czhj.wire.okio.ByteString;
 
 import java.io.IOException;
+import java.lang.Object;
+import java.lang.Override;
+import java.lang.String;
+import java.lang.StringBuilder;
 import java.util.List;
 
-/**
- * 内部竞价请求
- */
-public final class BidRequest extends AndroidMessage<BidRequest, BidRequest.Builder> {
 
+public final class BidRequest extends AndroidMessage<BidRequest, BidRequest.Builder> {
     public static final ProtoAdapter<BidRequest> ADAPTER = new ProtoAdapter_BidRequest();
 
     public static final Parcelable.Creator<BidRequest> CREATOR = AndroidMessage.newCreator(ADAPTER);
 
     private static final long serialVersionUID = 0L;
 
-    public static final String DEFAULT_TOKEN = "";
-
     public static final String DEFAULT_ID = "";
 
-    /**
-     * 内部生成；请求唯一标识，[a-zA-Z0-9]{32}
-     */
-    @WireField(tag = 1, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String token;
+    public static final String DEFAULT_TOKEN = "";
 
     /**
-     * 内部生成；请求唯一标识，[a-zA-Z0-9]{32}
+     * 展示广告内容的应用相关信息，查看 App 对象
      */
-    @WireField(tag = 2, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String id;
-
-    /**
-     * 内部生成；请求唯一标识，[a-zA-Z0-9]{32}
-     */
-    @WireField(tag = 3, adapter = "com.gt.sdk.base.models.rtb.Imp#ADAPTER", label = WireField.Label.REPEATED)
-    public final List<Imp> imp;
-
-    /**
-     * 必填！应用信息
-     */
-    @WireField(tag = 4, adapter = "com.gt.sdk.base.models.rtb.App#ADAPTER")
+    @WireField(tag = 1, adapter = "com.gt.sdk.base.models.rtb.App#ADAPTER")
     public final App app;
 
     /**
-     * 必填！设备信息
+     * 展示广告内容的设备信息对象，查看 Device 对象
      */
-    @WireField(tag = 5, adapter = "com.gt.sdk.base.models.rtb.Device#ADAPTER")
+    @WireField(tag = 2, adapter = "com.gt.sdk.base.models.rtb.Device#ADAPTER")
     public final Device device;
 
     /**
-     * 用户信息
+     * 请求标识 ID，由媒体生成，请确保全局唯一
      */
-    @WireField(tag = 6, adapter = "com.gt.sdk.base.models.rtb.User#ADAPTER")
+    @WireField(tag = 3, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String id;
+
+    /**
+     * 展现广告资源位描述，查看 Imp 对象
+     */
+    @WireField(tag = 4, adapter = "com.gt.sdk.base.models.rtb.Imp#ADAPTER", label = WireField.Label.REPEATED)
+    public final List<Imp> imp;
+
+    /**
+     * 展示广告内容的用户信息对象，查看 User 对象
+     */
+    @WireField(tag = 5, adapter = "com.gt.sdk.base.models.rtb.User#ADAPTER")
     public final User user;
 
-    public BidRequest(String token, String id, List<Imp> imp, App app, Device device, User user) {
-        this(token, id, imp, app, device, user, ByteString.EMPTY);
+    /**
+     * 由商务提供，dsp侧无需使用
+     */
+    @WireField(tag = 6, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String token;
+
+    public BidRequest(App app, Device device, String id, List<Imp> imp, User user, String token) {
+        this(app, device, id, imp, user, token, ByteString.EMPTY);
     }
 
-    public BidRequest(String token, String id, List<Imp> imp, App app, Device device, User user, ByteString unknownFields) {
+    public BidRequest(App app, Device device, String id, List<Imp> imp, User user, String token, ByteString unknownFields) {
         super(ADAPTER, unknownFields);
-        this.token = token;
-        this.id = id;
-        this.imp = Internal.immutableCopyOf("imp", imp);
         this.app = app;
         this.device = device;
+        this.id = id;
+        this.imp = Internal.immutableCopyOf("imp", imp);
         this.user = user;
+        this.token = token;
     }
 
     @Override
     public Builder newBuilder() {
         Builder builder = new Builder();
-        builder.token = token;
-        builder.id = id;
-        builder.imp = Internal.copyOf("imp", imp);
         builder.app = app;
         builder.device = device;
+        builder.id = id;
+        builder.imp = Internal.copyOf("imp", imp);
         builder.user = user;
+        builder.token = token;
         builder.addUnknownFields(unknownFields());
         return builder;
     }
@@ -100,7 +101,7 @@ public final class BidRequest extends AndroidMessage<BidRequest, BidRequest.Buil
         if (other == this) return true;
         if (!(other instanceof BidRequest)) return false;
         BidRequest o = (BidRequest) other;
-        return unknownFields().equals(o.unknownFields()) && Internal.equals(token, o.token) && Internal.equals(id, o.id) && imp.equals(o.imp) && Internal.equals(app, o.app) && Internal.equals(device, o.device) && Internal.equals(user, o.user);
+        return unknownFields().equals(o.unknownFields()) && Internal.equals(app, o.app) && Internal.equals(device, o.device) && Internal.equals(id, o.id) && imp.equals(o.imp) && Internal.equals(user, o.user) && Internal.equals(token, o.token);
     }
 
     @Override
@@ -108,12 +109,12 @@ public final class BidRequest extends AndroidMessage<BidRequest, BidRequest.Buil
         int result = super.hashCode;
         if (result == 0) {
             result = unknownFields().hashCode();
-            result = result * 37 + (token != null ? token.hashCode() : 0);
-            result = result * 37 + (id != null ? id.hashCode() : 0);
-            result = result * 37 + imp.hashCode();
             result = result * 37 + (app != null ? app.hashCode() : 0);
             result = result * 37 + (device != null ? device.hashCode() : 0);
+            result = result * 37 + (id != null ? id.hashCode() : 0);
+            result = result * 37 + imp.hashCode();
             result = result * 37 + (user != null ? user.hashCode() : 0);
+            result = result * 37 + (token != null ? token.hashCode() : 0);
             super.hashCode = result;
         }
         return result;
@@ -122,42 +123,50 @@ public final class BidRequest extends AndroidMessage<BidRequest, BidRequest.Buil
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        if (token != null) builder.append(", token=").append(token);
-        if (id != null) builder.append(", id=").append(id);
-        if (!imp.isEmpty()) builder.append(", imp=").append(imp);
         if (app != null) builder.append(", app=").append(app);
         if (device != null) builder.append(", device=").append(device);
+        if (id != null) builder.append(", id=").append(id);
+        if (!imp.isEmpty()) builder.append(", imp=").append(imp);
         if (user != null) builder.append(", user=").append(user);
+        if (token != null) builder.append(", token=").append(token);
         return builder.replace(0, 2, "BidRequest{").append('}').toString();
     }
 
     public static final class Builder extends Message.Builder<BidRequest, Builder> {
-        public String token = DEFAULT_TOKEN;
-
-        public String id = DEFAULT_ID;
-
-        public List<Imp> imp;
-
         public App app;
 
         public Device device;
 
+        public String id;
+
+        public List<Imp> imp;
+
         public User user;
+
+        public String token;
 
         public Builder() {
             imp = Internal.newMutableList();
         }
 
         /**
-         * 内部生成；请求唯一标识，[a-zA-Z0-9]{32}
+         * 展示广告内容的应用相关信息，查看 App 对象
          */
-        public Builder token(String token) {
-            this.token = token;
+        public Builder app(App app) {
+            this.app = app;
             return this;
         }
 
         /**
-         * 内部生成；请求唯一标识，[a-zA-Z0-9]{32}
+         * 展示广告内容的设备信息对象，查看 Device 对象
+         */
+        public Builder device(Device device) {
+            this.device = device;
+            return this;
+        }
+
+        /**
+         * 请求标识 ID，由媒体生成，请确保全局唯一
          */
         public Builder id(String id) {
             this.id = id;
@@ -165,7 +174,7 @@ public final class BidRequest extends AndroidMessage<BidRequest, BidRequest.Buil
         }
 
         /**
-         * 内部生成；请求唯一标识，[a-zA-Z0-9]{32}
+         * 展现广告资源位描述，查看 Imp 对象
          */
         public Builder imp(List<Imp> imp) {
             Internal.checkElementsNotNull(imp);
@@ -174,32 +183,24 @@ public final class BidRequest extends AndroidMessage<BidRequest, BidRequest.Buil
         }
 
         /**
-         * 必填！应用信息
-         */
-        public Builder app(App app) {
-            this.app = app;
-            return this;
-        }
-
-        /**
-         * 必填！设备信息
-         */
-        public Builder device(Device device) {
-            this.device = device;
-            return this;
-        }
-
-        /**
-         * 用户信息
+         * 展示广告内容的用户信息对象，查看 User 对象
          */
         public Builder user(User user) {
             this.user = user;
             return this;
         }
 
+        /**
+         * 由商务提供，dsp侧无需使用
+         */
+        public Builder token(String token) {
+            this.token = token;
+            return this;
+        }
+
         @Override
         public BidRequest build() {
-            return new BidRequest(token, id, imp, app, device, user, super.buildUnknownFields());
+            return new BidRequest(app, device, id, imp, user, token, super.buildUnknownFields());
         }
     }
 
@@ -210,17 +211,17 @@ public final class BidRequest extends AndroidMessage<BidRequest, BidRequest.Buil
 
         @Override
         public int encodedSize(BidRequest value) {
-            return ProtoAdapter.STRING.encodedSizeWithTag(1, value.token) + ProtoAdapter.STRING.encodedSizeWithTag(2, value.id) + Imp.ADAPTER.asRepeated().encodedSizeWithTag(3, value.imp) + App.ADAPTER.encodedSizeWithTag(4, value.app) + Device.ADAPTER.encodedSizeWithTag(5, value.device) + User.ADAPTER.encodedSizeWithTag(6, value.user) + value.unknownFields().size();
+            return App.ADAPTER.encodedSizeWithTag(1, value.app) + Device.ADAPTER.encodedSizeWithTag(2, value.device) + ProtoAdapter.STRING.encodedSizeWithTag(3, value.id) + Imp.ADAPTER.asRepeated().encodedSizeWithTag(4, value.imp) + User.ADAPTER.encodedSizeWithTag(5, value.user) + ProtoAdapter.STRING.encodedSizeWithTag(6, value.token) + value.unknownFields().size();
         }
 
         @Override
         public void encode(ProtoWriter writer, BidRequest value) throws IOException {
-            ProtoAdapter.STRING.encodeWithTag(writer, 1, value.token);
-            ProtoAdapter.STRING.encodeWithTag(writer, 2, value.id);
-            Imp.ADAPTER.asRepeated().encodeWithTag(writer, 3, value.imp);
-            App.ADAPTER.encodeWithTag(writer, 4, value.app);
-            Device.ADAPTER.encodeWithTag(writer, 5, value.device);
-            User.ADAPTER.encodeWithTag(writer, 6, value.user);
+            App.ADAPTER.encodeWithTag(writer, 1, value.app);
+            Device.ADAPTER.encodeWithTag(writer, 2, value.device);
+            ProtoAdapter.STRING.encodeWithTag(writer, 3, value.id);
+            Imp.ADAPTER.asRepeated().encodeWithTag(writer, 4, value.imp);
+            User.ADAPTER.encodeWithTag(writer, 5, value.user);
+            ProtoAdapter.STRING.encodeWithTag(writer, 6, value.token);
             writer.writeBytes(value.unknownFields());
         }
 
@@ -231,22 +232,22 @@ public final class BidRequest extends AndroidMessage<BidRequest, BidRequest.Buil
             for (int tag; (tag = reader.nextTag()) != -1; ) {
                 switch (tag) {
                     case 1:
-                        builder.token(ProtoAdapter.STRING.decode(reader));
-                        break;
-                    case 2:
-                        builder.id(ProtoAdapter.STRING.decode(reader));
-                        break;
-                    case 3:
-                        builder.imp.add(Imp.ADAPTER.decode(reader));
-                        break;
-                    case 4:
                         builder.app(App.ADAPTER.decode(reader));
                         break;
-                    case 5:
+                    case 2:
                         builder.device(Device.ADAPTER.decode(reader));
                         break;
-                    case 6:
+                    case 3:
+                        builder.id(ProtoAdapter.STRING.decode(reader));
+                        break;
+                    case 4:
+                        builder.imp.add(Imp.ADAPTER.decode(reader));
+                        break;
+                    case 5:
                         builder.user(User.ADAPTER.decode(reader));
+                        break;
+                    case 6:
+                        builder.token(ProtoAdapter.STRING.decode(reader));
                         break;
                     default: {
                         FieldEncoding fieldEncoding = reader.peekFieldEncoding();
@@ -262,9 +263,9 @@ public final class BidRequest extends AndroidMessage<BidRequest, BidRequest.Buil
         @Override
         public BidRequest redact(BidRequest value) {
             Builder builder = value.newBuilder();
-            Internal.redactElements(builder.imp, Imp.ADAPTER);
             if (builder.app != null) builder.app = App.ADAPTER.redact(builder.app);
             if (builder.device != null) builder.device = Device.ADAPTER.redact(builder.device);
+            Internal.redactElements(builder.imp, Imp.ADAPTER);
             if (builder.user != null) builder.user = User.ADAPTER.redact(builder.user);
             builder.clearUnknownFields();
             return builder.build();

@@ -15,6 +15,12 @@ import com.czhj.wire.internal.Internal;
 import com.czhj.wire.okio.ByteString;
 
 import java.io.IOException;
+import java.lang.Float;
+import java.lang.Object;
+import java.lang.Override;
+import java.lang.String;
+import java.lang.StringBuilder;
+
 
 public final class Geo extends AndroidMessage<Geo, Geo.Builder> {
     public static final ProtoAdapter<Geo> ADAPTER = new ProtoAdapter_Geo();
@@ -28,13 +34,13 @@ public final class Geo extends AndroidMessage<Geo, Geo.Builder> {
     public static final Float DEFAULT_LON = 0.0f;
 
     /**
-     * 纬度
+     * 纬度，取值范围 -90.0 到 90.0，负值表示南方
      */
     @WireField(tag = 1, adapter = "com.squareup.wire.ProtoAdapter#FLOAT")
     public final Float lat;
 
     /**
-     * 经度
+     * 经度，取值范围 -180.0 到 180.0，负值表示西方
      */
     @WireField(tag = 2, adapter = "com.squareup.wire.ProtoAdapter#FLOAT")
     public final Float lon;
@@ -87,15 +93,15 @@ public final class Geo extends AndroidMessage<Geo, Geo.Builder> {
     }
 
     public static final class Builder extends Message.Builder<Geo, Builder> {
-        public Float lat = DEFAULT_LAT;
+        public Float lat;
 
-        public Float lon = DEFAULT_LON;
+        public Float lon;
 
         public Builder() {
         }
 
         /**
-         * 纬度
+         * 纬度，取值范围 -90.0 到 90.0，负值表示南方
          */
         public Builder lat(Float lat) {
             this.lat = lat;
@@ -103,7 +109,7 @@ public final class Geo extends AndroidMessage<Geo, Geo.Builder> {
         }
 
         /**
-         * 经度
+         * 经度，取值范围 -180.0 到 180.0，负值表示西方
          */
         public Builder lon(Float lon) {
             this.lon = lon;

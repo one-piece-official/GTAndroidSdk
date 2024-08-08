@@ -14,17 +14,26 @@ import com.czhj.wire.WireField;
 import com.czhj.wire.internal.Internal;
 import com.czhj.wire.okio.ByteString;
 
-
 import java.io.IOException;
+import java.lang.Boolean;
+import java.lang.Integer;
+import java.lang.Object;
+import java.lang.Override;
+import java.lang.String;
+import java.lang.StringBuilder;
 import java.util.Map;
 
-public final class Imp extends AndroidMessage<Imp, Imp.Builder> {
 
+public final class Imp extends AndroidMessage<Imp, Imp.Builder> {
     public static final ProtoAdapter<Imp> ADAPTER = new ProtoAdapter_Imp();
 
     public static final Parcelable.Creator<Imp> CREATOR = AndroidMessage.newCreator(ADAPTER);
 
     private static final long serialVersionUID = 0L;
+
+    public static final Boolean DEFAULT_DEEPLINK = false;
+
+    public static final Boolean DEFAULT_UL = false;
 
     public static final String DEFAULT_ID = "";
 
@@ -32,86 +41,112 @@ public final class Imp extends AndroidMessage<Imp, Imp.Builder> {
 
     public static final String DEFAULT_SUBTAGID = "";
 
-    public static final Integer DEFAULT_STYLE = 0;
-
-    public static final Integer DEFAULT_SECURE = 0;
-
     public static final Integer DEFAULT_BIDFLOOR = 0;
 
     public static final Integer DEFAULT_WIDTH = 0;
 
     public static final Integer DEFAULT_HEIGHT = 0;
 
-    public static final Integer DEFAULT_DEEPLINK = 0;
+    public static final Integer DEFAULT_STYLE = 0;
 
-    public static final Integer DEFAULT_UL = 0;
+    public static final Integer DEFAULT_SECURE = 0;
 
-    @WireField(tag = 1, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 是否支持唤醒广告主 App，1 代表支持，0 代表不支持
+     */
+    @WireField(tag = 1, adapter = "com.squareup.wire.ProtoAdapter#BOOL")
+    public final Boolean deeplink;
+
+    /**
+     * iOS 流量使用，是否需要返回 iOS 流量使用，在 is_deeplink 为 1 时有效 如需返回 Universal Link 时传 1，否则不传
+     */
+    @WireField(tag = 2, adapter = "com.squareup.wire.ProtoAdapter#BOOL")
+    public final Boolean ul;
+
+    /**
+     * 曝光标识 ID，只在多次曝光有意义，媒体生成，请确保全局唯一
+     */
+    @WireField(tag = 3, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String id;
 
-    @WireField(tag = 2, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 广告代码位
+     */
+    @WireField(tag = 4, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String tagid;
 
-    @WireField(tag = 3, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    /**
+     * 媒体自己的广告位ID
+     */
+    @WireField(tag = 5, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String subtagid;
 
-    @WireField(tag = 4, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
-    public final Integer style;
-
-    @WireField(tag = 5, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
-    public final Integer secure;
-
-    @WireField(tag = 6, keyAdapter = "com.squareup.wire.ProtoAdapter#STRING", adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final Map<String, String> ext;
-
-    @WireField(tag = 7, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
+    /**
+     * 底价，单位 分/CPM 采用 RTB 模式需要传入正整数的底价，不传或传 0 代表非 RTB 模式
+     */
+    @WireField(tag = 6, adapter = "com.squareup.wire.ProtoAdapter#INT32")
     public final Integer bidfloor;
 
-    @WireField(tag = 8, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
+    /**
+     * 广告位宽
+     */
+    @WireField(tag = 7, adapter = "com.squareup.wire.ProtoAdapter#INT32")
     public final Integer width;
 
-    @WireField(tag = 9, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
+    /**
+     * 广告位高
+     */
+    @WireField(tag = 8, adapter = "com.squareup.wire.ProtoAdapter#INT32")
     public final Integer height;
 
-    @WireField(tag = 10, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
-    public final Integer deeplink;
+    /**
+     * 广告位类型，广告位类型，不填表示类型由广告位中信息表示，1 开屏 2 插屏 3 横幅 4 原生 5 激励视频 6 全屏视频 7 品牌元素视频 8 sdk广告
+     */
+    @WireField(tag = 9, adapter = "com.squareup.wire.ProtoAdapter#INT32")
+    public final Integer style;
 
-    @WireField(tag = 11, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
-    public final Integer ul;
+    /**
+     * 是否需要返回 https，0 不需要，1 需要，默认为 0
+     */
+    @WireField(tag = 10, adapter = "com.squareup.wire.ProtoAdapter#INT32")
+    public final Integer secure;
 
-    public Imp(String id, String tagid, String subtagid, Integer style, Integer secure, Map<String, String> ext, Integer bidfloor, Integer width, Integer height, Integer deeplink, Integer ul) {
-        this(id, tagid, subtagid, style, secure, ext, bidfloor, width, height, deeplink, ul, ByteString.EMPTY);
+    @WireField(tag = 11, keyAdapter = "com.squareup.wire.ProtoAdapter#STRING", adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final Map<String, String> ext;
+
+    public Imp(Boolean deeplink, Boolean ul, String id, String tagid, String subtagid, Integer bidfloor, Integer width, Integer height, Integer style, Integer secure, Map<String, String> ext) {
+        this(deeplink, ul, id, tagid, subtagid, bidfloor, width, height, style, secure, ext, ByteString.EMPTY);
     }
 
-    public Imp(String id, String tagid, String subtagid, Integer style, Integer secure, Map<String, String> ext, Integer bidfloor, Integer width, Integer height, Integer deeplink, Integer ul, ByteString unknownFields) {
+    public Imp(Boolean deeplink, Boolean ul, String id, String tagid, String subtagid, Integer bidfloor, Integer width, Integer height, Integer style, Integer secure, Map<String, String> ext, ByteString unknownFields) {
         super(ADAPTER, unknownFields);
+        this.deeplink = deeplink;
+        this.ul = ul;
         this.id = id;
         this.tagid = tagid;
         this.subtagid = subtagid;
-        this.style = style;
-        this.secure = secure;
-        this.ext = Internal.immutableCopyOf("ext", ext);
         this.bidfloor = bidfloor;
         this.width = width;
         this.height = height;
-        this.deeplink = deeplink;
-        this.ul = ul;
+        this.style = style;
+        this.secure = secure;
+        this.ext = Internal.immutableCopyOf("ext", ext);
     }
 
     @Override
     public Builder newBuilder() {
         Builder builder = new Builder();
+        builder.deeplink = deeplink;
+        builder.ul = ul;
         builder.id = id;
         builder.tagid = tagid;
         builder.subtagid = subtagid;
-        builder.style = style;
-        builder.secure = secure;
-        builder.ext = Internal.copyOf("ext", ext);
         builder.bidfloor = bidfloor;
         builder.width = width;
         builder.height = height;
-        builder.deeplink = deeplink;
-        builder.ul = ul;
+        builder.style = style;
+        builder.secure = secure;
+        builder.ext = Internal.copyOf("ext", ext);
         builder.addUnknownFields(unknownFields());
         return builder;
     }
@@ -121,7 +156,7 @@ public final class Imp extends AndroidMessage<Imp, Imp.Builder> {
         if (other == this) return true;
         if (!(other instanceof Imp)) return false;
         Imp o = (Imp) other;
-        return unknownFields().equals(o.unknownFields()) && Internal.equals(id, o.id) && Internal.equals(tagid, o.tagid) && Internal.equals(subtagid, o.subtagid) && Internal.equals(style, o.style) && Internal.equals(secure, o.secure) && ext.equals(o.ext) && Internal.equals(bidfloor, o.bidfloor) && Internal.equals(width, o.width) && Internal.equals(height, o.height) && Internal.equals(deeplink, o.deeplink) && Internal.equals(ul, o.ul);
+        return unknownFields().equals(o.unknownFields()) && Internal.equals(deeplink, o.deeplink) && Internal.equals(ul, o.ul) && Internal.equals(id, o.id) && Internal.equals(tagid, o.tagid) && Internal.equals(subtagid, o.subtagid) && Internal.equals(bidfloor, o.bidfloor) && Internal.equals(width, o.width) && Internal.equals(height, o.height) && Internal.equals(style, o.style) && Internal.equals(secure, o.secure) && ext.equals(o.ext);
     }
 
     @Override
@@ -129,17 +164,17 @@ public final class Imp extends AndroidMessage<Imp, Imp.Builder> {
         int result = super.hashCode;
         if (result == 0) {
             result = unknownFields().hashCode();
+            result = result * 37 + (deeplink != null ? deeplink.hashCode() : 0);
+            result = result * 37 + (ul != null ? ul.hashCode() : 0);
             result = result * 37 + (id != null ? id.hashCode() : 0);
             result = result * 37 + (tagid != null ? tagid.hashCode() : 0);
             result = result * 37 + (subtagid != null ? subtagid.hashCode() : 0);
-            result = result * 37 + (style != null ? style.hashCode() : 0);
-            result = result * 37 + (secure != null ? secure.hashCode() : 0);
-            result = result * 37 + ext.hashCode();
             result = result * 37 + (bidfloor != null ? bidfloor.hashCode() : 0);
             result = result * 37 + (width != null ? width.hashCode() : 0);
             result = result * 37 + (height != null ? height.hashCode() : 0);
-            result = result * 37 + (deeplink != null ? deeplink.hashCode() : 0);
-            result = result * 37 + (ul != null ? ul.hashCode() : 0);
+            result = result * 37 + (style != null ? style.hashCode() : 0);
+            result = result * 37 + (secure != null ? secure.hashCode() : 0);
+            result = result * 37 + ext.hashCode();
             super.hashCode = result;
         }
         return result;
@@ -148,67 +183,122 @@ public final class Imp extends AndroidMessage<Imp, Imp.Builder> {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
+        if (deeplink != null) builder.append(", deeplink=").append(deeplink);
+        if (ul != null) builder.append(", ul=").append(ul);
         if (id != null) builder.append(", id=").append(id);
         if (tagid != null) builder.append(", tagid=").append(tagid);
         if (subtagid != null) builder.append(", subtagid=").append(subtagid);
-        if (style != null) builder.append(", style=").append(style);
-        if (secure != null) builder.append(", secure=").append(secure);
-        if (!ext.isEmpty()) builder.append(", ext=").append(ext);
         if (bidfloor != null) builder.append(", bidfloor=").append(bidfloor);
         if (width != null) builder.append(", width=").append(width);
         if (height != null) builder.append(", height=").append(height);
-        if (deeplink != null) builder.append(", deeplink=").append(deeplink);
-        if (ul != null) builder.append(", ul=").append(ul);
+        if (style != null) builder.append(", style=").append(style);
+        if (secure != null) builder.append(", secure=").append(secure);
+        if (!ext.isEmpty()) builder.append(", ext=").append(ext);
         return builder.replace(0, 2, "Imp{").append('}').toString();
     }
 
     public static final class Builder extends Message.Builder<Imp, Builder> {
-        public String id = DEFAULT_ID;
+        public Boolean deeplink;
 
-        public String tagid = DEFAULT_TAGID;
+        public Boolean ul;
 
-        public String subtagid = DEFAULT_SUBTAGID;
+        public String id;
 
-        public Integer style = DEFAULT_STYLE;
+        public String tagid;
 
-        public Integer secure = DEFAULT_SECURE;
+        public String subtagid;
+
+        public Integer bidfloor;
+
+        public Integer width;
+
+        public Integer height;
+
+        public Integer style;
+
+        public Integer secure;
 
         public Map<String, String> ext;
-
-        public Integer bidfloor = DEFAULT_BIDFLOOR;
-
-        public Integer width = DEFAULT_WIDTH;
-
-        public Integer height = DEFAULT_HEIGHT;
-
-        public Integer deeplink = DEFAULT_DEEPLINK;
-
-        public Integer ul = DEFAULT_UL;
 
         public Builder() {
             ext = Internal.newMutableMap();
         }
 
+        /**
+         * 是否支持唤醒广告主 App，1 代表支持，0 代表不支持
+         */
+        public Builder deeplink(Boolean deeplink) {
+            this.deeplink = deeplink;
+            return this;
+        }
+
+        /**
+         * iOS 流量使用，是否需要返回 iOS 流量使用，在 is_deeplink 为 1 时有效 如需返回 Universal Link 时传 1，否则不传
+         */
+        public Builder ul(Boolean ul) {
+            this.ul = ul;
+            return this;
+        }
+
+        /**
+         * 曝光标识 ID，只在多次曝光有意义，媒体生成，请确保全局唯一
+         */
         public Builder id(String id) {
             this.id = id;
             return this;
         }
 
+        /**
+         * 广告代码位
+         */
         public Builder tagid(String tagid) {
             this.tagid = tagid;
             return this;
         }
 
+        /**
+         * 媒体自己的广告位ID
+         */
         public Builder subtagid(String subtagid) {
             this.subtagid = subtagid;
             return this;
         }
 
+        /**
+         * 底价，单位 分/CPM 采用 RTB 模式需要传入正整数的底价，不传或传 0 代表非 RTB 模式
+         */
+        public Builder bidfloor(Integer bidfloor) {
+            this.bidfloor = bidfloor;
+            return this;
+        }
+
+        /**
+         * 广告位宽
+         */
+        public Builder width(Integer width) {
+            this.width = width;
+            return this;
+        }
+
+        /**
+         * 广告位高
+         */
+        public Builder height(Integer height) {
+            this.height = height;
+            return this;
+        }
+
+        /**
+         * 广告位类型，广告位类型，不填表示类型由广告位中信息表示，1 开屏 2 插屏 3 横幅 4 原生 5 激励视频 6 全屏视频 7 品牌元素视频 8 sdk广告
+         */
         public Builder style(Integer style) {
             this.style = style;
             return this;
         }
 
+        /**
+         * 是否需要返回 https，0 不需要，1 需要，默认为 0
+         */
         public Builder secure(Integer secure) {
             this.secure = secure;
             return this;
@@ -220,34 +310,9 @@ public final class Imp extends AndroidMessage<Imp, Imp.Builder> {
             return this;
         }
 
-        public Builder bidfloor(Integer bidfloor) {
-            this.bidfloor = bidfloor;
-            return this;
-        }
-
-        public Builder width(Integer width) {
-            this.width = width;
-            return this;
-        }
-
-        public Builder height(Integer height) {
-            this.height = height;
-            return this;
-        }
-
-        public Builder deeplink(Integer deeplink) {
-            this.deeplink = deeplink;
-            return this;
-        }
-
-        public Builder ul(Integer ul) {
-            this.ul = ul;
-            return this;
-        }
-
         @Override
         public Imp build() {
-            return new Imp(id, tagid, subtagid, style, secure, ext, bidfloor, width, height, deeplink, ul, super.buildUnknownFields());
+            return new Imp(deeplink, ul, id, tagid, subtagid, bidfloor, width, height, style, secure, ext, super.buildUnknownFields());
         }
     }
 
@@ -260,22 +325,22 @@ public final class Imp extends AndroidMessage<Imp, Imp.Builder> {
 
         @Override
         public int encodedSize(Imp value) {
-            return ProtoAdapter.STRING.encodedSizeWithTag(1, value.id) + ProtoAdapter.STRING.encodedSizeWithTag(2, value.tagid) + ProtoAdapter.STRING.encodedSizeWithTag(3, value.subtagid) + ProtoAdapter.UINT32.encodedSizeWithTag(4, value.style) + ProtoAdapter.UINT32.encodedSizeWithTag(5, value.secure) + ext.encodedSizeWithTag(6, value.ext) + ProtoAdapter.UINT32.encodedSizeWithTag(7, value.bidfloor) + ProtoAdapter.UINT32.encodedSizeWithTag(8, value.width) + ProtoAdapter.UINT32.encodedSizeWithTag(9, value.height) + ProtoAdapter.UINT32.encodedSizeWithTag(10, value.deeplink) + ProtoAdapter.UINT32.encodedSizeWithTag(11, value.ul) + value.unknownFields().size();
+            return ProtoAdapter.BOOL.encodedSizeWithTag(1, value.deeplink) + ProtoAdapter.BOOL.encodedSizeWithTag(2, value.ul) + ProtoAdapter.STRING.encodedSizeWithTag(3, value.id) + ProtoAdapter.STRING.encodedSizeWithTag(4, value.tagid) + ProtoAdapter.STRING.encodedSizeWithTag(5, value.subtagid) + ProtoAdapter.INT32.encodedSizeWithTag(6, value.bidfloor) + ProtoAdapter.INT32.encodedSizeWithTag(7, value.width) + ProtoAdapter.INT32.encodedSizeWithTag(8, value.height) + ProtoAdapter.INT32.encodedSizeWithTag(9, value.style) + ProtoAdapter.INT32.encodedSizeWithTag(10, value.secure) + ext.encodedSizeWithTag(11, value.ext) + value.unknownFields().size();
         }
 
         @Override
         public void encode(ProtoWriter writer, Imp value) throws IOException {
-            ProtoAdapter.STRING.encodeWithTag(writer, 1, value.id);
-            ProtoAdapter.STRING.encodeWithTag(writer, 2, value.tagid);
-            ProtoAdapter.STRING.encodeWithTag(writer, 3, value.subtagid);
-            ProtoAdapter.UINT32.encodeWithTag(writer, 4, value.style);
-            ProtoAdapter.UINT32.encodeWithTag(writer, 5, value.secure);
-            ext.encodeWithTag(writer, 6, value.ext);
-            ProtoAdapter.UINT32.encodeWithTag(writer, 7, value.bidfloor);
-            ProtoAdapter.UINT32.encodeWithTag(writer, 8, value.width);
-            ProtoAdapter.UINT32.encodeWithTag(writer, 9, value.height);
-            ProtoAdapter.UINT32.encodeWithTag(writer, 10, value.deeplink);
-            ProtoAdapter.UINT32.encodeWithTag(writer, 11, value.ul);
+            ProtoAdapter.BOOL.encodeWithTag(writer, 1, value.deeplink);
+            ProtoAdapter.BOOL.encodeWithTag(writer, 2, value.ul);
+            ProtoAdapter.STRING.encodeWithTag(writer, 3, value.id);
+            ProtoAdapter.STRING.encodeWithTag(writer, 4, value.tagid);
+            ProtoAdapter.STRING.encodeWithTag(writer, 5, value.subtagid);
+            ProtoAdapter.INT32.encodeWithTag(writer, 6, value.bidfloor);
+            ProtoAdapter.INT32.encodeWithTag(writer, 7, value.width);
+            ProtoAdapter.INT32.encodeWithTag(writer, 8, value.height);
+            ProtoAdapter.INT32.encodeWithTag(writer, 9, value.style);
+            ProtoAdapter.INT32.encodeWithTag(writer, 10, value.secure);
+            ext.encodeWithTag(writer, 11, value.ext);
             writer.writeBytes(value.unknownFields());
         }
 
@@ -286,37 +351,37 @@ public final class Imp extends AndroidMessage<Imp, Imp.Builder> {
             for (int tag; (tag = reader.nextTag()) != -1; ) {
                 switch (tag) {
                     case 1:
-                        builder.id(ProtoAdapter.STRING.decode(reader));
+                        builder.deeplink(ProtoAdapter.BOOL.decode(reader));
                         break;
                     case 2:
-                        builder.tagid(ProtoAdapter.STRING.decode(reader));
+                        builder.ul(ProtoAdapter.BOOL.decode(reader));
                         break;
                     case 3:
-                        builder.subtagid(ProtoAdapter.STRING.decode(reader));
+                        builder.id(ProtoAdapter.STRING.decode(reader));
                         break;
                     case 4:
-                        builder.style(ProtoAdapter.UINT32.decode(reader));
+                        builder.tagid(ProtoAdapter.STRING.decode(reader));
                         break;
                     case 5:
-                        builder.secure(ProtoAdapter.UINT32.decode(reader));
+                        builder.subtagid(ProtoAdapter.STRING.decode(reader));
                         break;
                     case 6:
-                        builder.ext.putAll(ext.decode(reader));
+                        builder.bidfloor(ProtoAdapter.INT32.decode(reader));
                         break;
                     case 7:
-                        builder.bidfloor(ProtoAdapter.UINT32.decode(reader));
+                        builder.width(ProtoAdapter.INT32.decode(reader));
                         break;
                     case 8:
-                        builder.width(ProtoAdapter.UINT32.decode(reader));
+                        builder.height(ProtoAdapter.INT32.decode(reader));
                         break;
                     case 9:
-                        builder.height(ProtoAdapter.UINT32.decode(reader));
+                        builder.style(ProtoAdapter.INT32.decode(reader));
                         break;
                     case 10:
-                        builder.deeplink(ProtoAdapter.UINT32.decode(reader));
+                        builder.secure(ProtoAdapter.INT32.decode(reader));
                         break;
                     case 11:
-                        builder.ul(ProtoAdapter.UINT32.decode(reader));
+                        builder.ext.putAll(ext.decode(reader));
                         break;
                     default: {
                         FieldEncoding fieldEncoding = reader.peekFieldEncoding();

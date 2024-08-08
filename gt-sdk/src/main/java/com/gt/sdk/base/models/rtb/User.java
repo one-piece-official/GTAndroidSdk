@@ -20,8 +20,8 @@ import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
 
-public final class User extends AndroidMessage<User, User.Builder> {
 
+public final class User extends AndroidMessage<User, User.Builder> {
     public static final ProtoAdapter<User> ADAPTER = new ProtoAdapter_User();
 
     public static final Parcelable.Creator<User> CREATOR = AndroidMessage.newCreator(ADAPTER);
@@ -41,7 +41,7 @@ public final class User extends AndroidMessage<User, User.Builder> {
     public final String id;
 
     /**
-     * 用户性别，F 女性 M 男性
+     * F 女性 M 男性
      */
     @WireField(tag = 2, adapter = "com.squareup.wire.ProtoAdapter#STRING")
     public final String gender;
@@ -104,11 +104,11 @@ public final class User extends AndroidMessage<User, User.Builder> {
     }
 
     public static final class Builder extends Message.Builder<User, Builder> {
-        public String id = DEFAULT_ID;
+        public String id;
 
-        public String gender = DEFAULT_GENDER;
+        public String gender;
 
-        public String keywords = DEFAULT_KEYWORDS;
+        public String keywords;
 
         public Builder() {
         }
@@ -122,7 +122,7 @@ public final class User extends AndroidMessage<User, User.Builder> {
         }
 
         /**
-         * 用户性别，F 女性 M 男性
+         * F 女性 M 男性
          */
         public Builder gender(String gender) {
             this.gender = gender;

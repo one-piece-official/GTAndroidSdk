@@ -14,6 +14,7 @@ import com.czhj.sdk.common.ThreadPool.ThreadPoolFactory;
 import com.czhj.sdk.common.utils.AppPackageUtil;
 import com.czhj.sdk.common.utils.FileUtil;
 import com.czhj.sdk.logger.SigmobLog;
+import com.gt.sdk.GtAdSdk;
 import com.gt.sdk.WindConstants;
 import com.gt.sdk.base.common.ADEvent;
 import com.gt.sdk.base.common.AdStackManager;
@@ -70,7 +71,7 @@ class AppInstallReceiver extends BroadcastReceiver {
 
             if (TextUtils.isEmpty(title)) {
                 try {
-                    title = String.valueOf(AppPackageUtil.getPackageManager(SDKContext.getApplicationContext()).getApplicationLabel(info.applicationInfo));
+                    title = String.valueOf(AppPackageUtil.getPackageManager(GtAdSdk.sharedAds().getContext()).getApplicationLabel(info.applicationInfo));
                 } catch (Throwable e) {
                     title = packageName;
                 }

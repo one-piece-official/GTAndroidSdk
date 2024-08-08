@@ -6,81 +6,79 @@ option java_package = "com.gt.sdk.base.models.rtb";
 option objc_class_prefix = "gt";
 option optimize_for = LITE_RUNTIME;
 
-message App {
-  string          id = 1;                      //应用标识
-  string          name = 2;                    //应⽤名称
-  string          ver = 3;                     //应⽤版本
-  string          bundle = 4;                  // 必填！应用包名。IOS设备为bundle id
-  repeated string cat = 5;                     //app 所属类别
-  repeated string pagecat = 6;                 //app当前页面的分类信息标签列表
-  repeated string keywords = 7;                //app 关键字标签列表
-  string          store_ver = 8;               // App的应用商店版本
-}
 
-message Device {
-  uint32   os = 1;                 // 操作系统类型. 1=IOS；2=Android
-  uint32   osv = 2;      // Android API level
-  string   did = 3;
-  string   didmd5 = 4;
-  string   didsha1 = 5;
-  string   oid = 6;
-  string   oidmd5 = 7;
-  string   dpid = 8;
-  string   dpidmd5 = 9;
-  string   dpidsha1 = 10;
-  string   ifa = 11;
-  string   ifamd5 = 12;
-  string   ip = 13;
-  string   ipv6 = 14;
-  string   ua = 15;
-  uint32   connectiontype = 16;
-  uint32   devicetype = 17;
-  string   make = 18;
-  string   model = 19;
-  string   hwv = 20;
-  uint32   carrier = 21;
-  string   macmd5 = 22;
-  string   macsha1 = 23;
-  string   mac = 24;
-  uint32   h = 25;
-  uint32   w = 26;
-  uint32   ppi = 27;
-  Geo      geo = 28;
-  string   ssid = 29;
-  string   wifi_mac = 30;
-  string   rom_version = 31;
-  repeated string installed_app = 32;
-  string   update_mark = 33;
-  string   update_time = 34;
-  string   boot_mark = 35;
-  string   boot_time = 36;
-  string   sys_compiling_time = 37;
-  string   birth_time = 38;
-  string   paid_1_4 = 39;
-  string   hms_ver = 40;
-  string   hwag_ver = 41;
-  string   caid = 42;
-  string   caid_md5 = 43;
-  string   caid_version = 44;
-  string   device_name_md5 = 45;
-  string   hardware_machine = 46;
-  string   physical_memory = 47;
-  string   hard_disk_size = 48;
-  string   country = 49;
-  string   language = 50;
-  string   time_zone = 51;
-  uint32   cpu_num = 52;
+message App {
+  string bundle = 1; // application bundle 或 package name
+  string id = 2; // 应用标识
+  string name = 3; // 应⽤名称
+  string ver = 4; // 应⽤版本
+  repeated string cat = 5; // app 所属类别
+  repeated string pagecat = 6; // 当前页面的分类信息标签列表
+  repeated string keywords = 7; // app 关键字标签列表
+  string store_ver = 8; //App 的应用商店版本
 }
 
 message Geo {
-  float  lat = 1;             // 纬度
-  float  lon = 2;             // 经度
+  float lat = 1; // 纬度，取值范围 -90.0 到 90.0，负值表示南方
+  float lon = 2; // 经度，取值范围 -180.0 到 180.0，负值表示西方
+}
+
+message Device {
+  int32 carrier = 1; // 运营商名称 - 1：中国移动 2：联通 3：电信 0：未知
+  int32 connectiontype = 2; // 设备链接类型 - 0：Unknown 1：Ethernet 2：WiFi 3：Cellular Network-Unk 4：2G 5：3G 6：4G 7：5G
+  int32 devicetype = 3; // 设备类型 - 1：手机 2：平板 3:  电脑 4:  智能电视 0:  未知
+  string did = 4; // Android 设备的 IMEI
+  string didmd5 = 5; // Android 设备的 IMEI 使用 MD5 后的值
+  string ifamd5 = 6; // iOS设备的IDFA使用MD5后的值
+  string dpid = 7; //Android 设备 Android ID
+  string dpidmd5 = 8; // Android 设备 Android ID 使用 MD5 后的值
+  Geo geo = 9; // 设备的位置信息
+  int32 h = 10; // 屏幕的物理高度，单位：px
+  string hwv = 11; // 硬件版本, 如 "HUAWEI R9"
+  string ip = 12; // 设备 IP 地址
+  string oid = 13; // Android 设备的 OAID 明文
+  string oidmd5 = 14; // Android 设备的 OAID 使用MD5后的值
+  string ifa = 15; // iOS 设备的 IDFA，需大写
+  string ipv6 = 16; // 设备 IPv6 地址
+  string make = 17; // 设备品牌 Android取Build.BRAND，可用Build.MANUFACTURE代替，但效果会变差；iOS使用默认值Apple Android例子：Honor
+  string model = 18; // 设备型号，Android取Build.MODEL Android例子：Che1-CL20 iOS例子：iPhone4,1
+  int32 os = 19; // 操作系统 1 :Android, 2 : ios
+  string osv = 20; // 操作系统硬件版本，Android API 等级（例如：28）
+  int32 ppi = 21; // 每英寸像素个数，单位：ppi
+  string ua = 22; // User Agent，需使用系统 webview 的 ua
+  int32 w = 23; // 屏幕的物理宽度，单位：px
+  string mac = 24; // 设备 MAC 地址的 原值
+  string macmd5 = 25; // 设备 MAC 地址使用 MD5 后的值
+  string ssid = 26; // 无线网 ssid 名称
+  string wifi_mac = 27; // wifi 路由器的 Mac 地址
+  string rom_version = 28; //手机 ROM 版本
+  repeated string installed_app = 29; // 用户已安装的app
+  string update_mark = 30; // 系统更新标识
+  string update_time = 31; // 系统更新时间
+  string boot_mark = 32; // 系统启动标识
+  string boot_time = 33; // 系统启动时间
+  string sys_compiling_time = 34;
+  string birth_time = 35; // 设备启动时间
+  string paid_1_4 = 36; // 拼多多设备ID
+  string hms_ver = 37; // 华为安卓设备的 HMS Core的版本号，保留原始值
+  string hwag_ver = 38; // 华为安卓设备的 AG（应用市场）的版本号，保留原始值
+  string caid = 39; // Caid 原值
+  string caid_md5 = 40; // Caid md5 值
+  string caid_version = 41; // Caid 的版本
+  string device_name_md5 = 42; // 设备名称的md5值
+  string hardware_machine = 43; // 设备machine值，对应model，示例："iPhone10,3"
+  string physical_memory = 44; // 物理内存，单位：字节
+  string hard_disk_size = 45; // 硬盘大小，单位：字节
+  string country = 46; // 国家，示例："CN"
+  string language = 47; // 语言，示例："zh-Hans-CN"
+  string time_zone = 48; // 时区，示例："28800"
+  string cpu_num = 49; //CPU数目
 }
 
 message User {
-  string          id = 1;                     //用户ID
-  string          gender = 2;                 //用户性别，F 女性 M 男性
-  string          keywords = 3;               //用户关键字
+  string id = 1; //用户ID
+  string gender = 2; // F 女性 M 男性
+  string keywords = 3; // 用户关键字
 }
 
 

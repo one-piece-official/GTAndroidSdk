@@ -296,7 +296,7 @@ public class BaseWebView extends WebView {
         url = StringUtil.getUrl(url);
         httpHeaders.put("Referer", "");
         if (mAdUnit != null) {
-            if (mAdUnit.isDisablexRequestWith()) {
+            if (mAdUnit.isDisableXRequestWith()) {
                 httpHeaders.put("X-Requested-With", "");
             }
         }

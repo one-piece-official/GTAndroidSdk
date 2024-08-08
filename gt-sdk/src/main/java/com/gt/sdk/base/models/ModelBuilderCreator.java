@@ -66,7 +66,7 @@ public class ModelBuilderCreator {
         builder.os(1);
         try {
 
-            builder.osv(ClientMetadata.getDeviceOSLevel());
+            builder.osv(String.valueOf(ClientMetadata.getDeviceOSLevel()));
 
             String imei = deviceContext != null ? deviceContext.getImei() : ClientMetadata.getInstance().getDeviceId();
             if (!TextUtils.isEmpty(imei)) {

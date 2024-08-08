@@ -20,7 +20,6 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.StringBuilder;
-import java.util.List;
 
 public final class BidResponse extends AndroidMessage<BidResponse, BidResponse.Builder> {
     public static final ProtoAdapter<BidResponse> ADAPTER = new ProtoAdapter_BidResponse();
@@ -29,7 +28,7 @@ public final class BidResponse extends AndroidMessage<BidResponse, BidResponse.B
 
     private static final long serialVersionUID = 0L;
 
-    public static final String DEFAULT_REQUEST_ID = "";
+    public static final String DEFAULT_ID = "";
 
     public static final String DEFAULT_BIDID = "";
 
@@ -40,47 +39,50 @@ public final class BidResponse extends AndroidMessage<BidResponse, BidResponse.B
     public static final Integer DEFAULT_NBT = 0;
 
     /**
-     * 对应请的request_id(内部生成的)
+     * 对应请求中的 Bid Request 的 id
      */
     @WireField(tag = 1, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String request_id;
+    public final String id;
 
     /**
-     * 广告信息
+     * 本次响应标识 ID，用于日志和后续调试
      */
-    @WireField(tag = 2, adapter = "com.gt.sdk.base.models.rtb.SeatBid#ADAPTER", label = WireField.Label.REPEATED)
-    public final List<SeatBid> bids;
-
-    @WireField(tag = 3, adapter = "com.squareup.wire.ProtoAdapter#STRING")
-    public final String bidId;
+    @WireField(tag = 2, adapter = "com.squareup.wire.ProtoAdapter#STRING")
+    public final String bidid;
 
     /**
-     * 广告有效截止日期。Unix时间戳，单位秒。
+     * 响应交易对象，查看 SeatBid 对象， 没有且code为0表示未填充
      */
-    @WireField(tag = 4, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
+    @WireField(tag = 3, adapter = "com.gt.sdk.base.models.rtb.SeatBid#ADAPTER")
+    public final SeatBid seatbid;
+
+    /**
+     * 状态码
+     */
+    @WireField(tag = 4, adapter = "com.squareup.wire.ProtoAdapter#INT32")
     public final Integer code;
 
     /**
-     * 广告有效截止日期。Unix时间戳，单位秒。
+     * 短时屏蔽状态
      */
-    @WireField(tag = 5, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
+    @WireField(tag = 5, adapter = "com.squareup.wire.ProtoAdapter#INT32")
     public final Integer nbs;
 
     /**
-     * 广告有效截止日期。Unix时间戳，单位秒。
+     * 短时屏蔽时间，单位s
      */
-    @WireField(tag = 6, adapter = "com.squareup.wire.ProtoAdapter#UINT32")
+    @WireField(tag = 6, adapter = "com.squareup.wire.ProtoAdapter#INT32")
     public final Integer nbt;
 
-    public BidResponse(String request_id, List<SeatBid> bids, String bidId, Integer code, Integer nbs, Integer nbt) {
-        this(request_id, bids, bidId, code, nbs, nbt, ByteString.EMPTY);
+    public BidResponse(String id, String bidid, SeatBid seatbid, Integer code, Integer nbs, Integer nbt) {
+        this(id, bidid, seatbid, code, nbs, nbt, ByteString.EMPTY);
     }
 
-    public BidResponse(String request_id, List<SeatBid> bids, String bidId, Integer code, Integer nbs, Integer nbt, ByteString unknownFields) {
+    public BidResponse(String id, String bidid, SeatBid seatbid, Integer code, Integer nbs, Integer nbt, ByteString unknownFields) {
         super(ADAPTER, unknownFields);
-        this.request_id = request_id;
-        this.bids = Internal.immutableCopyOf("bids", bids);
-        this.bidId = bidId;
+        this.id = id;
+        this.bidid = bidid;
+        this.seatbid = seatbid;
         this.code = code;
         this.nbs = nbs;
         this.nbt = nbt;
@@ -89,9 +91,9 @@ public final class BidResponse extends AndroidMessage<BidResponse, BidResponse.B
     @Override
     public Builder newBuilder() {
         Builder builder = new Builder();
-        builder.request_id = request_id;
-        builder.bids = Internal.copyOf("bids", bids);
-        builder.bidId = bidId;
+        builder.id = id;
+        builder.bidid = bidid;
+        builder.seatbid = seatbid;
         builder.code = code;
         builder.nbs = nbs;
         builder.nbt = nbt;
@@ -104,7 +106,7 @@ public final class BidResponse extends AndroidMessage<BidResponse, BidResponse.B
         if (other == this) return true;
         if (!(other instanceof BidResponse)) return false;
         BidResponse o = (BidResponse) other;
-        return unknownFields().equals(o.unknownFields()) && Internal.equals(request_id, o.request_id) && bids.equals(o.bids) && Internal.equals(bidId, o.bidId) && Internal.equals(code, o.code) && Internal.equals(nbs, o.nbs) && Internal.equals(nbt, o.nbt);
+        return unknownFields().equals(o.unknownFields()) && Internal.equals(id, o.id) && Internal.equals(bidid, o.bidid) && Internal.equals(seatbid, o.seatbid) && Internal.equals(code, o.code) && Internal.equals(nbs, o.nbs) && Internal.equals(nbt, o.nbt);
     }
 
     @Override
@@ -112,9 +114,9 @@ public final class BidResponse extends AndroidMessage<BidResponse, BidResponse.B
         int result = super.hashCode;
         if (result == 0) {
             result = unknownFields().hashCode();
-            result = result * 37 + (request_id != null ? request_id.hashCode() : 0);
-            result = result * 37 + bids.hashCode();
-            result = result * 37 + (bidId != null ? bidId.hashCode() : 0);
+            result = result * 37 + (id != null ? id.hashCode() : 0);
+            result = result * 37 + (bidid != null ? bidid.hashCode() : 0);
+            result = result * 37 + (seatbid != null ? seatbid.hashCode() : 0);
             result = result * 37 + (code != null ? code.hashCode() : 0);
             result = result * 37 + (nbs != null ? nbs.hashCode() : 0);
             result = result * 37 + (nbt != null ? nbt.hashCode() : 0);
@@ -126,9 +128,9 @@ public final class BidResponse extends AndroidMessage<BidResponse, BidResponse.B
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        if (request_id != null) builder.append(", request_id=").append(request_id);
-        if (!bids.isEmpty()) builder.append(", bids=").append(bids);
-        if (bidId != null) builder.append(", bidId=").append(bidId);
+        if (id != null) builder.append(", id=").append(id);
+        if (bidid != null) builder.append(", bidid=").append(bidid);
+        if (seatbid != null) builder.append(", seatbid=").append(seatbid);
         if (code != null) builder.append(", code=").append(code);
         if (nbs != null) builder.append(", nbs=").append(nbs);
         if (nbt != null) builder.append(", nbt=").append(nbt);
@@ -136,11 +138,11 @@ public final class BidResponse extends AndroidMessage<BidResponse, BidResponse.B
     }
 
     public static final class Builder extends Message.Builder<BidResponse, Builder> {
-        public String request_id;
+        public String id;
 
-        public List<SeatBid> bids;
+        public String bidid;
 
-        public String bidId;
+        public SeatBid seatbid;
 
         public Integer code;
 
@@ -149,33 +151,34 @@ public final class BidResponse extends AndroidMessage<BidResponse, BidResponse.B
         public Integer nbt;
 
         public Builder() {
-            bids = Internal.newMutableList();
         }
 
         /**
-         * 对应请的request_id(内部生成的)
+         * 对应请求中的 Bid Request 的 id
          */
-        public Builder request_id(String request_id) {
-            this.request_id = request_id;
+        public Builder id(String id) {
+            this.id = id;
             return this;
         }
 
         /**
-         * 广告信息
+         * 本次响应标识 ID，用于日志和后续调试
          */
-        public Builder bids(List<SeatBid> bids) {
-            Internal.checkElementsNotNull(bids);
-            this.bids = bids;
-            return this;
-        }
-
-        public Builder bidId(String bidId) {
-            this.bidId = bidId;
+        public Builder bidid(String bidid) {
+            this.bidid = bidid;
             return this;
         }
 
         /**
-         * 广告有效截止日期。Unix时间戳，单位秒。
+         * 响应交易对象，查看 SeatBid 对象， 没有且code为0表示未填充
+         */
+        public Builder seatbid(SeatBid seatbid) {
+            this.seatbid = seatbid;
+            return this;
+        }
+
+        /**
+         * 状态码
          */
         public Builder code(Integer code) {
             this.code = code;
@@ -183,7 +186,7 @@ public final class BidResponse extends AndroidMessage<BidResponse, BidResponse.B
         }
 
         /**
-         * 广告有效截止日期。Unix时间戳，单位秒。
+         * 短时屏蔽状态
          */
         public Builder nbs(Integer nbs) {
             this.nbs = nbs;
@@ -191,7 +194,7 @@ public final class BidResponse extends AndroidMessage<BidResponse, BidResponse.B
         }
 
         /**
-         * 广告有效截止日期。Unix时间戳，单位秒。
+         * 短时屏蔽时间，单位s
          */
         public Builder nbt(Integer nbt) {
             this.nbt = nbt;
@@ -200,7 +203,7 @@ public final class BidResponse extends AndroidMessage<BidResponse, BidResponse.B
 
         @Override
         public BidResponse build() {
-            return new BidResponse(request_id, bids, bidId, code, nbs, nbt, super.buildUnknownFields());
+            return new BidResponse(id, bidid, seatbid, code, nbs, nbt, super.buildUnknownFields());
         }
     }
 
@@ -211,17 +214,17 @@ public final class BidResponse extends AndroidMessage<BidResponse, BidResponse.B
 
         @Override
         public int encodedSize(BidResponse value) {
-            return ProtoAdapter.STRING.encodedSizeWithTag(1, value.request_id) + SeatBid.ADAPTER.asRepeated().encodedSizeWithTag(2, value.bids) + ProtoAdapter.STRING.encodedSizeWithTag(3, value.bidId) + ProtoAdapter.UINT32.encodedSizeWithTag(4, value.code) + ProtoAdapter.UINT32.encodedSizeWithTag(5, value.nbs) + ProtoAdapter.UINT32.encodedSizeWithTag(6, value.nbt) + value.unknownFields().size();
+            return ProtoAdapter.STRING.encodedSizeWithTag(1, value.id) + ProtoAdapter.STRING.encodedSizeWithTag(2, value.bidid) + SeatBid.ADAPTER.encodedSizeWithTag(3, value.seatbid) + ProtoAdapter.INT32.encodedSizeWithTag(4, value.code) + ProtoAdapter.INT32.encodedSizeWithTag(5, value.nbs) + ProtoAdapter.INT32.encodedSizeWithTag(6, value.nbt) + value.unknownFields().size();
         }
 
         @Override
         public void encode(ProtoWriter writer, BidResponse value) throws IOException {
-            ProtoAdapter.STRING.encodeWithTag(writer, 1, value.request_id);
-            SeatBid.ADAPTER.asRepeated().encodeWithTag(writer, 2, value.bids);
-            ProtoAdapter.STRING.encodeWithTag(writer, 3, value.bidId);
-            ProtoAdapter.UINT32.encodeWithTag(writer, 4, value.code);
-            ProtoAdapter.UINT32.encodeWithTag(writer, 5, value.nbs);
-            ProtoAdapter.UINT32.encodeWithTag(writer, 6, value.nbt);
+            ProtoAdapter.STRING.encodeWithTag(writer, 1, value.id);
+            ProtoAdapter.STRING.encodeWithTag(writer, 2, value.bidid);
+            SeatBid.ADAPTER.encodeWithTag(writer, 3, value.seatbid);
+            ProtoAdapter.INT32.encodeWithTag(writer, 4, value.code);
+            ProtoAdapter.INT32.encodeWithTag(writer, 5, value.nbs);
+            ProtoAdapter.INT32.encodeWithTag(writer, 6, value.nbt);
             writer.writeBytes(value.unknownFields());
         }
 
@@ -232,22 +235,22 @@ public final class BidResponse extends AndroidMessage<BidResponse, BidResponse.B
             for (int tag; (tag = reader.nextTag()) != -1; ) {
                 switch (tag) {
                     case 1:
-                        builder.request_id(ProtoAdapter.STRING.decode(reader));
+                        builder.id(ProtoAdapter.STRING.decode(reader));
                         break;
                     case 2:
-                        builder.bids.add(SeatBid.ADAPTER.decode(reader));
+                        builder.bidid(ProtoAdapter.STRING.decode(reader));
                         break;
                     case 3:
-                        builder.bidId(ProtoAdapter.STRING.decode(reader));
+                        builder.seatbid(SeatBid.ADAPTER.decode(reader));
                         break;
                     case 4:
-                        builder.code(ProtoAdapter.UINT32.decode(reader));
+                        builder.code(ProtoAdapter.INT32.decode(reader));
                         break;
                     case 5:
-                        builder.nbs(ProtoAdapter.UINT32.decode(reader));
+                        builder.nbs(ProtoAdapter.INT32.decode(reader));
                         break;
                     case 6:
-                        builder.nbt(ProtoAdapter.UINT32.decode(reader));
+                        builder.nbt(ProtoAdapter.INT32.decode(reader));
                         break;
                     default: {
                         FieldEncoding fieldEncoding = reader.peekFieldEncoding();
@@ -263,7 +266,7 @@ public final class BidResponse extends AndroidMessage<BidResponse, BidResponse.B
         @Override
         public BidResponse redact(BidResponse value) {
             Builder builder = value.newBuilder();
-            Internal.redactElements(builder.bids, SeatBid.ADAPTER);
+            if (builder.seatbid != null) builder.seatbid = SeatBid.ADAPTER.redact(builder.seatbid);
             builder.clearUnknownFields();
             return builder.build();
         }
