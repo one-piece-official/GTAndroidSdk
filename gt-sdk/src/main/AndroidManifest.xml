@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.sigmob.sdk"
+    package="com.gt.sdk"
     android:versionCode="1"
     android:versionName="1.0">
 
@@ -25,13 +25,12 @@
         </intent>
     </queries>
 
-
     <application
-
         android:supportsRtl="true"
         android:usesCleartextTraffic="true">
+
         <provider
-            android:name="com.sigmob.sdk.SigmobFileProvider"
+            android:name="com.gt.sdk.SigmobFileProvider"
             android:authorities="${applicationId}.sigprovider"
             android:exported="false"
             android:grantUriPermissions="true"
@@ -39,10 +38,10 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/sigmob_provider_paths" />
-        </provider> <!-- TT 国内 -->
+        </provider>
 
         <activity
-            android:name="com.sigmob.sdk.base.common.TransparentAdActivity"
+            android:name="com.gt.sdk.base.common.TransparentAdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:hardwareAccelerated="true"
             android:multiprocess="true"
@@ -50,7 +49,7 @@
             android:theme="@style/sig_transparent_style" />
 
         <activity
-            android:name="com.sigmob.sdk.base.common.AdActivity"
+            android:name="com.gt.sdk.base.activity.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:hardwareAccelerated="true"
             android:multiprocess="true"
@@ -58,7 +57,7 @@
             android:theme="@android:style/Theme.Light.NoTitleBar" />
 
         <activity
-            android:name="com.sigmob.sdk.base.common.PortraitAdActivity"
+            android:name="com.gt.sdk.base.activity.PortraitAdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:hardwareAccelerated="true"
             android:multiprocess="true"
@@ -66,7 +65,7 @@
             android:theme="@android:style/Theme.Light.NoTitleBar" />
 
         <activity
-            android:name="com.sigmob.sdk.base.common.LandscapeAdActivity"
+            android:name="com.gt.sdk.base.activity.LandScapeAdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:hardwareAccelerated="true"
             android:multiprocess="true"
@@ -74,7 +73,7 @@
             android:theme="@android:style/Theme.Light.NoTitleBar" />
 
         <activity
-            android:name="com.sigmob.sdk.base.common.PortraitTransparentAdActivity"
+            android:name="com.gt.sdk.base.activity.PortraitTransparentAdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:hardwareAccelerated="true"
             android:multiprocess="true"
@@ -82,7 +81,7 @@
             android:theme="@style/sig_transparent_style" />
 
         <activity
-            android:name="com.sigmob.sdk.base.common.LandscapeTransparentAdActivity"
+            android:name="com.gt.sdk.base.activity.LandscapeTransparentAdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:hardwareAccelerated="true"
             android:multiprocess="true"

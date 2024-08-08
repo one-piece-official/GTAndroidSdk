@@ -1,9 +1,5 @@
 package com.gt.sdk.base.network;
 
-import android.text.TextUtils;
-
-import com.czhj.sdk.common.ClientMetadata;
-
 import com.czhj.sdk.common.network.SigmobRequest;
 import com.czhj.sdk.common.utils.Preconditions;
 import com.czhj.sdk.logger.SigmobLog;
@@ -21,7 +17,7 @@ import com.gt.sdk.base.models.rtb.BidResponse;
 import com.gt.sdk.base.models.rtb.Imp;
 import com.gt.sdk.base.models.ModelBuilderCreator;
 import com.gt.sdk.base.models.rtb.SeatBid;
-import com.gt.sdk.utils.DeviceContextManager;
+import com.gt.sdk.admanager.DeviceContextManager;
 
 import java.util.ArrayList;
 import java.util.List;

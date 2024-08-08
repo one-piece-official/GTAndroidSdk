@@ -1,8 +1,6 @@
-package com.gt.sdk.utils;
+package com.gt.sdk.admanager;
 
 import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
 import android.location.Location;
 import android.text.TextUtils;
 

@@ -32,7 +32,6 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public class DownloadAPK {
-
     /**
      * 下载Apk, 并设置Apk地址,
      * 默认位置: /storage/sdcard0/Download
@@ -41,13 +40,10 @@ public class DownloadAPK {
      * @param downLoadUrl 下载地址
      * @param apkName     apk名称
      */
-    private static Map<String, String> downloadMap = new Hashtable<>();
-    private static Set<DownloadAPKItem> downloadAPKList = new CopyOnWriteArraySet<>();
+    private static final Map<String, String> downloadMap = new Hashtable<>();
+    private static final Set<DownloadAPKItem> downloadAPKList = new CopyOnWriteArraySet<>();
 
-    private static long downloadApk(
-            String downLoadUrl,
-            String apkName, String title) {
-
+    private static long downloadApk(String downLoadUrl, String apkName, String title) {
         try {
             String appUrl = downLoadUrl;
             if (appUrl == null || appUrl.isEmpty()) {
@@ -74,8 +70,7 @@ public class DownloadAPK {
 
             request.setTitle(title);
 
-            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE
-                    | DownloadManager.Request.NETWORK_WIFI);
+            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
             request.setAllowedOverRoaming(true);
 
             request.setVisibleInDownloadsUi(true);
@@ -102,13 +97,10 @@ public class DownloadAPK {
             DownloadManager manager = getDownloadManger();
 
             return manager.enqueue(request);
-
         } catch (Throwable e) {
             SigmobLog.e(e.getMessage());
         }
         return -1;
-
-
     }
 
     public static boolean getUnInstallApkInfo(Context context, String filePath) {
@@ -140,18 +132,15 @@ public class DownloadAPK {
                         options.put("apkurl", url);
                         entitySigmob.setOptions(options);
                     }
-
                 }
             });
         }
-
 
         HashMap ext = new HashMap<>();
         ext.put("result", Constants.SUCCESS);
         ext.put("downloadId", adUnit.getDownloadId());
 
         BaseBroadcastReceiver.broadcastAction(context, adUnit.getUuid(), ext, IntentActions.ACTION_INTERSTITIAL_DOWNLOAD_START);
-
     }
 
     private static void downloadAPK(String apkName, final String url, BaseAdUnit adUnit) {
@@ -402,9 +391,7 @@ public class DownloadAPK {
     public static long[] getDownloadIdBytesAndStatus(Context context, Long downloadId) {
 
 
-        long[] bytesAndStatus = new long[]{
-                -1, -1, 0
-        };
+        long[] bytesAndStatus = new long[]{-1, -1, 0};
 
         if (downloadId == null || downloadId < 0) return bytesAndStatus;
 
@@ -606,8 +593,7 @@ public class DownloadAPK {
             Uri uriForFile = null;
             try {
 
-                uriForFile = SigmobFileProvider.getUriForFile(SDKContext.getApplicationContext(),
-                        SDKContext.getApplicationContext().getPackageName() + ".sigprovider", file);
+                uriForFile = SigmobFileProvider.getUriForFile(SDKContext.getApplicationContext(), SDKContext.getApplicationContext().getPackageName() + ".sigprovider", file);
                 if (uriForFile != null) {
                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     intent.setDataAndType(uriForFile, "application/vnd.android.package-archive");
@@ -718,8 +704,7 @@ public class DownloadAPK {
                         return true;
                     }
 
-                    if (!cursor.moveToNext())
-                        break;
+                    if (!cursor.moveToNext()) break;
                 }
 
                 cursor.close();

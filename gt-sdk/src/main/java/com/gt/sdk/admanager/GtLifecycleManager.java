@@ -10,7 +10,6 @@ import com.gt.sdk.base.activity.AdActivity;
 import com.gt.sdk.base.models.point.PointCategory;
 import com.gt.sdk.base.models.point.GtPointEntityActive;
 import com.gt.sdk.base.models.point.PointType;
-import com.gt.sdk.utils.AdLifecycleManager;
 import com.gt.sdk.utils.WMLogUtil;
 
 import java.lang.ref.WeakReference;

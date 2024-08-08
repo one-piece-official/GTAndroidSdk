@@ -39,7 +39,7 @@ import com.gt.sdk.base.view.SlopeView;
 import com.gt.sdk.base.view.SwingView;
 import com.gt.sdk.base.view.TitleDescriptionView;
 import com.gt.sdk.base.view.WringView;
-import com.gt.sdk.utils.DeviceContextManager;
+import com.gt.sdk.admanager.DeviceContextManager;
 
 import java.util.Map;
 

@@ -6,7 +6,7 @@ import com.gt.sdk.GtAdSdk;
 import com.gt.sdk.GtConstants;
 import com.gt.sdk.admanager.GtConfigManager;
 import com.gt.sdk.admanager.PrivacyDataManager;
-import com.gt.sdk.utils.DeviceContextManager;
+import com.gt.sdk.admanager.DeviceContextManager;
 
 
 import java.util.List;
