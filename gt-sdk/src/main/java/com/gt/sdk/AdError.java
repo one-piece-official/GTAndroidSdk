@@ -54,6 +54,9 @@ public enum AdError {
     //激励视频播放出错
     ERROR_AD_PLAY(610002, "广告播放出错"),
 
+    ERROR_AD_VIDEO_PLAY_FAIL(61000002, "广告视频播放出错"),
+
+
     //激励视频未准备好
     ERROR_AD_NOT_READY(610003, "开屏广告未准备好"),
 

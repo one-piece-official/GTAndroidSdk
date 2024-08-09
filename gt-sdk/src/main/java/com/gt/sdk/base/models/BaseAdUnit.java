@@ -8,6 +8,7 @@ import com.czhj.sdk.common.models.AdFormat;
 import com.czhj.sdk.common.utils.Md5Util;
 import com.czhj.sdk.common.utils.Preconditions;
 import com.czhj.sdk.logger.SigmobLog;
+import com.gt.sdk.base.common.AdStackManager;
 import com.gt.sdk.manager.WindSDKConfig;
 import com.gt.sdk.base.LoadAdRequest;
 import com.gt.sdk.base.common.ADEvent;
@@ -147,6 +148,24 @@ public class BaseAdUnit implements Serializable {
     private String load_id;
 
     private final Map<String, String> privacyMap = new HashMap<>();
+
+    public String getProxyVideoUrl() {
+
+        String url = getVideo_url();
+        if (!TextUtils.isEmpty(url)) {
+            return AdStackManager.getHttProxyCacheServer().getProxyUrl(url);
+        }
+        return url;
+    }
+
+    public File getVideoProxyFile() {
+
+        String url = getVideo_url();
+        if (!TextUtils.isEmpty(url)) {
+            return AdStackManager.getHttProxyCacheServer().getCacheFile(url);
+        }
+        return null;
+    }
 
     public BaseAdUnit(Bid ad, String request_id, String bidId, LoadAdRequest adRequest) {
         try {

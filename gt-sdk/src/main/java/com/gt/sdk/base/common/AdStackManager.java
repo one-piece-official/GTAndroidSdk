@@ -28,9 +28,29 @@ public class AdStackManager {
     private static final Map<String, BaseAdUnit> AdUnitMap = new HashMap<>();
     private static volatile ImageManager mImageManager;
     private static BaseAdUnit clickAdUnit;
+    private static HttpProxyCacheServer proxyCacheServer;
 
     private AdStackManager() {
 
+    }
+
+    public static synchronized HttpProxyCacheServer getHttProxyCacheServer() {
+        if (proxyCacheServer == null) {
+            initHttpProxyCacheServer();
+        }
+        return proxyCacheServer;
+    }
+
+    public static synchronized void initHttpProxyCacheServer() {
+        HttpProxyCacheServer.Builder builder = new HttpProxyCacheServer.Builder(SDKContext.getApplicationContext());
+        try {
+            File file = new File(SigmobFileUtil.getVideoCachePath());
+            builder.cacheDirectory(file);
+        } catch (Throwable e) {
+            SigmobLog.e("initHttpProxyCacheServer fail ", e);
+        }
+
+        proxyCacheServer = builder.build();
     }
 
     public static synchronized AdStackManager shareInstance() {
