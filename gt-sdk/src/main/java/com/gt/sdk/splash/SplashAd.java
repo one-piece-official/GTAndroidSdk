@@ -8,7 +8,6 @@ import static com.czhj.sdk.common.models.AdStatus.AdStatusReady;
 
 import android.app.Activity;
 import android.os.Handler;
-import android.os.Looper;
 import android.view.ViewGroup;
 
 import com.czhj.sdk.common.models.AdStatus;
@@ -18,7 +17,7 @@ import com.gt.sdk.AdError;
 import com.gt.sdk.AdRequest;
 import com.gt.sdk.api.SplashAdListener;
 import com.gt.sdk.base.GtBaseAd;
-import com.gt.sdk.admanager.SplashAdManager;
+import com.gt.sdk.manager.SplashAdManager;
 
 public class SplashAd extends GtBaseAd implements SplashAdListener, AdLifecycleManager.LifecycleListener {
 

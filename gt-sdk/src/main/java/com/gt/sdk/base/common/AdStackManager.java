@@ -11,7 +11,7 @@ import com.czhj.volley.toolbox.DownloadItem;
 import com.czhj.volley.toolbox.FileDownloadRequest;
 import com.czhj.volley.toolbox.FileDownloader;
 import com.gt.sdk.GtAdSdk;
-import com.gt.sdk.admanager.WindSDKConfig;
+import com.gt.sdk.manager.WindSDKConfig;
 import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.utils.GtFileUtil;
 

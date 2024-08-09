@@ -28,7 +28,7 @@ import com.czhj.sdk.common.utils.ViewUtil;
 import com.czhj.sdk.logger.SigmobLog;
 import com.czhj.volley.toolbox.StringUtil;
 import com.gt.sdk.WindConstants;
-import com.gt.sdk.admanager.PrivacyManager;
+import com.gt.sdk.manager.PrivacyManager;
 import com.gt.sdk.base.common.APKStatusBroadcastReceiver;
 import com.gt.sdk.base.common.CustomEventAd;
 import com.gt.sdk.base.models.BaseAdUnit;

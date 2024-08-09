@@ -10,7 +10,7 @@ import com.czhj.volley.toolbox.HttpHeaderParser;
 import com.gt.sdk.base.models.ModelBuilderCreator;
 import com.gt.sdk.base.models.config.SdkConfigRequest;
 import com.gt.sdk.base.models.config.SdkConfigResponse;
-import com.gt.sdk.admanager.DeviceContextManager;
+import com.gt.sdk.manager.DeviceContextManager;
 import com.gt.sdk.utils.WMLogUtil;
 
 import java.util.Map;

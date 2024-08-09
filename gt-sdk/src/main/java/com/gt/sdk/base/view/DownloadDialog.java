@@ -33,7 +33,7 @@ import com.czhj.sdk.common.utils.Md5Util;
 import com.czhj.sdk.common.utils.ViewUtil;
 import com.czhj.sdk.logger.SigmobLog;
 import com.czhj.volley.toolbox.StringUtil;
-import com.gt.sdk.admanager.WindSDKConfig;
+import com.gt.sdk.manager.WindSDKConfig;
 import com.gt.sdk.base.common.SigMacroCommon;
 import com.gt.sdk.base.common.SigmobRes;
 import com.gt.sdk.base.models.BaseAdUnit;

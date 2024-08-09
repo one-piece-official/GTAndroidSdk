@@ -17,7 +17,7 @@ import android.widget.RelativeLayout;
 import com.czhj.sdk.common.utils.ViewUtil;
 import com.czhj.sdk.logger.SigmobLog;
 import com.gt.sdk.WindConstants;
-import com.gt.sdk.admanager.GtLifecycleManager;
+import com.gt.sdk.manager.GtLifecycleManager;
 import com.gt.sdk.base.blurkit.BlurKit;
 
 import java.lang.ref.WeakReference;

@@ -13,7 +13,7 @@ import com.gt.sdk.AdError;
 import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.LoadAdRequest;
 import com.gt.sdk.base.models.ModelBuilderCreator;
-import com.gt.sdk.admanager.DeviceContextManager;
+import com.gt.sdk.manager.DeviceContextManager;
 import com.gt.sdk.base.models.rtb.Bid;
 import com.gt.sdk.base.models.rtb.BidRequest;
 import com.gt.sdk.base.models.rtb.BidResponse;

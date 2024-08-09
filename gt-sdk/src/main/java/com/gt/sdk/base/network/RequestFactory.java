@@ -6,7 +6,7 @@ import com.czhj.sdk.common.network.Networking;
 import com.czhj.sdk.common.network.SigmobRequestUtil;
 import com.czhj.sdk.logger.SigmobLog;
 import com.gt.sdk.AdError;
-import com.gt.sdk.admanager.WindSDKConfig;
+import com.gt.sdk.manager.WindSDKConfig;
 import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.LoadAdRequest;
 

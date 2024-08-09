@@ -11,7 +11,6 @@ import android.os.Build;
 import com.czhj.sdk.common.utils.IntentUtil;
 import com.gt.sdk.GtAdSdk;
 import com.gt.sdk.WindConstants;
-import com.gt.sdk.admanager.WindSDKConfig;
 import com.gt.sdk.utils.Base64Util;
 
 import java.util.List;

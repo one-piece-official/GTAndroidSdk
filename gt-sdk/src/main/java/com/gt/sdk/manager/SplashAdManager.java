@@ -1,4 +1,4 @@
-package com.gt.sdk.admanager;
+package com.gt.sdk.manager;
 
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 

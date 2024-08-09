@@ -5,9 +5,9 @@ import com.czhj.sdk.common.mta.DeviceContext;
 import com.czhj.sdk.common.mta.PointEntityBase;
 import com.gt.sdk.GtAdSdk;
 import com.gt.sdk.WindConstants;
-import com.gt.sdk.admanager.WindSDKConfig;
-import com.gt.sdk.admanager.PrivacyManager;
-import com.gt.sdk.admanager.DeviceContextManager;
+import com.gt.sdk.manager.WindSDKConfig;
+import com.gt.sdk.manager.PrivacyManager;
+import com.gt.sdk.manager.DeviceContextManager;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.gt.sdk.admanager;
+package com.gt.sdk.manager;
 
 import android.app.Activity;
 import android.app.Application;

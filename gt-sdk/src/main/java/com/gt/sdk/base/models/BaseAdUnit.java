@@ -8,7 +8,7 @@ import com.czhj.sdk.common.models.AdFormat;
 import com.czhj.sdk.common.utils.Md5Util;
 import com.czhj.sdk.common.utils.Preconditions;
 import com.czhj.sdk.logger.SigmobLog;
-import com.gt.sdk.admanager.WindSDKConfig;
+import com.gt.sdk.manager.WindSDKConfig;
 import com.gt.sdk.base.LoadAdRequest;
 import com.gt.sdk.base.common.ADEvent;
 import com.gt.sdk.base.common.BaseAdConfig;

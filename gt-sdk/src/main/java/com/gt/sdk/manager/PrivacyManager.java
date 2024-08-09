@@ -1,4 +1,4 @@
-package com.gt.sdk.admanager;
+package com.gt.sdk.manager;
 
 import static com.czhj.sdk.common.Constants.FAIL;
 import static com.czhj.sdk.common.Constants.SUCCESS;

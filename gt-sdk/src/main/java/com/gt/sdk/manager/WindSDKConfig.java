@@ -1,4 +1,4 @@
-package com.gt.sdk.admanager;
+package com.gt.sdk.manager;
 
 import android.content.SharedPreferences;
 import android.os.Handler;

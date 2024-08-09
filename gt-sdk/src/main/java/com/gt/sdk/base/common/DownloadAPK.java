@@ -22,7 +22,7 @@ import com.czhj.sdk.common.utils.Md5Util;
 import com.czhj.sdk.logger.SigmobLog;
 import com.gt.sdk.GtAdSdk;
 import com.gt.sdk.SigmobFileProvider;
-import com.gt.sdk.admanager.WindSDKConfig;
+import com.gt.sdk.manager.WindSDKConfig;
 import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.models.IntentActions;
 import com.gt.sdk.base.models.point.PointCategory;
