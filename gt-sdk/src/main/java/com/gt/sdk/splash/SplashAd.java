@@ -15,22 +15,34 @@ import com.gt.sdk.manager.SplashAdManager;
 
 public class SplashAd extends GtBaseAd implements SplashAdListener, AdLifecycleManager.LifecycleListener {
 
-    private SplashAdListener mSplashAdListener;
-    private final Handler mHandler;
-    private final SplashAdManager adManager;
+    private Handler mHandler;
+    private SplashAdManager mAdManager;
     private ViewGroup mViewGroup;
     private String codeId;
 
+    private SplashAdListener splashAdListener;
+
+    public SplashAd(AdRequest adRequest) {
+        super(adRequest);
+        init(adRequest, null);
+    }
+
     public SplashAd(AdRequest adRequest, SplashAdListener adListener) {
         super(adRequest);
+        init(adRequest, adListener);
+    }
 
+    private void init(AdRequest adRequest, SplashAdListener adListener) {
         if (adRequest != null) {
             codeId = adRequest.getCodeId();
         }
+        splashAdListener = adListener;
+        mAdManager = new SplashAdManager(adRequest, this);
+        mHandler = mAdManager.getHandler();
+    }
 
-        mSplashAdListener = adListener;
-        adManager = new SplashAdManager(adRequest, this);
-        mHandler = adManager.getHandler();
+    public void setSplashAdListener(SplashAdListener splashAdListener) {
+        this.splashAdListener = splashAdListener;
     }
 
     public boolean loadAd() {
@@ -52,12 +64,12 @@ public class SplashAd extends GtBaseAd implements SplashAdListener, AdLifecycleM
 
         sendRequestEvent(mAdRequest);
 
-        adManager.loadAd();
+        mAdManager.loadAd();
         return true;
     }
 
     public boolean isReady() {
-        return adStatus == AdStatus.AdStatusReady && adManager.isReady();
+        return adStatus == AdStatus.AdStatusReady && mAdManager.isReady();
     }
 
     public void show(ViewGroup adContainer) {
@@ -76,7 +88,7 @@ public class SplashAd extends GtBaseAd implements SplashAdListener, AdLifecycleM
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                adManager.showSplashAd(mViewGroup);
+                mAdManager.showSplashAd(mViewGroup);
             }
         });
         adStatus = AdStatus.AdStatusPlaying;
@@ -84,48 +96,48 @@ public class SplashAd extends GtBaseAd implements SplashAdListener, AdLifecycleM
 
     @Override
     public void onSplashAdShow(String codeId) {
-        if (mSplashAdListener != null) {
-            mSplashAdListener.onSplashAdShow(codeId);
+        if (splashAdListener != null) {
+            splashAdListener.onSplashAdShow(codeId);
         }
     }
 
     @Override
     public void onSplashAdLoadSuccess(String placementId) {
         adStatus = AdStatus.AdStatusReady;
-        if (mSplashAdListener != null) {
-            mSplashAdListener.onSplashAdLoadSuccess(placementId);
+        if (splashAdListener != null) {
+            splashAdListener.onSplashAdLoadSuccess(placementId);
         }
     }
 
     @Override
     public void onSplashAdLoadFail(String codeId, AdError error) {
         adStatus = AdStatus.AdStatusNone;
-        if (mSplashAdListener != null) {
-            mSplashAdListener.onSplashAdLoadFail(codeId, error);
+        if (splashAdListener != null) {
+            splashAdListener.onSplashAdLoadFail(codeId, error);
         }
     }
 
     @Override
     public void onSplashAdShowError(String codeId, AdError error) {
         adStatus = AdStatus.AdStatusNone;
-        if (mSplashAdListener != null) {
-            mSplashAdListener.onSplashAdShowError(codeId, error);
+        if (splashAdListener != null) {
+            splashAdListener.onSplashAdShowError(codeId, error);
         }
     }
 
     @Override
     public void onSplashAdClick(String codeId) {
         adStatus = AdStatus.AdStatusClick;
-        if (mSplashAdListener != null) {
-            mSplashAdListener.onSplashAdClick(codeId);
+        if (splashAdListener != null) {
+            splashAdListener.onSplashAdClick(codeId);
         }
     }
 
     @Override
     public void onSplashAdClose(String codeId) {
         adStatus = AdStatus.AdStatusClose;
-        if (mSplashAdListener != null) {
-            mSplashAdListener.onSplashAdClose(codeId);
+        if (splashAdListener != null) {
+            splashAdListener.onSplashAdClose(codeId);
         }
         destroyAd();
     }
@@ -142,15 +154,15 @@ public class SplashAd extends GtBaseAd implements SplashAdListener, AdLifecycleM
 
     @Override
     public void onPause(Activity activity) {
-        if (adManager != null) {
-            adManager.onPause(activity);
+        if (mAdManager != null) {
+            mAdManager.onPause(activity);
         }
     }
 
     @Override
     public void onResume(Activity activity) {
-        if (adManager != null) {
-            adManager.onResume(activity);
+        if (mAdManager != null) {
+            mAdManager.onResume(activity);
         }
     }
 
@@ -165,8 +177,8 @@ public class SplashAd extends GtBaseAd implements SplashAdListener, AdLifecycleM
     }
 
     public void destroyAd() {
-        if (adManager != null) {
-            adManager.destroyAd();
+        if (mAdManager != null) {
+            mAdManager.destroyAd();
         }
 
         if (mViewGroup != null) {
@@ -174,8 +186,8 @@ public class SplashAd extends GtBaseAd implements SplashAdListener, AdLifecycleM
             mViewGroup = null;
         }
 
-        if (mSplashAdListener != null) {
-            mSplashAdListener = null;
+        if (splashAdListener != null) {
+            splashAdListener = null;
         }
     }
 }

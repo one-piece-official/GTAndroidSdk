@@ -40,6 +40,8 @@ public abstract class GtBaseAd {
 
     protected void sendRequestEvent(AdRequest adRequest) {
 
+
+
     }
 
 }
