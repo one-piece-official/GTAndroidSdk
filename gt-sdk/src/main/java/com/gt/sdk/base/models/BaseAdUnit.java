@@ -22,6 +22,9 @@ import com.gt.sdk.base.models.rtb.Image;
 import com.gt.sdk.base.models.rtb.Tracking;
 import com.gt.sdk.base.models.rtb.Video;
 import com.gt.sdk.base.splash.SplashAdConfig;
+import com.gt.sdk.natives.AdAppInfo;
+import com.gt.sdk.natives.NativeAdInteractiveType;
+import com.gt.sdk.natives.NativeAdPatternType;
 import com.gt.sdk.utils.GtFileUtil;
 
 
@@ -38,10 +41,7 @@ public class BaseAdUnit implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final String TAG = "BaseAdUnit";
-
-    private String adSlot_id;
-
-    private int ad_type;
+    private transient AdAppInfo adAppInfo;
 
     private long create_time;
 
@@ -118,7 +118,6 @@ public class BaseAdUnit implements Serializable {
     private transient SessionManager mSessionManager;
     private transient BaseAdConfig adConfig;
 
-
     public String getBidId() {
         return bidId;
     }
@@ -147,7 +146,7 @@ public class BaseAdUnit implements Serializable {
     private String request_id;
     private String load_id;
 
-    private Map<String, String> privacyMap = new HashMap<>();
+    private final Map<String, String> privacyMap = new HashMap<>();
 
     public BaseAdUnit(Bid ad, String request_id, String bidId, LoadAdRequest adRequest) {
         try {
@@ -276,6 +275,59 @@ public class BaseAdUnit implements Serializable {
         return null;
     }
 
+    public AdAppInfo getAdAppInfo() {
+        if (adAppInfo == null && mAd != null) {
+            try {
+                adAppInfo = new AdAppInfo() {
+
+                    @Override
+                    public String getAppName() {
+                        return BaseAdUnit.this.getPrivacyAppName();
+                    }
+
+                    @Override
+                    public String getAuthorName() {
+                        return BaseAdUnit.this.getCompanyName();
+                    }
+
+                    @Override
+                    public String getPermissionsUrl() {
+                        return BaseAdUnit.this.getPermissionsUrl();
+                    }
+
+                    @Override
+                    public String getDeveloper() {
+                        return BaseAdUnit.this.getDeveloperName();
+                    }
+
+                    @Override
+                    public String getPackageName() {
+                        return BaseAdUnit.this.getPrivacyPackageName();
+                    }
+
+                    @Override
+                    public String getPrivacyUrl() {
+                        return BaseAdUnit.this.getPrivacyUrl();
+                    }
+
+                    @Override
+                    public String getVersionName() {
+                        return BaseAdUnit.this.getAppVersion();
+                    }
+
+                    @Override
+                    public int getAppSize() {
+                        return BaseAdUnit.this.getAppSize();
+                    }
+                };
+
+            } catch (Throwable ignored) {
+
+            }
+        }
+        return adAppInfo;
+    }
+
     public LoadAdRequest getAdRequest() {
         return adRequest;
     }
@@ -285,7 +337,6 @@ public class BaseAdUnit implements Serializable {
         SigmobLog.d("path: [ " + path + " ] calc [ " + fileMD5 + " ] origin " + md5);
         return fileMD5 != null && fileMD5.equalsIgnoreCase(md5);
     }
-
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -404,6 +455,10 @@ public class BaseAdUnit implements Serializable {
         return image != null && !TextUtils.isEmpty(image.url);
     }
 
+    public boolean isImageAds() {
+        return imageList != null && imageList.size() >= 3;
+    }
+
     public String getSplashURL() {
         if (video != null && !TextUtils.isEmpty(video.url)) {
             return video.url;
@@ -450,7 +505,7 @@ public class BaseAdUnit implements Serializable {
         if (adRequest != null) {
             return adRequest.getCodeId();
         }
-        return adSlot_id;
+        return "";
     }
 
     public Bid getAd() {
@@ -540,14 +595,6 @@ public class BaseAdUnit implements Serializable {
         return loading_page;
     }
 
-    public int getCreativeType() {
-        return action;
-    }
-
-    public String getAdLogo() {
-        return getAd_source_logo();
-    }
-
     public String getTitle() {
         if (adm != null) {
             return adm.title;
@@ -580,6 +627,9 @@ public class BaseAdUnit implements Serializable {
         return null;
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public String getAppName() {
         if (mAd != null) {
             return mAd.app_name;
@@ -589,7 +639,28 @@ public class BaseAdUnit implements Serializable {
 
     public String getCompanyName() {
         if (mAd != null) {
+            return mAd.brand_name;
+        }
+        return null;
+    }
+
+    public String getDeveloperName() {
+        if (mAd != null) {
             return mAd.developer;
+        }
+        return null;
+    }
+
+    public String getPrivacyPackageName() {
+        if (mAd != null) {
+            return mAd.package_name;
+        }
+        return null;
+    }
+
+    public String getPrivacyUrl() {
+        if (mAd != null) {
+            return mAd.privacy_url;
         }
         return null;
     }
@@ -615,6 +686,8 @@ public class BaseAdUnit implements Serializable {
         return null;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public double getAdPercent() {
         if (adPercent > 0) {
             return adPercent;
@@ -623,7 +696,6 @@ public class BaseAdUnit implements Serializable {
             return realAdPercent;
         }
         return 16 / 9.0f;
-
     }
 
     public void updateRealAdPercent(double adPercent) {
@@ -676,7 +748,20 @@ public class BaseAdUnit implements Serializable {
         if (mAd != null) {
             return mAd.action;
         }
-        return 1;
+        return NativeAdInteractiveType.NATIVE_UNKNOWN;
+    }
+
+    public int getAdPatternType() {
+        if (isVideoAd()) {
+            return NativeAdPatternType.NATIVE_VIDEO_AD;
+        }
+        if (isImageAds()) {
+            return NativeAdPatternType.NATIVE_GROUP_IMAGE_AD;
+        }
+        if (isImageAd()) {
+            return NativeAdPatternType.NATIVE_BIG_IMAGE_AD;
+        }
+        return NativeAdPatternType.NATIVE_UNKNOWN;
     }
 
     public String getLandUrl() {
@@ -790,6 +875,7 @@ public class BaseAdUnit implements Serializable {
         return apkPackageName;
     }
 
+
     public void destroy() {
         if (this.adConfig != null) {
             this.adConfig.destroy();
@@ -814,5 +900,7 @@ public class BaseAdUnit implements Serializable {
     public Map<String, String> getPrivacyMap() {
         return privacyMap;
     }
+
+
 }
 
