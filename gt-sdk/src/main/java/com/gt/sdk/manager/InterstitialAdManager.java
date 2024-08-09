@@ -108,7 +108,13 @@ public class InterstitialAdManager implements RequestFactory.LoadAdRequestListen
 
         mLoadAdRequest.setLoadId(UUID.randomUUID().toString());
 
+        sendRequestEvent(mLoadAdRequest);
+
         RequestFactory.LoadAd(mLoadAdRequest, this);
+    }
+
+    private void sendRequestEvent(LoadAdRequest adRequest) {
+        PointEntityUtils.GtTracking(PointCategory.REQUEST, "", adRequest);
     }
 
     private void handleError(AdError error, boolean isLoadError) {

@@ -14,11 +14,9 @@ import java.util.List;
 public class GtPointEntityAd extends PointEntityBase {
 
     private String appId;
-    private String placement_id;
-    private String load_count;
-    private String feed_cnt;
+    private String code_id;
     private String custom_info;
-    private String custom_info_ad;
+    private String bid_floor;
 
     private String bidId;//本次响应标识 ID，用于日志和后续调试
     private String logId;//用于记录日志或行为追踪
@@ -29,20 +27,28 @@ public class GtPointEntityAd extends PointEntityBase {
 
     private String final_url;
 
+    public String getBid_floor() {
+        return bid_floor;
+    }
+
+    public void setBid_floor(String bid_floor) {
+        this.bid_floor = bid_floor;
+    }
+
+    public void setFinal_url(String downloadUrl) {
+        this.final_url = downloadUrl;
+    }
+
+    public String getFinal_url() {
+        return final_url;
+    }
+
     public String getCustom_info() {
         return custom_info;
     }
 
     public void setCustom_info(String custom_info) {
         this.custom_info = custom_info;
-    }
-
-    public String getCustom_info_ad() {
-        return custom_info_ad;
-    }
-
-    public void setCustom_info_ad(String position_custom_info) {
-        this.custom_info_ad = position_custom_info;
     }
 
     public String getPrice() {
@@ -53,14 +59,6 @@ public class GtPointEntityAd extends PointEntityBase {
         this.price = price;
     }
 
-    public String getFeed_cnt() {
-        return feed_cnt;
-    }
-
-    public void setFeed_cnt(String feed_cnt) {
-        this.feed_cnt = feed_cnt;
-    }
-
     public String getAppId() {
         return appId;
     }
@@ -69,20 +67,12 @@ public class GtPointEntityAd extends PointEntityBase {
         this.appId = appId;
     }
 
-    public String getPlacement_id() {
-        return placement_id;
+    public String getCode_id() {
+        return code_id;
     }
 
-    public void setPlacement_id(String placement_id) {
-        this.placement_id = placement_id;
-    }
-
-    public String getLoad_count() {
-        return load_count;
-    }
-
-    public void setLoad_count(String load_count) {
-        this.load_count = load_count;
+    public void setCode_id(String code_id) {
+        this.code_id = code_id;
     }
 
     public String getBidId() {
@@ -129,8 +119,8 @@ public class GtPointEntityAd extends PointEntityBase {
         GtPointEntityAd entityWind = new GtPointEntityAd();
         entityWind.setAc_type(PointType.GT_COMMON);
         entityWind.setCategory(category);
-        entityWind.setAdType(adType);
-        entityWind.setPlacement_id(placement_id);
+        entityWind.setAd_type(adType);
+        entityWind.setCode_id(placement_id);
 
         return entityWind;
     }
@@ -165,14 +155,6 @@ public class GtPointEntityAd extends PointEntityBase {
     @Override
     public DeviceContext getDeviceContext() {
         return DeviceContextManager.sharedInstance().getDeviceContext();
-    }
-
-    public void setFinal_url(String downloadUrl) {
-        this.final_url=downloadUrl;
-    }
-
-    public String getFinal_url() {
-        return final_url;
     }
 
 }

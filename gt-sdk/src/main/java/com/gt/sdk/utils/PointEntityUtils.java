@@ -1,7 +1,5 @@
 package com.gt.sdk.utils;
 
-import android.text.TextUtils;
-
 import com.czhj.sdk.common.track.AdTracker;
 import com.czhj.volley.NetworkResponse;
 import com.czhj.volley.VolleyError;
@@ -58,11 +56,11 @@ public class PointEntityUtils {
     public static void updateADunitInfo(BaseAdUnit adUnit, GtPointEntityAd pointEntity) {
         if (adUnit != null) {
             try {
-                pointEntity.setAdType(String.valueOf(adUnit.getAd_type()));
+                pointEntity.setAd_type(String.valueOf(adUnit.getAd_type()));
                 pointEntity.setBidId(adUnit.getBidId());
                 pointEntity.setLogId(adUnit.getLogId());
                 pointEntity.setAdId(adUnit.getAdId());
-                pointEntity.setPlacement_id(adUnit.getAdSlot_id());
+                pointEntity.setCode_id(adUnit.getAdSlot_id());
                 pointEntity.setLoad_id(adUnit.getLoad_id());
                 pointEntity.setImpId(adUnit.getImpId());
                 pointEntity.setAdmId(adUnit.getAdmId());
@@ -102,17 +100,14 @@ public class PointEntityUtils {
 
         if (pointEntity != null && adRequest != null) {
 
-            pointEntity.setPlacement_id(adRequest.getCodeId());
-
-            if (!TextUtils.isEmpty(adRequest.getLoadId())) {
-                pointEntity.setLoad_id(adRequest.getLoadId());
-            }
-
-            pointEntity.setAdType(String.valueOf(adRequest.getAdType()));
+            pointEntity.setCode_id(adRequest.getCodeId());
+            pointEntity.setLoad_id(adRequest.getLoadId());
+            pointEntity.setBid_floor(String.valueOf(adRequest.getBidFloor()));
+            pointEntity.setAd_type(String.valueOf(adRequest.getAdType()));
 
             if (adRequest.getOptions() != null) {
                 JSONObject jsonObject = new JSONObject(adRequest.getOptions());
-                pointEntity.setCustom_info_ad(jsonObject.toString());
+                pointEntity.setCustom_info(jsonObject.toString());
             }
         }
     }

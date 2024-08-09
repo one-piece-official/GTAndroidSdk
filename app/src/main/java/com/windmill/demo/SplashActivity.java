@@ -53,7 +53,6 @@ public class SplashActivity extends AppCompatActivity implements SplashAdListene
 
         AdRequest adRequest = new AdRequest.Builder()
                 .setCodeId("123456")
-                .setUserID(userID)
                 .setWidth(PxUtils.getRealMetrics(this).widthPixels)
                 .setHeight(PxUtils.getRealMetrics(this).heightPixels - dipsToIntPixels(100, this))
                 .setExtOption(options)

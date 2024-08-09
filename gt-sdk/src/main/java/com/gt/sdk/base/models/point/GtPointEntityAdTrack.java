@@ -71,8 +71,8 @@ public class GtPointEntityAdTrack extends GtPointEntityAd {
         GtPointEntityAdTrack entityWind = new GtPointEntityAdTrack();
         entityWind.setAc_type(acType);
         entityWind.setCategory(category);
-        entityWind.setAdType(adType);
-        entityWind.setPlacement_id(placement_id);
+        entityWind.setAd_type(adType);
+        entityWind.setCode_id(placement_id);
 
         return entityWind;
     }

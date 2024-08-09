@@ -7,7 +7,6 @@ import java.util.Map;
 
 public class LoadAdRequest implements Serializable {
 
-    private final String userId;
     private final String codeId;
     private final int adType;
     private String loadId;
@@ -17,17 +16,12 @@ public class LoadAdRequest implements Serializable {
     private Map<String, String> options;
 
     public LoadAdRequest(AdRequest adRequest, int adType) {
-        this.userId = adRequest.getUserID();
         this.adType = adType;
         this.codeId = adRequest.getCodeId();
         this.width = adRequest.getWidth();
         this.height = adRequest.getHeight();
         this.bidFloor = adRequest.getBidFloor();
         this.options = adRequest.getExtOption();
-    }
-
-    public String getUserId() {
-        return userId;
     }
 
     public String getCodeId() {

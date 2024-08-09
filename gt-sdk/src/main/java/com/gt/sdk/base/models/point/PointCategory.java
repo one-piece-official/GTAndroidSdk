@@ -5,8 +5,6 @@ public final class PointCategory {
     public static final String INIT = "init";
     public static final String REQUEST = "request";
     public static final String RESPOND = "respond";
-    public static final String LOAD = "load";
-    public static final String START = "start";
     public static final String READY = "ready";
     public static final String PLAY = "play";
     public static final String SKIP = "skip";

@@ -59,6 +59,7 @@ public class MyApplication extends MultiDexApplication {
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("setting", 0);
         String appId = sharedPreferences.getString(Constants.CONF_APP_ID, "");
+        String userID = sharedPreferences.getString(Constants.CONF_USER_ID, "");
         boolean isAdult = sharedPreferences.getBoolean(Constants.CONF_ADULT, true);
         boolean isPersonalizedAdvertisingOn = sharedPreferences.getBoolean(Constants.CONF_PERSONALIZED, true);
         boolean isSdkLogEnable = sharedPreferences.getBoolean(Constants.CONF_SDK_LOG, true);
@@ -106,8 +107,10 @@ public class MyApplication extends MultiDexApplication {
 
         Map<String, String> customData = new HashMap<>();
         customData.put("key", "value");
-        GtAdSdk.sharedAds().init(this, new GtSdkConfig.Builder().appId(appId) // 测试aapId，请联系快手平台申请正式AppId，必填
+        GtAdSdk.sharedAds().init(this, new GtSdkConfig.Builder()
+                .appId(appId) // 测试aapId，请联系快手平台申请正式AppId，必填
                 .appName("appName") // 测试appName，请填写您应用的名称，非必填
+                .userId(userID)
                 .addCustomData(customData) // 是否展示下载通知栏
                 .customController(new GtCustomController() {
                     @Override

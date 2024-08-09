@@ -62,8 +62,6 @@ public class SplashAd extends GtBaseAd implements SplashAdListener, AdLifecycleM
 
         adStatus = AdStatus.AdStatusLoading;
 
-        sendRequestEvent(mAdRequest);
-
         mAdManager.loadAd();
         return true;
     }

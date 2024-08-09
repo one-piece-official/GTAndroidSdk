@@ -109,7 +109,15 @@ public class SplashAdManager implements RequestFactory.LoadAdRequestListener, Ad
 
         mLoadAdRequest.setLoadId(UUID.randomUUID().toString());
 
+        sendRequestEvent(mLoadAdRequest);
+
         RequestFactory.LoadAd(mLoadAdRequest, this);
+    }
+
+    private void sendRequestEvent(LoadAdRequest adRequest){
+
+        PointEntityUtils.GtTracking(PointCategory.REQUEST,"",adRequest);
+
     }
 
     private void handleError(AdError error, boolean isLoadError) {
@@ -202,7 +210,7 @@ public class SplashAdManager implements RequestFactory.LoadAdRequestListener, Ad
     @Override
     public void onSuccess(List<BaseAdUnit> adUnits, LoadAdRequest loadAdRequest) {
         BaseAdUnit adUnit = adUnits.get(0);
-        PointEntityUtils.eventRecord(PointCategory.RESPOND, Constants.SUCCESS, adUnit);
+        PointEntityUtils.GtTracking(PointCategory.RESPOND, Constants.SUCCESS, adUnit);
         if (!mSplashAdInterstitial.baseAdUnitValid(adUnit)) {
             handleError(AdError.ERROR_AD_INFORMATION_LOSE, true);
             return;

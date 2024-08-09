@@ -8,6 +8,7 @@ import com.czhj.sdk.logger.SigmobLog;
 import com.gt.sdk.AdError;
 import com.gt.sdk.AdRequest;
 import com.gt.sdk.GtAdSdk;
+import com.gt.sdk.utils.PointEntityUtils;
 
 
 public abstract class GtBaseAd {
@@ -36,12 +37,6 @@ public abstract class GtBaseAd {
             return AdError.ERROR_AD_LOAD_FAIL_LOADING;
         }
         return null;
-    }
-
-    protected void sendRequestEvent(AdRequest adRequest) {
-
-
-
     }
 
 }

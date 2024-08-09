@@ -67,8 +67,6 @@ public class InterstitialAd extends GtBaseAd implements InterstitialAdListener, 
 
         adStatus = AdStatusLoading;
 
-        sendRequestEvent(mAdRequest);
-
         adManager.loadAd();
         return true;
     }

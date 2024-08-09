@@ -10,14 +10,12 @@ public class AdRequest {
     private int width;
     private int height;
     private int adCount;
-    private String userID;
     private int orientation;
     private int adType;
-    private Map<String, String> extOption;
     private int rewardAmount;
     private String rewardName;
-
     private int bidFloor;
+    private Map<String, String> extOption;
 
     private AdRequest() {
         this.orientation = 2;
@@ -51,10 +49,6 @@ public class AdRequest {
         this.adCount = adCount;
     }
 
-    public String getUserID() {
-        return this.userID;
-    }
-
     public int getOrientation() {
         return this.orientation;
     }
@@ -62,7 +56,6 @@ public class AdRequest {
     public int getAdType() {
         return this.adType;
     }
-
 
     public String getRewardName() {
         return this.rewardName;
@@ -80,7 +73,6 @@ public class AdRequest {
             var1.put("width", this.width);
             var1.put("height", this.height);
             var1.put("adCount", this.adCount);
-            var1.put("userID", this.userID);
             var1.put("mOrientation", this.orientation);
             var1.put("extOption", this.extOption);
             var1.put("rewardName", this.rewardName);
@@ -96,13 +88,12 @@ public class AdRequest {
         private int width = 1080;
         private int height = 0;
         private int adCount = 1;
-        private String userID = "defaultUser";
         private int orientation = 2;
         private int adType;
-        private Map<String, String> extOption;
         private int rewardAmount;
         private String rewardName;
         private int bidFloor;
+        private Map<String, String> extOption;
 
         public Builder() {
 
@@ -153,11 +144,6 @@ public class AdRequest {
             return this;
         }
 
-        public Builder setUserID(String userID) {
-            this.userID = userID;
-            return this;
-        }
-
         public Builder setOrientation(int orientation) {
             this.orientation = orientation;
             return this;
@@ -179,7 +165,6 @@ public class AdRequest {
             request.adCount = this.adCount;
             request.width = this.width;
             request.height = this.height;
-            request.userID = this.userID;
             request.orientation = this.orientation;
             request.extOption = this.extOption;
             request.adType = this.adType;

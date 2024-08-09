@@ -96,7 +96,11 @@ public class MainFragment extends Fragment implements SplashAdListener {
 
         Map<String, String> options = new HashMap<>();
         options.put("user_id", userID);
-        AdRequest adRequest = new AdRequest.Builder().setCodeId(splash_code_id).setUserID(userID).setWidth(PxUtils.getRealMetrics(getMyActivity()).widthPixels).setHeight(PxUtils.getRealMetrics(getMyActivity()).heightPixels).setExtOption(options).build();
+        AdRequest adRequest = new AdRequest.Builder()
+                .setCodeId(splash_code_id)
+                .setWidth(PxUtils.getRealMetrics(getMyActivity()).widthPixels)
+                .setHeight(PxUtils.getRealMetrics(getMyActivity()).heightPixels)
+                .setExtOption(options).build();
 
         if (splashAd != null) {
             if (isNewInstance) {

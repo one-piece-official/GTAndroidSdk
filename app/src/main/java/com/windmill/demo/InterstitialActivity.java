@@ -108,7 +108,6 @@ public class InterstitialActivity extends AppCompatActivity implements Interstit
         options.put("user_id", userID);
         AdRequest adRequest = new AdRequest.Builder()
                 .setCodeId(codeId)
-                .setUserID(userID)
                 .setExtOption(options)
                 .build();
 
