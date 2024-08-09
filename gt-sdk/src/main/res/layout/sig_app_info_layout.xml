@@ -7,17 +7,17 @@
         android:id="@+id/sig_app_info_ver_rl"
         android:layout_width="wrap_content"
         android:layout_height="15dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp">
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
 
         <TextView
             android:id="@+id/sig_app_info_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="5dp"
+            android:singleLine="true"
             android:text="名称"
             android:textColor="@android:color/white"
-            android:singleLine="true"
             android:textSize="8sp" />
 
         <TextView
@@ -34,10 +34,10 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="15dp"
-        android:layout_toRightOf="@+id/sig_app_info_ver_rl"
         android:layout_alignParentRight="true"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp">
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@+id/sig_app_info_ver_rl">
 
         <TextView
             android:id="@+id/sig_app_info_dev"
@@ -55,9 +55,9 @@
             android:id="@+id/sig_app_info_permissions"
             android:layout_width="wrap_content"
             android:layout_height="13dp"
-            android:gravity="right"
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@+id/sig_app_info_privacy"
+            android:gravity="right"
             android:text="权限"
             android:textColor="@android:color/white"
             android:textSize="8sp" />
@@ -77,10 +77,10 @@
             android:id="@+id/sig_app_info_product"
             android:layout_width="wrap_content"
             android:layout_height="13dp"
-            android:gravity="right"
-            android:text="介绍"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:gravity="right"
+            android:text="介绍"
             android:textColor="@android:color/white"
             android:textSize="8sp" />
     </RelativeLayout>
