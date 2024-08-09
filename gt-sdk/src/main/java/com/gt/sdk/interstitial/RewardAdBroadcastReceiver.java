@@ -35,6 +35,8 @@ public class RewardAdBroadcastReceiver extends BaseBroadcastReceiver {
             sIntentFilter.addAction(IntentActions.ACTION_REWARDED_VIDEO_CLICK);
             sIntentFilter.addAction(IntentActions.ACTION_REWARDED_VIDEO_SKIP);
             sIntentFilter.addAction(IntentActions.ACTION_REWARDED_VIDEO_COMPLETE);
+            sIntentFilter.addAction(IntentActions.ACTION_LAND_PAGE_SHOW);
+            sIntentFilter.addAction(IntentActions.ACTION_LAND_PAGE_DISMISS);
         }
         return sIntentFilter;
     }

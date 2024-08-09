@@ -2,6 +2,7 @@ package com.gt.sdk.base.common;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -36,6 +37,16 @@ public class BaseAdConfig implements Serializable {
     private WeakReference<Activity> contextWeakReference;
     private DownloadDialog.onPrivacyClickListener mOnPrivacyClickListener;
     private final WeakReference<BaseAdUnit> adUnitWeakReference;
+
+    public interface OnSigAdClickListener {
+        void onAdClick(boolean isRecord);
+    }
+
+    private OnSigAdClickListener mOnSigAdClickListener;
+
+    public void setOnAdClickListener(OnSigAdClickListener onClickListener) {
+        mOnSigAdClickListener = onClickListener;
+    }
 
     protected BaseAdConfig(BaseAdUnit adUnit) {
         adUnitWeakReference = new WeakReference<>(adUnit);
@@ -288,6 +299,9 @@ public class BaseAdConfig implements Serializable {
     }
 
     public void handleUrlAction(BaseAdUnit adUnit, String url) {
+        if (mOnSigAdClickListener != null) {
+            mOnSigAdClickListener.onAdClick(true);
+        }
         if (adUnit != null) {
             int interactionType = adUnit.getInteractionType();
             switch (interactionType) {
@@ -302,6 +316,14 @@ public class BaseAdConfig implements Serializable {
                     break;
             }
         }
+    }
+
+    public void handleLandPageShow(Context context, BaseAdUnit adUnit) {
+        PointEntityUtils.GtTracking(PointCategory.LANDING_PAGE_SHOW, null, adUnit);
+    }
+
+    public void handleLandPageClose(Context context, BaseAdUnit adUnit) {
+        PointEntityUtils.GtTracking(PointCategory.LANDING_PAGE_CLOSE, null, adUnit);
     }
 }
 

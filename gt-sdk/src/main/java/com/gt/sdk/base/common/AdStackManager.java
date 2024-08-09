@@ -11,6 +11,7 @@ import com.czhj.volley.toolbox.DownloadItem;
 import com.czhj.volley.toolbox.FileDownloadRequest;
 import com.czhj.volley.toolbox.FileDownloader;
 import com.gt.sdk.GtAdSdk;
+import com.gt.sdk.base.videocache.HttpProxyCacheServer;
 import com.gt.sdk.manager.WindSDKConfig;
 import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.utils.GtFileUtil;
@@ -42,9 +43,9 @@ public class AdStackManager {
     }
 
     public static synchronized void initHttpProxyCacheServer() {
-        HttpProxyCacheServer.Builder builder = new HttpProxyCacheServer.Builder(SDKContext.getApplicationContext());
+        HttpProxyCacheServer.Builder builder = new HttpProxyCacheServer.Builder(GtAdSdk.sharedAds().getContext());
         try {
-            File file = new File(SigmobFileUtil.getVideoCachePath());
+            File file = new File(GtFileUtil.getVideoCachePath());
             builder.cacheDirectory(file);
         } catch (Throwable e) {
             SigmobLog.e("initHttpProxyCacheServer fail ", e);

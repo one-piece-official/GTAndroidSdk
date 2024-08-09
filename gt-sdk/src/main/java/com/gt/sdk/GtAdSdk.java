@@ -173,6 +173,8 @@ public class GtAdSdk {
             });
         }
 
+        AdStackManager.initHttpProxyCacheServer();
+
         ThreadPoolFactory.BackgroundThreadPool.getInstance().submit(new Runnable() {
             @Override
             public void run() {

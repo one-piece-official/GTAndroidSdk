@@ -157,7 +157,7 @@ public class SplashAdManager implements RequestFactory.LoadAdRequestListener, Ad
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             viewGroup.addView(mSplashAdView, layoutParams);
 
-            mSplashAdInterstitial.showInterstitial(mAdUnit);
+            mSplashAdInterstitial.showInterstitial(mAdUnit,null );
             mDuration = mSplashAdInterstitial.mAdConfig.getShowDuration();
 
             mSplashAdView.setDuration(mDuration);

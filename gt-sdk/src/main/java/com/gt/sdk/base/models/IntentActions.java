@@ -25,6 +25,12 @@ public class IntentActions {
     public static final String ACTION_REWARDED_VIDEO_SKIP = "action.reward.video.skip";
     public static final String ACTION_REWARDED_VIDEO_COMPLETE = "action.reward.video.complete";
 
+
+    public static final String ACTION_NATIVE_TEMPLE_SHOW = "action.native.temple.show";
+    public static final String ACTION_NATIVE_TEMPLE_CLICK = "action.native.temple.click";
+    public static final String ACTION_NATIVE_TEMPLE_DISMISS = "action.native.temple.dismiss";
+
+
     private IntentActions() {
 
     }

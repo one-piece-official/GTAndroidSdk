@@ -18,12 +18,11 @@ public class ADEvent {
     public static final String AD_OPEN_DEEPLINK_FAIL = "open_deeplink_failed";
 
     public static final String VIDEO_PLAY_START = "video_play_start";
-    public static final String VIDEO_PLAY_END = "video_play_end";
-    public static final String VIDEO_PLAY_VAIL = "video_play_vail";
-
     public static final String AD_PLAY_PAUSE = "video_pause";
-
+    public static final String VIDEO_PLAY_END = "video_play_end";
     public static final String AD_PLAY_PLAYER_VALID = "player_valid";
+
+
 
     public static final String AD_DOWNLOAD_QUARTER = "download_quarter";
 

@@ -1,5 +1,7 @@
 package com.gt.sdk.base.common;
 
+import android.os.Bundle;
+
 import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.splash.SplashAdConfig;
 
@@ -21,7 +23,7 @@ public class SplashAdInterstitial extends LoadAdsInterstitial {
     }
 
     @Override
-    public void showInterstitial(BaseAdUnit baseAdUnit) {
+    public void showInterstitial(BaseAdUnit baseAdUnit, Bundle option) {
         mAdConfig = (SplashAdConfig) baseAdUnit.getAdConfig();
         if (customEventInterstitialListener instanceof SplashAdListener) {
             mSplashAdBroadcastReceiver = new SplashAdBroadcastReceiver(baseAdUnit, (SplashAdListener) customEventInterstitialListener, baseAdUnit.getUuid());

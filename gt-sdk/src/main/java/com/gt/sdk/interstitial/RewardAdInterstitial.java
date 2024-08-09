@@ -1,9 +1,9 @@
 package com.gt.sdk.interstitial;
 
+import android.os.Bundle;
+
 import com.gt.sdk.base.common.LoadAdsInterstitial;
-import com.gt.sdk.base.common.SplashAdBroadcastReceiver;
 import com.gt.sdk.base.models.BaseAdUnit;
-import com.gt.sdk.base.splash.SplashAdConfig;
 
 public class RewardAdInterstitial extends LoadAdsInterstitial {
 
@@ -23,7 +23,7 @@ public class RewardAdInterstitial extends LoadAdsInterstitial {
     }
 
     @Override
-    public void showInterstitial(BaseAdUnit baseAdUnit) {
+    public void showInterstitial(BaseAdUnit baseAdUnit, Bundle option) {
         mAdConfig = (VideoAdConfig) baseAdUnit.getAdConfig();
         if (customEventInterstitialListener instanceof VideoAdListener) {
             adBroadcastReceiver = new RewardAdBroadcastReceiver(baseAdUnit, (VideoAdListener) customEventInterstitialListener, baseAdUnit.getUuid());

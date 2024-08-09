@@ -1,16 +1,12 @@
 package com.gt.sdk.manager;
 
-import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
-
 import android.app.Activity;
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.czhj.sdk.common.ClientMetadata;
 import com.czhj.sdk.common.Constants;
 import com.czhj.sdk.common.models.AdFormat;
 import com.czhj.sdk.common.models.AdStatus;
@@ -31,10 +27,11 @@ import com.gt.sdk.base.models.IntentActions;
 import com.gt.sdk.base.models.point.PointCategory;
 import com.gt.sdk.base.network.RequestFactory;
 import com.gt.sdk.base.splash.SplashAdView;
-import com.gt.sdk.interstitial.InterstitialAdListener;
 import com.gt.sdk.interstitial.RewardAdInterstitial;
 import com.gt.sdk.natives.NativeAdData;
+import com.gt.sdk.natives.NativeAdInterstitial;
 import com.gt.sdk.natives.NativeAdLoadListener;
+import com.gt.sdk.natives.NativeAdUnitObject;
 import com.gt.sdk.utils.PointEntityUtils;
 
 import java.io.File;
@@ -42,9 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class NativeAdManager implements RequestFactory.LoadAdRequestListener, AdStackManager.AdStackStatusListener, RewardAdInterstitial.VideoAdListener {
+public class NativeAdManager implements RequestFactory.LoadAdRequestListener, AdStackManager.AdStackStatusListener, NativeAdInterstitial.NativeAdInterstitialListener {
 
-    private final Runnable timerRunnable;
     private Handler mHandler;
     private AdStatus adStatus;
     private SplashAdView mSplashAdView;
@@ -53,32 +49,15 @@ public class NativeAdManager implements RequestFactory.LoadAdRequestListener, Ad
     private NativeAdLoadListener interstitialAdListener;
     private final LoadAdRequest mLoadAdRequest;
     private static final int what_timeout = 0x001;
-    private final SplashAdInterstitial mSplashAdInterstitial;
+    private final NativeAdInterstitial nativeAdInterstitial;
 
     public NativeAdManager(final AdRequest request, NativeAdLoadListener adListener) {
         mHandler = new Handler(Looper.getMainLooper());
-        timerRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if (mHandler != null) {
-                    mHandler.removeCallbacksAndMessages(null);
-                    if (mSplashAdView == null) return;
-                    if (mDuration > 0) {
-                        mSplashAdView.setDuration(mDuration);
-                        mDuration--;
-                        mHandler.postDelayed(timerRunnable, 1000);
-                    } else {
-                        mSplashAdView.setDuration(0);
-                    }
-                }
-            }
-        };
-
         adStatus = AdStatus.AdStatusNone;
 
         interstitialAdListener = adListener;
         mLoadAdRequest = new LoadAdRequest(request, AdFormat.SPLASH);
-        mSplashAdInterstitial = new SplashAdInterstitial(this);
+        nativeAdInterstitial = new NativeAdInterstitial(this);
     }
 
     public boolean isReady() {
@@ -86,7 +65,7 @@ public class NativeAdManager implements RequestFactory.LoadAdRequestListener, Ad
             if (mAdUnit != null) {
                 boolean isExist = new File(mAdUnit.getSplashFilePath()).canRead();
                 boolean isExpired = mAdUnit.isExpiredAd();
-                boolean baseAdUnitValid = mSplashAdInterstitial.baseAdUnitValid(mAdUnit);
+                boolean baseAdUnitValid = nativeAdInterstitial.baseAdUnitValid(mAdUnit);
                 return isExist && !isExpired && baseAdUnitValid;
             }
         } catch (Exception e) {
@@ -128,39 +107,12 @@ public class NativeAdManager implements RequestFactory.LoadAdRequestListener, Ad
         }
 
         if (interstitialAdListener != null) {
-            if (isLoadError) {
-                interstitialAdListener.onInterstitialAdLoadError(mLoadAdRequest.getCodeId(), error);
-            } else {
-                interstitialAdListener.onInterstitialAdShowError(mLoadAdRequest.getCodeId(), error);
-            }
+            interstitialAdListener.onAdError(mLoadAdRequest.getCodeId(), error);
         }
 
-        if (mSplashAdInterstitial != null) {
-            mSplashAdInterstitial.onInvalidate(mAdUnit);
+        if (nativeAdInterstitial != null) {
+            nativeAdInterstitial.onInvalidate(mAdUnit);
         }
-    }
-
-    public void showAd(Activity activity) {
-        boolean isPortrait = ORIENTATION_PORTRAIT == ClientMetadata.getInstance().getOrientationInt();
-        if (!isPortrait) {
-            onAdPlayFail(AdError.ERROR_AD_UN_SUPPORT_ORIENTATION);
-            return;
-        }
-
-        onAdPlayFail(AdError.ERROR_AD_PLAY);
-    }
-
-    private void onAdPlayFail(AdError adError) {
-        PointEntityUtils.GtError(PointCategory.PLAY, adError, mAdUnit);
-        handleError(adError, false);
-        destroyAd();
-    }
-
-    private boolean createSplashView(Context context, BaseAdUnit adUnit) {
-        if (adUnit == null) return false;
-        mSplashAdView = new SplashAdView(context.getApplicationContext());
-        mSplashAdView.invisibleView();
-        return mSplashAdView.loadUI(adUnit);
     }
 
     private Activity getActivity() {
@@ -178,46 +130,23 @@ public class NativeAdManager implements RequestFactory.LoadAdRequestListener, Ad
     }
 
     public void onResume(Activity activity) {
-        if (mSplashAdView != null && activity == getActivity()) {
-            mSplashAdView.onResume();
-            if (mHandler == null) {
-                mHandler = new Handler(Looper.getMainLooper());
-            }
-            mHandler.post(timerRunnable);
-        }
+
     }
+
+    private ArrayList<NativeAdData> adNativeAdDataList;
 
     @Override
     public void onSuccess(List<BaseAdUnit> adUnits, LoadAdRequest loadAdRequest) {
         BaseAdUnit adUnit = adUnits.get(0);
         PointEntityUtils.eventRecord(PointCategory.RESPOND, Constants.SUCCESS, adUnit);
-        if (!mSplashAdInterstitial.baseAdUnitValid(adUnit)) {
+        if (!nativeAdInterstitial.baseAdUnitValid(adUnit)) {
             handleError(AdError.ERROR_AD_INFORMATION_LOSE, true);
             return;
         }
-
-        ArrayList<NativeAdData> adList = new ArrayList<>();
-        NativeAdData ad = new WindNativeAdUnitObject(adUnit);
-        adList.add(ad);
-
-
-        for (int i = 0; i < adUnits.size(); i++) {
-            BaseAdUnit adUnit = adUnits.get(i);
-
-            adUnit.setLoad_id(loadAdRequest.getLoadId());
-
-            if (adUnit.getAd_source_channel().equalsIgnoreCase(WindConstants.SIGMOB_CHANNEL)) {
-                AdStackManager.shareInstance().addHistoryAdCache(adUnit);
-            }
-        }
-
-
-
-        if (interstitialAdListener != null) {
-            interstitialAdListener.onInterstitialAdLoadSuccess(mLoadAdRequest.getCodeId());
-        }
-
         mAdUnit = adUnit;
+        adNativeAdDataList = new ArrayList<>();
+        NativeAdData ad = new NativeAdUnitObject(mAdUnit);
+        adNativeAdDataList.add(ad);
         AdStackManager.shareInstance().cache(mAdUnit, this);
     }
 
@@ -260,7 +189,7 @@ public class NativeAdManager implements RequestFactory.LoadAdRequestListener, Ad
                 @Override
                 public void run() {
                     if (interstitialAdListener != null) {
-                        interstitialAdListener.onInterstitialAdCacheSuccess(mLoadAdRequest.getCodeId());
+                        interstitialAdListener.onAdLoad(mLoadAdRequest.getCodeId(), adNativeAdDataList);
                     }
                 }
             });
@@ -283,23 +212,10 @@ public class NativeAdManager implements RequestFactory.LoadAdRequestListener, Ad
         adStatus = AdStatus.AdStatusPlaying;
         initSessionManager();
         AdStackManager.setPlayAdUnit(adUnit);
-        if (mSplashAdView.getDuration() > 0 && mSplashAdView.getDuration() < mDuration) {
-            mDuration = mSplashAdView.getDuration();
-        }
-
-        if (mSplashAdView != null) {
-            mSplashAdView.setDuration(mDuration);
-            mSplashAdView.setVisibility(View.VISIBLE);
-        }
-
-        if (interstitialAdListener != null) {
-            interstitialAdListener.onInterstitialAdPlay(mLoadAdRequest.getCodeId());
-        }
 
         if (mHandler == null) {
             mHandler = new Handler(Looper.getMainLooper());
         }
-        mHandler.post(timerRunnable);
     }
 
     public void initSessionManager() {
@@ -313,31 +229,12 @@ public class NativeAdManager implements RequestFactory.LoadAdRequestListener, Ad
     @Override
     public void onAdClicked(BaseAdUnit adUnit) {
         adStatus = AdStatus.AdStatusClick;
-        if (interstitialAdListener != null) {
-            interstitialAdListener.onInterstitialAdClick(mLoadAdRequest.getCodeId());
-        }
     }
 
-    @Override
-    public void onAdSkip(BaseAdUnit adUnit) {
-        if (interstitialAdListener != null) {
-            interstitialAdListener.onInterstitialAdSkip(mLoadAdRequest.getCodeId());
-        }
-    }
-
-    @Override
-    public void onAdPlayEnd(BaseAdUnit adUnit) {
-        if (interstitialAdListener != null) {
-            interstitialAdListener.onInterstitialAdPLayEnd(mLoadAdRequest.getCodeId());
-        }
-    }
 
     @Override
     public void onAdClose(BaseAdUnit adUnit) {
         adStatus = AdStatus.AdStatusClose;
-        if (interstitialAdListener != null) {
-            interstitialAdListener.onInterstitialAdClosed(mLoadAdRequest.getCodeId());
-        }
         destroyAd();
     }
 
@@ -352,8 +249,8 @@ public class NativeAdManager implements RequestFactory.LoadAdRequestListener, Ad
     }
 
     public void destroyAd() {
-        if (mSplashAdInterstitial != null) {
-            mSplashAdInterstitial.onInvalidate(mAdUnit);
+        if (nativeAdInterstitial != null) {
+            nativeAdInterstitial.onInvalidate(mAdUnit);
         }
 
         if (mAdUnit != null) {
@@ -381,6 +278,21 @@ public class NativeAdManager implements RequestFactory.LoadAdRequestListener, Ad
             mHandler = new Handler(Looper.getMainLooper());
         }
         return mHandler;
+    }
+
+    @Override
+    public void onAdDetailShow() {
+
+    }
+
+    @Override
+    public void onAdDetailClick() {
+
+    }
+
+    @Override
+    public void onAdDetailDismiss() {
+
     }
 }
 

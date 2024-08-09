@@ -1,9 +1,9 @@
 package com.gt.sdk.natives;
 
-import static com.sigmob.sdk.videoplayer.VideoAdView.STATE_AUTO_COMPLETE;
-import static com.sigmob.sdk.videoplayer.VideoAdView.STATE_ERROR;
-import static com.sigmob.sdk.videoplayer.VideoAdView.STATE_NORMAL;
-import static com.sigmob.sdk.videoplayer.VideoAdView.STATE_PLAYING;
+import static com.gt.sdk.base.videoplayer.VideoAdView.STATE_AUTO_COMPLETE;
+import static com.gt.sdk.base.videoplayer.VideoAdView.STATE_ERROR;
+import static com.gt.sdk.base.videoplayer.VideoAdView.STATE_NORMAL;
+import static com.gt.sdk.base.videoplayer.VideoAdView.STATE_PLAYING;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,19 +21,14 @@ import com.czhj.sdk.common.ClientMetadata;
 import com.czhj.sdk.common.utils.Dips;
 import com.czhj.sdk.common.utils.ImageManager;
 import com.czhj.sdk.common.utils.ImageUtils;
+import com.czhj.sdk.common.utils.ViewUtil;
+import com.gt.sdk.AdError;
 import com.gt.sdk.base.blurkit.BlurKit;
+import com.gt.sdk.base.common.SigUtils;
 import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.videoplayer.OnVideoAdViewListener;
+import com.gt.sdk.base.videoplayer.VideoAdButton;
 import com.gt.sdk.base.videoplayer.VideoAdView;
-import com.sigmob.sdk.SDKContext;
-import com.sigmob.sdk.base.blurkit.BlurKit;
-import com.sigmob.sdk.base.models.BaseAdUnit;
-import com.sigmob.sdk.base.utils.ViewUtil;
-import com.sigmob.sdk.videoplayer.OnVideoAdViewListener;
-import com.sigmob.sdk.videoplayer.SigUtils;
-import com.sigmob.sdk.videoplayer.VideoAdButton;
-import com.sigmob.sdk.videoplayer.VideoAdView;
-import com.sigmob.windad.WindAdError;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -62,7 +57,6 @@ public class SigNativeAdVideo extends SigNativeAdView implements SigAdVideoStatu
         BlurKit.init(mContext);
     }
 
-
     @Override
     public SigVideoAdController getSigVideoAdController() {
         if (videoAdController == null) {
@@ -71,14 +65,12 @@ public class SigNativeAdVideo extends SigNativeAdView implements SigAdVideoStatu
         return videoAdController;
     }
 
-
     public VideoAdView getVideoAdView() {
         if (mVideoAdView == null) {
             mVideoAdView = new VideoAdView(mContext);
         }
         return mVideoAdView;
     }
-
 
     public SigAppView getAppView() {
         if (mAppView == null) {
@@ -365,7 +357,7 @@ public class SigNativeAdVideo extends SigNativeAdView implements SigAdVideoStatu
                 removeView(getVideoAdView());
                 videoContainer.addView(getVideoAdView(), new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-                getVideoAdView().setSoundChange(getAdConfig().getDetail_page_video_mute() || SDKContext.isSysMute());
+                getVideoAdView().setSoundChange(getAdConfig().getDetail_page_video_mute());
 
                 getVideoAdView().showButton(VideoAdButton.START, false);
                 getVideoAdView().showButton(VideoAdButton.FULLSCREEN, true);
@@ -398,7 +390,7 @@ public class SigNativeAdVideo extends SigNativeAdView implements SigAdVideoStatu
     }
 
     @Override
-    public void onVideoError(WindAdError adError) {
+    public void onVideoError(AdError adError) {
         if (getSigAdVideoStatusListener() != null) {
             getSigAdVideoStatusListener().onVideoError(adError);
         }
