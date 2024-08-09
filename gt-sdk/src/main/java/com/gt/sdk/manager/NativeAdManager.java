@@ -43,9 +43,7 @@ public class NativeAdManager implements RequestFactory.LoadAdRequestListener, Ad
 
     private Handler mHandler;
     private AdStatus adStatus;
-    private SplashAdView mSplashAdView;
     private BaseAdUnit mAdUnit;
-    private int mDuration;
     private NativeAdLoadListener interstitialAdListener;
     private final LoadAdRequest mLoadAdRequest;
     private static final int what_timeout = 0x001;
@@ -115,18 +113,8 @@ public class NativeAdManager implements RequestFactory.LoadAdRequestListener, Ad
         }
     }
 
-    private Activity getActivity() {
-        return ViewUtil.getActivityFromViewTop(mSplashAdView);
-    }
-
     public void onPause(Activity activity) {
-        if (mSplashAdView != null && activity == getActivity()) {
-            mSplashAdView.onPause();
-            if (mHandler != null) {
-                mHandler.removeCallbacksAndMessages(null);
-                mHandler = null;
-            }
-        }
+
     }
 
     public void onResume(Activity activity) {
