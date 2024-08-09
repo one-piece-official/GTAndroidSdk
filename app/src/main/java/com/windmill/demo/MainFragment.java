@@ -60,7 +60,6 @@ public class MainFragment extends Fragment implements SplashAdListener {
         getMyActivity().findViewById(id).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 //开屏代码位id
                 if (v.getId() == R.id.splash_button_load) {
                     LoadSplashAd();
@@ -73,16 +72,6 @@ public class MainFragment extends Fragment implements SplashAdListener {
                 }
 
                 Intent intent = new Intent(getMyActivity(), clz);
-                //激励视频代码位id
-                if (v.getId() == R.id.reward_button) {
-//                    intent.putExtra("horizontal_rit", "901121184");
-//                    intent.putExtra("vertical_rit", "901121375");
-                }
-                //全屏视频代码位id
-                if (v.getId() == R.id.interstitial_button) {
-//                    intent.putExtra("horizontal_rit", "901121430");
-//                    intent.putExtra("vertical_rit", "901121365");
-                }
                 startActivity(intent);
             }
         });
@@ -96,11 +85,7 @@ public class MainFragment extends Fragment implements SplashAdListener {
 
         Map<String, String> options = new HashMap<>();
         options.put("user_id", userID);
-        AdRequest adRequest = new AdRequest.Builder()
-                .setCodeId(splash_code_id)
-                .setWidth(PxUtils.getRealMetrics(getMyActivity()).widthPixels)
-                .setHeight(PxUtils.getRealMetrics(getMyActivity()).heightPixels)
-                .setExtOption(options).build();
+        AdRequest adRequest = new AdRequest.Builder().setCodeId(splash_code_id).setWidth(PxUtils.getRealMetrics(getMyActivity()).widthPixels).setHeight(PxUtils.getRealMetrics(getMyActivity()).heightPixels).setExtOption(options).build();
 
         if (splashAd != null) {
             if (isNewInstance) {

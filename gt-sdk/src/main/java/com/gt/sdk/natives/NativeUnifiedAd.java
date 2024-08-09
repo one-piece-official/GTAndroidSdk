@@ -15,7 +15,7 @@ import java.util.List;
 
 public class NativeUnifiedAd extends GtBaseAd implements NativeAdLoadListener, AdLifecycleManager.LifecycleListener {
 
-    private NativeUnifiedAd nativeAdListener;
+    private NativeAdLoadListener nativeAdListener;
     private String codeId;
     private NativeAdManager mAdManager;
     private Handler mHandler;
@@ -25,12 +25,12 @@ public class NativeUnifiedAd extends GtBaseAd implements NativeAdLoadListener, A
         init(adRequest, null);
     }
 
-    public NativeUnifiedAd(AdRequest adRequest, NativeUnifiedAd adListener) {
+    public NativeUnifiedAd(AdRequest adRequest, NativeAdLoadListener adListener) {
         super(adRequest);
         init(adRequest, adListener);
     }
 
-    private void init(AdRequest adRequest, NativeUnifiedAd adListener) {
+    private void init(AdRequest adRequest, NativeAdLoadListener adListener) {
         if (adRequest != null) {
             codeId = adRequest.getCodeId();
         }

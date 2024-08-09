@@ -276,9 +276,7 @@ public class NativeAdDrawActivity extends AppCompatActivity {
                 NormalViewHolder normalViewHolder = (NormalViewHolder) viewHolder;
                 normalViewHolder.videoView.setVideoURI(Uri.parse("android.resource://" + mContext.getPackageName() + "/" + item.normalVideo.videoId));
                 normalViewHolder.videoThumb.setImageResource(item.normalVideo.imgId);
-                Glide.with(mContext).load(R.drawable.header_icon)
-                        .apply(RequestOptions.bitmapTransform(new CircleCrop()))
-                        .into(normalViewHolder.authorIcon);
+                Glide.with(mContext).load(R.drawable.header_icon).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(normalViewHolder.authorIcon);
                 normalViewHolder.videoThumb.setVisibility(View.VISIBLE);
 
             } else if (viewHolder instanceof ExpressAdViewHolder) {

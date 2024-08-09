@@ -39,15 +39,15 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/reward_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center"
-            android:text="RewardVideoAD" />
+        <!--        <Button-->
+        <!--            android:id="@+id/reward_button"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginLeft="10dp"-->
+        <!--            android:layout_marginTop="10dp"-->
+        <!--            android:layout_marginRight="10dp"-->
+        <!--            android:gravity="center"-->
+        <!--            android:text="RewardVideoAD" />-->
 
         <Button
             android:id="@+id/interstitial_button"
@@ -70,15 +70,15 @@
             android:gravity="center"
             android:text="NativeAD" />
 
-        <Button
-            android:id="@+id/banner_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center"
-            android:text="BannerAD" />
+        <!--        <Button-->
+        <!--            android:id="@+id/banner_button"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginLeft="10dp"-->
+        <!--            android:layout_marginTop="10dp"-->
+        <!--            android:layout_marginRight="10dp"-->
+        <!--            android:gravity="center"-->
+        <!--            android:text="BannerAD" />-->
     </LinearLayout>
 
     <LinearLayout
@@ -105,7 +105,7 @@
             android:layout_marginRight="10dp"
             android:gravity="center"
             android:text="DeviceInfo" />
-        
+
         <Button
             android:id="@+id/configuration_button"
             android:layout_width="match_parent"

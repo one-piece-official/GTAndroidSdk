@@ -1,5 +1,6 @@
 package com.windmill.demo.natives;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextUtils;
@@ -17,11 +18,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.gt.sdk.AdError;
+import com.gt.sdk.base.models.SigImage;
+import com.gt.sdk.natives.AdAppInfo;
+import com.gt.sdk.natives.NativeADEventListener;
+import com.gt.sdk.natives.NativeAdData;
+import com.gt.sdk.natives.NativeAdPatternType;
 import com.windmill.demo.R;
 import com.windmill.sdk.natives.WMImage;
 import com.windmill.sdk.natives.WMNativeAdData;
 import com.windmill.sdk.natives.WMNativeAdDataType;
-import com.windmill.sdk.natives.WMNativeAdRender;
 import com.windmill.sdk.natives.WMVideoOption;
 import com.windmill.sdk.natives.WMViewBinder;
 
@@ -30,15 +36,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NativeAdDemoRender implements WMNativeAdRender<WMNativeAdData> {
+public class NativeDemoRender {
 
     private static final String TAG = "lance";
 
     private Context context;
 
-    /**
-     * 多布局根据adPatternType复用不同的根视图
-     */
     private Map<Integer, View> developViewMap = new HashMap<>();
     private ImageView img_logo;
     private ImageView ad_logo;
@@ -58,40 +61,36 @@ public class NativeAdDemoRender implements WMNativeAdRender<WMNativeAdData> {
     private Button mCTAButton;
     private FrameLayout shakeLayout;
 
+    private Activity activity;
+
+    public NativeDemoRender(Activity activity) {
+        this.activity = activity;
+    }
+
     /**
-     * NativeAdPatternType 取值范围
-     *
      * @param context
-     * @param adPatternType 这里可以根据 adPatternType创建不用的根视图容器
+     * @param adData
      * @return
      */
-    @Override
-    public View createView(Context context, int adPatternType) {
-        Log.d("lance", "---------createView----------" + adPatternType);
+    public View createView(Context context, NativeAdData adData) {
+        Log.d("lance", "---------createView----------" + adData.hashCode());
         this.context = context;
-        View developView = developViewMap.get(adPatternType);
+        View developView = developViewMap.get(adData.hashCode());
         if (developView == null) {
-            switch (adPatternType) {
-
-                case WMNativeAdDataType.NATIVE_SMALL_IMAGE_AD:
-                    developView = LayoutInflater.from(context).inflate(R.layout.native_ad_item_small, null);
-                    break;
-                default:
-                    developView = LayoutInflater.from(context).inflate(R.layout.native_ad_item_normal, null);
-                    break;
-            }
-            developViewMap.put(adPatternType, developView);
+            developView = LayoutInflater.from(context).inflate(R.layout.native_ad_item_normal, null);
+            developViewMap.put(adData.hashCode(), developView);
         }
         if (developView.getParent() != null) {
             ((ViewGroup) developView.getParent()).removeView(developView);
         }
-
         return developView;
     }
 
-    @Override
-    public void renderAdView(View view, final WMNativeAdData adData) {
+    public View renderAdView(NativeAdData adData, NativeADEventListener nativeAdEventListener) {
+
+        View view = createView(activity, adData);
         Log.d("lance", "renderAdView:" + adData.getTitle());
+
         img_logo = view.findViewById(R.id.img_logo);
         ad_logo = view.findViewById(R.id.channel_ad_logo);
         img_dislike = view.findViewById(R.id.iv_dislike);
@@ -123,6 +122,13 @@ public class NativeAdDemoRender implements WMNativeAdRender<WMNativeAdData> {
 //            img_logo.setVisibility(View.GONE);
         }
 
+        if (adData.getAdLogo() != null) {
+            ad_logo.setVisibility(View.VISIBLE);
+            Glide.with(context.getApplicationContext()).load(adData.getAdLogo()).into(ad_logo);
+        } else {
+            ad_logo.setVisibility(View.GONE);
+        }
+
         if (!TextUtils.isEmpty(adData.getTitle())) {
             text_title.setText(adData.getTitle());
         } else {
@@ -133,13 +139,6 @@ public class NativeAdDemoRender implements WMNativeAdRender<WMNativeAdData> {
             text_desc.setText(adData.getDesc());
         } else {
             text_desc.setText("听说点开它的人都交了好运!");
-        }
-
-        if (adData.getAdLogo() != null) {
-            ad_logo.setVisibility(View.VISIBLE);
-            ad_logo.setImageBitmap(adData.getAdLogo());
-        } else {
-            ad_logo.setVisibility(View.GONE);
         }
 
         //clickViews数量必须大于等于1
@@ -156,7 +155,7 @@ public class NativeAdDemoRender implements WMNativeAdRender<WMNativeAdData> {
         int patternType = adData.getAdPatternType();
         Log.d("lance", "patternType:" + patternType);
         //ITEM_VIEW_TYPE_LARGE_PIC_AD
-        if (patternType == WMNativeAdDataType.NATIVE_SMALL_IMAGE_AD || patternType == WMNativeAdDataType.NATIVE_BIG_IMAGE_AD) {
+        if (patternType == NativeAdPatternType.NATIVE_BIG_IMAGE_AD) {
             // 双图双文、单图双文：注册mImagePoster的点击事件
             mImagePoster.setVisibility(View.VISIBLE);
             mButtonsContainer.setVisibility(View.GONE);
@@ -164,7 +163,7 @@ public class NativeAdDemoRender implements WMNativeAdRender<WMNativeAdData> {
             mMediaViewLayout.setVisibility(View.GONE);
             clickableViews.add(mImagePoster);
             imageViews.add(mImagePoster);
-        } else if (patternType == WMNativeAdDataType.NATIVE_GROUP_IMAGE_AD) {//IMAGE_MODE_GROUP_IMG
+        } else if (patternType == NativeAdPatternType.NATIVE_GROUP_IMAGE_AD) {//IMAGE_MODE_GROUP_IMG
             // 三小图广告：注册native_3img_ad_container的点击事件
             native_3img_ad_container.setVisibility(View.VISIBLE);
             mImagePoster.setVisibility(View.GONE);
@@ -176,41 +175,16 @@ public class NativeAdDemoRender implements WMNativeAdRender<WMNativeAdData> {
             imageViews.add(img_3);
         }
 
-        if (adData.getNetworkId() == 16) {//gdt
-            FrameLayout.LayoutParams adLogoParams = new FrameLayout.LayoutParams(dpToPx(context, 20), dpToPx(context, 10));
-            adLogoParams.gravity = Gravity.END | Gravity.BOTTOM;
-            adLogoParams.rightMargin = dpToPx(context, 5);
-            adLogoParams.bottomMargin = dpToPx(context, 5);
-            adData.setAdLogoParams(adLogoParams);
-        }
-
-        if (adData.getNetworkId() == 24) {//vivo
-            FrameLayout.LayoutParams adLogoParams = new FrameLayout.LayoutParams(0, 0);
-            adLogoParams.gravity = Gravity.END | Gravity.BOTTOM;
-            adLogoParams.rightMargin = dpToPx(context, 5);
-            adLogoParams.bottomMargin = dpToPx(context, 5);
-            adData.setAdLogoParams(adLogoParams);
-        }
-
-        //gromore需要绑定资源ID
-        //在bindViewForInteraction之前注册
-        if (adData.getNetworkId() == 22) {//gromore
-            WMViewBinder viewBinder = new WMViewBinder.Builder(view.getId()).titleId(text_title.getId()).descriptionTextId(text_desc.getId()).callToActionId(mCTAButton.getId()).iconImageId(img_logo.getId()).mainImageId(mImagePoster.getId()).mediaViewIdId(mMediaViewLayout.getId()).groupImage1Id(img_1.getId()).groupImage2Id(img_2.getId()).groupImage3Id(img_3.getId()).shakeViewContainerId(shakeLayout.getId()).build();
-            adData.registerViewBidder(viewBinder);
-        }
-
         //重要! 这个涉及到广告计费，必须正确调用。convertView必须使用ViewGroup。
         //作为creativeViewList传入，点击不进入详情页，直接下载或进入落地页，视频和图文广告均生效
-        adData.bindViewForInteraction(context, view, clickableViews, creativeViewList, img_dislike);
+        adData.bindViewForInteraction(view, clickableViews, creativeViewList, img_dislike, nativeAdEventListener);
 
-        adData.setCloseViewPosition(3);//针对vivo渠道
-
-        List<WMImage> imageList = adData.getImageList();
-        if (imageList != null && imageList.size() > 0) {
+        List<SigImage> imageList = adData.getImageList();
+        if (imageList != null && !imageList.isEmpty()) {
             for (int i = 0; i < imageList.size(); i++) {
-                WMImage wmImage = imageList.get(i);
-                if (wmImage != null) {
-                    Log.d("lance", "-------------imageList--------------:" + adData.getNetworkId() + ":" + wmImage.getWidth() + ":" + wmImage.getHeight() + ":" + wmImage.getImageUrl());
+                SigImage image = imageList.get(i);
+                if (image != null) {
+                    Log.d("lance", "-------------imageList--------------:" + image.getWidth() + ":" + image.getHeight() + ":" + image.getImageUrl());
                 }
             }
         } else {
@@ -219,25 +193,49 @@ public class NativeAdDemoRender implements WMNativeAdRender<WMNativeAdData> {
 
         //需要等到bindViewForInteraction后再去添加media
         if (!imageViews.isEmpty()) {
-            adData.bindImageViews(context, imageViews, 0);
-        } else if (patternType == WMNativeAdDataType.NATIVE_VIDEO_AD) {
-            WMImage videoCoverImage = adData.getVideoCoverImage();
-            if (videoCoverImage != null) {
-                Log.d("lance", "-------------videoCoverImage----------" + adData.getNetworkId() + ":" + videoCoverImage.getWidth() + ":" + videoCoverImage.getHeight() + ":" + videoCoverImage.getImageUrl());
-            }
+            adData.bindImageViews(imageViews, 0);
+        } else if (patternType == NativeAdPatternType.NATIVE_VIDEO_AD) {
 
-            WMNativeAdData.CustomizeVideo customizeVideo = adData.getCustomizeVideo();
-            if (customizeVideo != null) {
-                Log.d("lance", "-------------customizeVideo----------" + adData.getNetworkId() + ":" + customizeVideo.getVideoUrl());
-            }
-
-            adData.setMediaViewOption(new WMVideoOption.Builder().setEnableDetailPage(true).setNeedCoverImage(true).setEnableUserControl(false).setNeedProgressBar(false).build());
+            int videoWidth = adData.getVideoWidth();
+            int videoHeight = adData.getVideoHeight();
+            Log.d("lance", "-------------getVideoWidth----------" + videoWidth + ":" + videoHeight);
 
             // 视频广告，注册mMediaView的点击事件
             mImagePoster.setVisibility(View.GONE);
             native_3img_ad_container.setVisibility(View.GONE);
             mMediaViewLayout.setVisibility(View.VISIBLE);
-            adData.bindMediaView(context, mMediaViewLayout);
+            adData.bindMediaView(mMediaViewLayout, new NativeAdData.NativeADMediaListener() {
+
+                @Override
+                public void onVideoLoad() {
+                    Log.d("lance", "-------------onVideoLoad--------------");
+                }
+
+                @Override
+                public void onVideoError(AdError error) {
+                    Log.d("lance", "-------------onVideoError--------------:" + error.toString());
+                }
+
+                @Override
+                public void onVideoStart() {
+                    Log.d("lance", "-------------onVideoStart--------------");
+                }
+
+                @Override
+                public void onVideoPause() {
+                    Log.d("lance", "-------------onVideoPause--------------");
+                }
+
+                @Override
+                public void onVideoResume() {
+                    Log.d("lance", "-------------onVideoResume--------------");
+                }
+
+                @Override
+                public void onVideoCompleted() {
+                    Log.d("lance", "-------------onVideoCompleted--------------");
+                }
+            });
 
             mButtonsContainer.setVisibility(View.VISIBLE);
 
@@ -258,16 +256,7 @@ public class NativeAdDemoRender implements WMNativeAdRender<WMNativeAdData> {
             mStopButton.setOnClickListener(listener);
         }
 
-        /**
-         * 渲染百度摇一摇
-         */
-        View shakeView = adData.renderShakeView(80, 80, new WMNativeAdData.AdShakeViewListener() {
-            @Override
-            public void onDismiss() {
-                Log.d("lance", "renderShakeView onDismiss");
-            }
-        });
-
+        View shakeView = adData.getWidgetView(80, 80);
         if (shakeView != null) {
             shakeLayout.addView(shakeView);
         }
@@ -283,20 +272,21 @@ public class NativeAdDemoRender implements WMNativeAdRender<WMNativeAdData> {
         updateAdAction(ctaText);
 
         /**
-         * 四要素信息展示
+         * 六要素信息展示
          */
-        WMNativeAdData.AppInfo appInfo = adData.getAppInfo();
+        AdAppInfo appInfo = adData.getAdAppInfo();
         if (appInfo != null) {
             Log.d("lance", "应用名字 = " + appInfo.getAppName());
-            Log.d("lance", "应用包名 = " + appInfo.getAppPackageName());
-            Log.d("lance", "应用版本 = " + appInfo.getAppVersion());
-            Log.d("lance", "开发者 = " + appInfo.getDeveloperName());
-            Log.d("lance", "包大小 = " + appInfo.getAppPackageSize());
+            Log.d("lance", "应用包名 = " + appInfo.getPackageName());
+            Log.d("lance", "应用版本 = " + appInfo.getVersionName());
+            Log.d("lance", "开发者 = " + appInfo.getDeveloper());
+            Log.d("lance", "应用品牌 = " + appInfo.getAuthorName());
+            Log.d("lance", "包大小 = " + appInfo.getAppSize());
             Log.d("lance", "隐私条款链接 = " + appInfo.getPrivacyUrl());
-            Log.d("lance", "权限信息 = " + appInfo.getPermissionInfo());
-            Log.d("lance", "权限信息链接 = " + appInfo.getPermissionInfoUrl());
-            Log.d("lance", "产品功能描述 = " + appInfo.getFunctionDescUrl());
+            Log.d("lance", "权限信息链接 = " + appInfo.getPermissionsUrl());
         }
+
+        return view;
     }
 
     public void updateAdAction(String ctaText) {
