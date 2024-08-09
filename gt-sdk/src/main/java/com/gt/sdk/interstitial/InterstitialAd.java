@@ -156,9 +156,23 @@ public class InterstitialAd extends GtBaseAd implements InterstitialAdListener, 
     }
 
     @Override
-    public void onInterstitialAdShow(String codeId) {
+    public void onInterstitialAdPlay(String codeId) {
         if (interstitialAdListener != null) {
-            interstitialAdListener.onInterstitialAdShow(codeId);
+            interstitialAdListener.onInterstitialAdPlay(codeId);
+        }
+    }
+
+    @Override
+    public void onInterstitialAdSkip(String codeId) {
+        if (interstitialAdListener != null) {
+            interstitialAdListener.onInterstitialAdSkip(codeId);
+        }
+    }
+
+    @Override
+    public void onInterstitialAdPLayEnd(String codeId) {
+        if (interstitialAdListener != null) {
+            interstitialAdListener.onInterstitialAdPLayEnd(codeId);
         }
     }
 

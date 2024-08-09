@@ -52,7 +52,7 @@ public class SplashActivity extends AppCompatActivity implements SplashAdListene
         options.put("user_id", userID);
 
         AdRequest adRequest = new AdRequest.Builder()
-                .setCodeId("splash_placement_id")
+                .setCodeId("123456")
                 .setUserID(userID)
                 .setWidth(PxUtils.getRealMetrics(this).widthPixels)
                 .setHeight(PxUtils.getRealMetrics(this).heightPixels - dipsToIntPixels(100, this))
@@ -107,8 +107,8 @@ public class SplashActivity extends AppCompatActivity implements SplashAdListene
     }
 
     @Override
-    public void onSplashAdShow(String placementId) {
-        Log.d("lance", "----------onSplashAdShow----------" + placementId);
+    public void onSplashAdShow(String codeId) {
+        Log.d("lance", "----------onSplashAdShow----------" + codeId);
         logs.add("onSplashAdShow");
     }
 
@@ -124,28 +124,28 @@ public class SplashActivity extends AppCompatActivity implements SplashAdListene
     }
 
     @Override
-    public void onSplashAdLoadFail(String placementId, AdError error) {
-        Log.d("lance", "----------onSplashAdLoadFail----------" + error.toString() + ":" + placementId);
-        logs.add("onSplashAdLoadFail: " + error + " placementId: " + placementId);
+    public void onSplashAdLoadFail(String codeId, AdError error) {
+        Log.d("lance", "----------onSplashAdLoadFail----------" + error.toString() + ":" + codeId);
+        logs.add("onSplashAdLoadFail: " + error + " placementId: " + codeId);
         jumpMainActivity();
     }
 
     @Override
-    public void onSplashAdShowError(String placementId, AdError error) {
-        Log.d("lance", "----------onSplashAdShowError----------" + error.toString() + ":" + placementId);
-        logs.add("onSplashAdShowError: " + error + " placementId: " + placementId);
+    public void onSplashAdShowError(String codeId, AdError error) {
+        Log.d("lance", "----------onSplashAdShowError----------" + error.toString() + ":" + codeId);
+        logs.add("onSplashAdShowError: " + error + " placementId: " + codeId);
         jumpMainActivity();
     }
 
     @Override
-    public void onSplashAdClick(String placementId) {
-        Log.d("lance", "----------onSplashAdClick----------" + placementId);
+    public void onSplashAdClick(String codeId) {
+        Log.d("lance", "----------onSplashAdClick----------" + codeId);
         logs.add("onSplashAdClick");
     }
 
     @Override
-    public void onSplashAdClose(String placementId) {
-        Log.d("lance", "----------onSplashAdClose----------" + placementId);
+    public void onSplashAdClose(String codeId) {
+        Log.d("lance", "----------onSplashAdClose----------" + codeId);
         logs.add("onSplashAdClose");
         jumpWhenCanClick();
     }

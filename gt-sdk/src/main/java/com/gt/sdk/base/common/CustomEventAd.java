@@ -28,7 +28,7 @@ public abstract class CustomEventAd {
         void onAdClose(BaseAdUnit adUnit);
 
     }
-    
+
     public interface LandPageViewEventAdListener {
 
         void onLandPageShow();

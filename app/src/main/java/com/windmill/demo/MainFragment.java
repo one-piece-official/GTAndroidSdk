@@ -38,7 +38,7 @@ public class MainFragment extends Fragment implements SplashAdListener {
     private TextView logTextView;
     private String[] mLogs;
     private Activity mActivity;
-    String splash_placement_id = "";
+    String splash_code_id = "123456";
     private ViewGroup splashLY;
     private boolean isNewInstance;
     private final Map<String, SplashAd> splashAdMap = new HashMap<>();
@@ -91,21 +91,16 @@ public class MainFragment extends Fragment implements SplashAdListener {
     private void LoadSplashAd() {
         initViewGroup(getMyActivity());
 
-        SplashAd splashAd = splashAdMap.get(splash_placement_id);
-        Log.d("lance", (splashAd == null) + "---------LoadSplashAd---------" + splash_placement_id);
+        SplashAd splashAd = splashAdMap.get(splash_code_id);
+        Log.d("lance", (splashAd == null) + "---------LoadSplashAd---------" + splash_code_id);
 
         Map<String, String> options = new HashMap<>();
         options.put("user_id", userID);
-        AdRequest adRequest = new AdRequest.Builder()
-                .setCodeId("splash_placement_id")
-                .setUserID(userID)
-                .setWidth(PxUtils.getRealMetrics(getMyActivity()).widthPixels)
-                .setHeight(PxUtils.getRealMetrics(getMyActivity()).heightPixels)
-                .setExtOption(options).build();
+        AdRequest adRequest = new AdRequest.Builder().setCodeId(splash_code_id).setUserID(userID).setWidth(PxUtils.getRealMetrics(getMyActivity()).widthPixels).setHeight(PxUtils.getRealMetrics(getMyActivity()).heightPixels).setExtOption(options).build();
 
         if (splashAd != null) {
             if (isNewInstance) {
-                splashAdMap.remove(splash_placement_id);
+                splashAdMap.remove(splash_code_id);
                 splashAd = new SplashAd(adRequest, this);
             }
         } else {
@@ -113,12 +108,12 @@ public class MainFragment extends Fragment implements SplashAdListener {
         }
         Log.d("lance", "------------start--------loadAd-------" + System.currentTimeMillis());
         splashAd.loadAd();
-        splashAdMap.put(splash_placement_id, splashAd);
+        splashAdMap.put(splash_code_id, splashAd);
     }
 
     private void showSplashAd() {
-        SplashAd splashAd = splashAdMap.get(splash_placement_id);
-        Log.d("lance", "---------showAd---------" + splash_placement_id);
+        SplashAd splashAd = splashAdMap.get(splash_code_id);
+        Log.d("lance", "---------showAd---------" + splash_code_id);
         if (splashAd != null && splashAd.isReady()) {
             splashAd.show(splashLY);
         } else {
@@ -177,7 +172,6 @@ public class MainFragment extends Fragment implements SplashAdListener {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("setting", 0);
         isNewInstance = sharedPreferences.getBoolean(Constants.CONF_NEW_INSTANCE, false);
         userID = sharedPreferences.getString(Constants.CONF_USER_ID, "");
-        splash_placement_id = "123456";
     }
 
     public void setLogs(String[] logs) {
@@ -216,7 +210,6 @@ public class MainFragment extends Fragment implements SplashAdListener {
     private static SimpleDateFormat dateFormat = null;
 
     private static SimpleDateFormat getDateTimeFormat() {
-
         if (dateFormat == null) {
             dateFormat = new SimpleDateFormat("MM-dd HH:mm:ss SSS", Locale.CHINA);
         }
@@ -235,9 +228,9 @@ public class MainFragment extends Fragment implements SplashAdListener {
     }
 
     @Override
-    public void onSplashAdLoadFail(String placementId, AdError error) {
-        Log.d("lance", "----------onSplashAdLoadFail----------" + error.toString() + ":" + placementId);
-        logMessage("onSplashAdFailToLoad:" + error + " placementId: " + placementId);
+    public void onSplashAdLoadFail(String codeId, AdError error) {
+        Log.d("lance", "----------onSplashAdLoadFail----------" + error.toString() + ":" + codeId);
+        logMessage("onSplashAdFailToLoad:" + error + " placementId: " + codeId);
         if (splashLY != null) {
             splashLY.removeAllViews();
             splashLY.setVisibility(View.GONE);
@@ -245,15 +238,15 @@ public class MainFragment extends Fragment implements SplashAdListener {
     }
 
     @Override
-    public void onSplashAdShow(String placementId) {
-        Log.d("lance", "----------onSplashAdShow----------" + placementId);
+    public void onSplashAdShow(String codeId) {
+        Log.d("lance", "----------onSplashAdShow----------" + codeId);
         logMessage("onSplashAdShow");
     }
 
     @Override
-    public void onSplashAdShowError(String placementId, AdError error) {
-        Log.d("lance", "----------onSplashAdShowError----------" + error.toString() + ":" + placementId);
-        logMessage("onSplashAdShowError:" + error + " placementId: " + placementId);
+    public void onSplashAdShowError(String codeId, AdError error) {
+        Log.d("lance", "----------onSplashAdShowError----------" + error.toString() + ":" + codeId);
+        logMessage("onSplashAdShowError:" + error + " placementId: " + codeId);
         if (splashLY != null) {
             splashLY.removeAllViews();
             splashLY.setVisibility(View.GONE);
@@ -261,14 +254,14 @@ public class MainFragment extends Fragment implements SplashAdListener {
     }
 
     @Override
-    public void onSplashAdClick(String placementId) {
-        Log.d("lance", "----------onSplashAdClicked----------" + placementId);
+    public void onSplashAdClick(String codeId) {
+        Log.d("lance", "----------onSplashAdClicked----------" + codeId);
         logMessage("onSplashAdClicked");
     }
 
     @Override
-    public void onSplashAdClose(String placementId) {
-        Log.d("lance", "----------onSplashAdClose----------" + placementId);
+    public void onSplashAdClose(String codeId) {
+        Log.d("lance", "----------onSplashAdClose----------" + codeId);
         logMessage("onSplashAdClose");
         //（1）当穿山甲、优量汇的开屏广告素材支持点睛时，splashEyeAd不为null
         //（2）当展示的是快手开屏广告时，splashEyeAd为非null值，但不一定表示此次快手开屏广告的素材支持点睛，不支持时调用IATSplashEyeAd#show()方法会直接回调ATSplashEyeAdListener#onAdDismiss()方法

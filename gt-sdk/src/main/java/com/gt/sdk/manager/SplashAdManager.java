@@ -53,7 +53,7 @@ public class SplashAdManager implements RequestFactory.LoadAdRequestListener, Ad
     private static final int what_timeout = 0x001;
     private final SplashAdInterstitial mSplashAdInterstitial;
 
-    public SplashAdManager(final AdRequest request, SplashAdListener splashADListener) {
+    public SplashAdManager(final AdRequest request, SplashAdListener splashAdListener) {
         mHandler = new Handler(Looper.getMainLooper());
         timerRunnable = new Runnable() {
             @Override
@@ -74,7 +74,7 @@ public class SplashAdManager implements RequestFactory.LoadAdRequestListener, Ad
 
         adStatus = AdStatus.AdStatusNone;
 
-        mSplashADListener = splashADListener;
+        mSplashADListener = splashAdListener;
         mLoadAdRequest = new LoadAdRequest(request, AdFormat.SPLASH);
         mSplashAdInterstitial = new SplashAdInterstitial(this);
     }

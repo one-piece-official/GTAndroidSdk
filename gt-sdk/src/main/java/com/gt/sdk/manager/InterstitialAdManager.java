@@ -9,8 +9,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.czhj.sdk.common.ClientMetadata;
 import com.czhj.sdk.common.Constants;
@@ -34,13 +32,14 @@ import com.gt.sdk.base.models.point.PointCategory;
 import com.gt.sdk.base.network.RequestFactory;
 import com.gt.sdk.base.splash.SplashAdView;
 import com.gt.sdk.interstitial.InterstitialAdListener;
+import com.gt.sdk.interstitial.RewardAdInterstitial;
 import com.gt.sdk.utils.PointEntityUtils;
 
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
-public class InterstitialAdManager implements RequestFactory.LoadAdRequestListener, AdStackManager.AdStackStatusListener, SplashAdInterstitial.SplashAdListener {
+public class InterstitialAdManager implements RequestFactory.LoadAdRequestListener, AdStackManager.AdStackStatusListener, RewardAdInterstitial.VideoAdListener {
 
     private final Runnable timerRunnable;
     private Handler mHandler;
@@ -268,7 +267,7 @@ public class InterstitialAdManager implements RequestFactory.LoadAdRequestListen
         }
 
         if (interstitialAdListener != null) {
-            interstitialAdListener.onInterstitialAdShow(mLoadAdRequest.getCodeId());
+            interstitialAdListener.onInterstitialAdPlay(mLoadAdRequest.getCodeId());
         }
 
         if (mHandler == null) {
@@ -290,6 +289,20 @@ public class InterstitialAdManager implements RequestFactory.LoadAdRequestListen
         adStatus = AdStatus.AdStatusClick;
         if (interstitialAdListener != null) {
             interstitialAdListener.onInterstitialAdClick(mLoadAdRequest.getCodeId());
+        }
+    }
+
+    @Override
+    public void onAdSkip(BaseAdUnit adUnit) {
+        if (interstitialAdListener != null) {
+            interstitialAdListener.onInterstitialAdSkip(mLoadAdRequest.getCodeId());
+        }
+    }
+
+    @Override
+    public void onAdPlayEnd(BaseAdUnit adUnit) {
+        if (interstitialAdListener != null) {
+            interstitialAdListener.onInterstitialAdPLayEnd(mLoadAdRequest.getCodeId());
         }
     }
 

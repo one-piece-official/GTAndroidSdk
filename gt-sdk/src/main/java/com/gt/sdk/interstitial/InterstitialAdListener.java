@@ -9,9 +9,13 @@ public interface InterstitialAdListener {
 
     void onInterstitialAdCacheSuccess(final String codeId);
 
-    void onInterstitialAdShow(final String codeId);
+    void onInterstitialAdPlay(final String codeId);
+
+    void onInterstitialAdPLayEnd(final String codeId);
 
     void onInterstitialAdClick(final String codeId);
+
+    void onInterstitialAdSkip(final String codeId);
 
     void onInterstitialAdClosed(final String codeId);
 
