@@ -22,25 +22,25 @@ import com.gt.sdk.AdError;
 import com.gt.sdk.AdRequest;
 import com.gt.sdk.GtAdSdk;
 import com.gt.sdk.WindConstants;
-import com.gt.sdk.api.SplashAdListener;
-import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.LoadAdRequest;
 import com.gt.sdk.base.common.AdSessionManager;
 import com.gt.sdk.base.common.AdStackManager;
 import com.gt.sdk.base.common.BaseBroadcastReceiver;
 import com.gt.sdk.base.common.SessionManager;
 import com.gt.sdk.base.common.SplashAdInterstitial;
-import com.gt.sdk.base.network.RequestFactory;
+import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.models.IntentActions;
 import com.gt.sdk.base.models.point.PointCategory;
+import com.gt.sdk.base.network.RequestFactory;
 import com.gt.sdk.base.splash.SplashAdView;
+import com.gt.sdk.interstitial.InterstitialAdListener;
 import com.gt.sdk.utils.PointEntityUtils;
 
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
-public class SplashAdManager implements RequestFactory.LoadAdRequestListener, AdStackManager.AdStackStatusListener, SplashAdInterstitial.SplashAdListener {
+public class InterstitialAdManager implements RequestFactory.LoadAdRequestListener, AdStackManager.AdStackStatusListener, SplashAdInterstitial.SplashAdListener {
 
     private final Runnable timerRunnable;
     private Handler mHandler;
@@ -48,12 +48,12 @@ public class SplashAdManager implements RequestFactory.LoadAdRequestListener, Ad
     private SplashAdView mSplashAdView;
     private BaseAdUnit mAdUnit;
     private int mDuration;
-    private SplashAdListener mSplashADListener;
+    private InterstitialAdListener interstitialAdListener;
     private final LoadAdRequest mLoadAdRequest;
     private static final int what_timeout = 0x001;
     private final SplashAdInterstitial mSplashAdInterstitial;
 
-    public SplashAdManager(final AdRequest request, SplashAdListener splashADListener) {
+    public InterstitialAdManager(final AdRequest request, InterstitialAdListener adListener) {
         mHandler = new Handler(Looper.getMainLooper());
         timerRunnable = new Runnable() {
             @Override
@@ -74,7 +74,7 @@ public class SplashAdManager implements RequestFactory.LoadAdRequestListener, Ad
 
         adStatus = AdStatus.AdStatusNone;
 
-        mSplashADListener = splashADListener;
+        interstitialAdListener = adListener;
         mLoadAdRequest = new LoadAdRequest(request, AdFormat.SPLASH);
         mSplashAdInterstitial = new SplashAdInterstitial(this);
     }
@@ -119,11 +119,11 @@ public class SplashAdManager implements RequestFactory.LoadAdRequestListener, Ad
             mHandler = null;
         }
 
-        if (mSplashADListener != null) {
+        if (interstitialAdListener != null) {
             if (isLoadError) {
-                mSplashADListener.onSplashAdLoadFail(mLoadAdRequest.getCodeId(), error);
+                interstitialAdListener.onInterstitialAdLoadError(mLoadAdRequest.getCodeId(), error);
             } else {
-                mSplashADListener.onSplashAdShowError(mLoadAdRequest.getCodeId(), error);
+                interstitialAdListener.onInterstitialAdShowError(mLoadAdRequest.getCodeId(), error);
             }
         }
 
@@ -132,33 +132,13 @@ public class SplashAdManager implements RequestFactory.LoadAdRequestListener, Ad
         }
     }
 
-    public void showSplashAd(ViewGroup viewGroup) {
+    public void showAd(Activity activity) {
         boolean isPortrait = ORIENTATION_PORTRAIT == ClientMetadata.getInstance().getOrientationInt();
         if (!isPortrait) {
             onAdPlayFail(AdError.ERROR_AD_UN_SUPPORT_ORIENTATION);
             return;
         }
 
-        if (viewGroup != null) {
-            viewGroup.removeAllViews();
-            boolean result = createSplashView(viewGroup.getContext(), mAdUnit);
-            if (!result) {
-                onAdPlayFail(AdError.ERROR_AD_PLAY);
-                return;
-            }
-            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            viewGroup.addView(mSplashAdView, layoutParams);
-
-            mSplashAdInterstitial.showInterstitial(mAdUnit);
-            mDuration = mSplashAdInterstitial.mAdConfig.getShowDuration();
-
-            mSplashAdView.setDuration(mDuration);
-            result = mSplashAdView.loadSplashResource();
-
-            if (result) {
-                return;
-            }
-        }
         onAdPlayFail(AdError.ERROR_AD_PLAY);
     }
 
@@ -208,6 +188,10 @@ public class SplashAdManager implements RequestFactory.LoadAdRequestListener, Ad
             return;
         }
 
+        if (interstitialAdListener != null) {
+            interstitialAdListener.onInterstitialAdLoadSuccess(mLoadAdRequest.getCodeId());
+        }
+
         mAdUnit = adUnit;
         AdStackManager.shareInstance().cache(mAdUnit, this);
     }
@@ -250,8 +234,8 @@ public class SplashAdManager implements RequestFactory.LoadAdRequestListener, Ad
             GtAdSdk.sharedAds().getHandler().post(new Runnable() {
                 @Override
                 public void run() {
-                    if (mSplashADListener != null) {
-                        mSplashADListener.onSplashAdLoadSuccess(mLoadAdRequest.getCodeId());
+                    if (interstitialAdListener != null) {
+                        interstitialAdListener.onInterstitialAdCacheSuccess(mLoadAdRequest.getCodeId());
                     }
                 }
             });
@@ -283,8 +267,8 @@ public class SplashAdManager implements RequestFactory.LoadAdRequestListener, Ad
             mSplashAdView.setVisibility(View.VISIBLE);
         }
 
-        if (mSplashADListener != null) {
-            mSplashADListener.onSplashAdShow(mLoadAdRequest.getCodeId());
+        if (interstitialAdListener != null) {
+            interstitialAdListener.onInterstitialAdShow(mLoadAdRequest.getCodeId());
         }
 
         if (mHandler == null) {
@@ -304,16 +288,16 @@ public class SplashAdManager implements RequestFactory.LoadAdRequestListener, Ad
     @Override
     public void onAdClicked(BaseAdUnit adUnit) {
         adStatus = AdStatus.AdStatusClick;
-        if (mSplashADListener != null) {
-            mSplashADListener.onSplashAdClick(mLoadAdRequest.getCodeId());
+        if (interstitialAdListener != null) {
+            interstitialAdListener.onInterstitialAdClick(mLoadAdRequest.getCodeId());
         }
     }
 
     @Override
     public void onAdClose(BaseAdUnit adUnit) {
         adStatus = AdStatus.AdStatusClose;
-        if (mSplashADListener != null) {
-            mSplashADListener.onSplashAdClose(mLoadAdRequest.getCodeId());
+        if (interstitialAdListener != null) {
+            interstitialAdListener.onInterstitialAdClosed(mLoadAdRequest.getCodeId());
         }
         destroyAd();
     }
@@ -350,7 +334,7 @@ public class SplashAdManager implements RequestFactory.LoadAdRequestListener, Ad
         }
 
         mAdUnit = null;
-        mSplashADListener = null;
+        interstitialAdListener = null;
     }
 
     public Handler getHandler() {

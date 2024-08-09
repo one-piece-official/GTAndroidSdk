@@ -94,7 +94,7 @@ public class AdActivity extends BaseAdActivity implements BaseAdViewControllerLi
                 SigmobLog.e("uuid is empty");
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("error", "uuid is empty");
-                BaseBroadcastReceiver.broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAYFAIL);
+                BaseBroadcastReceiver.broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAY_FAIL);
                 finish();
                 return;
             }
@@ -105,7 +105,7 @@ public class AdActivity extends BaseAdActivity implements BaseAdViewControllerLi
                 if (playAdUnit == null) {
                     HashMap<String, Object> map = new HashMap<>();
                     map.put("error", "playAdUnit is null");
-                    BaseBroadcastReceiver.broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAYFAIL);
+                    BaseBroadcastReceiver.broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAY_FAIL);
                     finish();
                     return;
                 }
@@ -122,7 +122,7 @@ public class AdActivity extends BaseAdActivity implements BaseAdViewControllerLi
             // mBaseAdViewController set to null, and finish the activity immediately.
             HashMap<String, Object> map = new HashMap<>();
             map.put("error", e.getMessage());
-            BaseBroadcastReceiver.broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAYFAIL);
+            BaseBroadcastReceiver.broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAY_FAIL);
             finish();
         }
     }
@@ -138,7 +138,7 @@ public class AdActivity extends BaseAdActivity implements BaseAdViewControllerLi
             SigmobLog.e(e.getMessage());
             HashMap<String, Object> map = new HashMap<>();
             map.put("error", e.getMessage());
-            BaseBroadcastReceiver.broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAYFAIL);
+            BaseBroadcastReceiver.broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAY_FAIL);
             finish();
         }
     }
@@ -153,7 +153,7 @@ public class AdActivity extends BaseAdActivity implements BaseAdViewControllerLi
         } catch (Throwable e) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("error", e.getMessage());
-            BaseBroadcastReceiver.broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAYFAIL);
+            BaseBroadcastReceiver.broadcastAction(this, mBroadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAY_FAIL);
             finish();
         }
     }

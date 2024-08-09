@@ -1,38 +1,40 @@
-package com.gt.sdk.base.common;
+package com.gt.sdk.interstitial;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.text.TextUtils;
 
 import com.czhj.sdk.common.utils.Preconditions;
+import com.gt.sdk.base.common.BaseBroadcastReceiver;
 import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.models.IntentActions;
 
-public class SplashAdBroadcastReceiver extends BaseBroadcastReceiver {
+public class RewardAdBroadcastReceiver extends BaseBroadcastReceiver {
 
     private static IntentFilter sIntentFilter;
 
     public BaseAdUnit mAdUnit;
 
-    private SplashAdInterstitial.SplashAdListener mAdInterstitialListener;
+    private RewardAdInterstitial.VideoAdListener mAdInterstitialListener;
 
-    public SplashAdBroadcastReceiver(BaseAdUnit baseAdUnit, SplashAdInterstitial.SplashAdListener splashAdListener, final String broadcastIdentifier) {
+    public RewardAdBroadcastReceiver(BaseAdUnit baseAdUnit, RewardAdInterstitial.VideoAdListener adListener, final String broadcastIdentifier) {
         super(broadcastIdentifier);
         this.mAdUnit = baseAdUnit;
-        mAdInterstitialListener = splashAdListener;
+        mAdInterstitialListener = adListener;
         getIntentFilter();
     }
 
     public IntentFilter getIntentFilter() {
         if (sIntentFilter == null) {
             sIntentFilter = new IntentFilter();
-            sIntentFilter.addAction(IntentActions.ACTION_SPLASH_PLAY);
-            sIntentFilter.addAction(IntentActions.ACTION_SPLASH_CLICK);
-            sIntentFilter.addAction(IntentActions.ACTION_SPLASH_CLOSE);
-            sIntentFilter.addAction(IntentActions.ACTION_SPLASH_PLAY_ERROR);
-            sIntentFilter.addAction(IntentActions.ACTION_LAND_PAGE_SHOW);
-            sIntentFilter.addAction(IntentActions.ACTION_LAND_PAGE_DISMISS);
+            sIntentFilter.addAction(IntentActions.ACTION_REWARDED_VIDEO_PLAY);
+            sIntentFilter.addAction(IntentActions.ACTION_REWARDED_VIDEO_PLAY_FAIL);
+            sIntentFilter.addAction(IntentActions.ACTION_REWARDED_VIDEO_CLOSE);
+            sIntentFilter.addAction(IntentActions.ACTION_REWARDED_VIDEO_CLICK);
+            sIntentFilter.addAction(IntentActions.ACTION_REWARDED_VIDEO_SKIP);
+            sIntentFilter.addAction(IntentActions.ACTION_REWARDED_VIDEO_COMPLETE);
         }
         return sIntentFilter;
     }
@@ -50,20 +52,26 @@ public class SplashAdBroadcastReceiver extends BaseBroadcastReceiver {
             return;
         }
 
-        final String action = intent.getAction();
+        String action = intent.getAction();
 
-        if (action != null) {
+        if (!TextUtils.isEmpty(action)) {
             switch (action) {
-                case IntentActions.ACTION_SPLASH_PLAY:
+                case IntentActions.ACTION_REWARDED_VIDEO_PLAY:
                     mAdInterstitialListener.onAdShow(mAdUnit);
                     break;
-                case IntentActions.ACTION_SPLASH_CLICK:
+                case IntentActions.ACTION_REWARDED_VIDEO_CLICK:
                     mAdInterstitialListener.onAdClicked(mAdUnit);
                     break;
-                case IntentActions.ACTION_SPLASH_CLOSE:
+                case IntentActions.ACTION_REWARDED_VIDEO_CLOSE:
                     mAdInterstitialListener.onAdClose(mAdUnit);
                     break;
-                case IntentActions.ACTION_SPLASH_PLAY_ERROR:
+                case IntentActions.ACTION_REWARDED_VIDEO_SKIP:
+                    mAdInterstitialListener.onAdSkip(mAdUnit);
+                    break;
+                case IntentActions.ACTION_REWARDED_VIDEO_COMPLETE:
+                    mAdInterstitialListener.onAdPlayEnd(mAdUnit);
+                    break;
+                case IntentActions.ACTION_REWARDED_VIDEO_PLAY_FAIL:
                     String error = intent.getStringExtra("error");
                     mAdInterstitialListener.onAdShowFailed(mAdUnit, error);
                     break;

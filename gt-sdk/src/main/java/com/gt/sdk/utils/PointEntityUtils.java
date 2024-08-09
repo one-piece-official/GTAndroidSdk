@@ -6,9 +6,6 @@ import com.czhj.sdk.common.track.AdTracker;
 import com.czhj.volley.NetworkResponse;
 import com.czhj.volley.VolleyError;
 import com.gt.sdk.AdError;
-import com.gt.sdk.GtAdSdk;
-import com.gt.sdk.GtSdkConfig;
-import com.gt.sdk.api.GtCustomController;
 import com.gt.sdk.base.models.BaseAdUnit;
 import com.gt.sdk.base.LoadAdRequest;
 import com.gt.sdk.base.models.point.GtPointEntityAd;
@@ -105,7 +102,7 @@ public class PointEntityUtils {
 
         if (pointEntity != null && adRequest != null) {
 
-            pointEntity.setPlacement_id(adRequest.getPlacementId());
+            pointEntity.setPlacement_id(adRequest.getCodeId());
 
             if (!TextUtils.isEmpty(adRequest.getLoadId())) {
                 pointEntity.setLoad_id(adRequest.getLoadId());

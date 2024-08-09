@@ -448,7 +448,7 @@ public class BaseAdUnit implements Serializable {
 
     public String getAdSlot_id() {
         if (adRequest != null) {
-            return adRequest.getPlacementId();
+            return adRequest.getCodeId();
         }
         return adSlot_id;
     }

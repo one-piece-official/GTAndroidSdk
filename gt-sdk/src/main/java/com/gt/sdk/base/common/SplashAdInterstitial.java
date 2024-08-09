@@ -9,15 +9,14 @@ public class SplashAdInterstitial extends LoadAdsInterstitial {
     private final CustomAdListener customEventInterstitialListener;
     public SplashAdConfig mAdConfig;
 
-    public SplashAdInterstitial(CustomAdListener customEventInterstitialListener) {
-        this.customEventInterstitialListener = customEventInterstitialListener;
+    public SplashAdInterstitial(CustomAdListener customAdListener) {
+        this.customEventInterstitialListener = customAdListener;
     }
 
     public boolean baseAdUnitValid(BaseAdUnit adUnit) {
-//        MaterialMeta material = adUnit.getMaterial();
-//        if (TextUtils.isEmpty(adUnit.getCrid()) || (TextUtils.isEmpty(material.video_url) && TextUtils.isEmpty(material.image_src))) {
-//            return false;
-//        }
+        if (adUnit != null) {
+            return adUnit.isImageAd() || adUnit.isVideoAd();
+        }
         return true;
     }
 

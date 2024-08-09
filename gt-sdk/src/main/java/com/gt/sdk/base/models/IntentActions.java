@@ -18,13 +18,12 @@ public class IntentActions {
     public static final String ACTION_AD_INSTALL_START = "action.ad.install.start";
     public static final String ACTION_AD_INSTALL_END = "action.ad.install.end";
 
-
-    public static final String ACTION_REWARDED_VIDEO_PLAY = "action.rewardedvideo.play";
-    public static final String ACTION_REWARDED_VIDEO_PLAYFAIL = "action.rewardedvideo.playFail";
-    public static final String ACTION_REWARDED_VIDEO_CLOSE = "action.rewardedvideo.Close";
-    public static final String ACTION_REWARDED_VIDEO_SKIP = "action.rewardedvideo.skip";
-    public static final String ACTION_REWARDED_VIDEO_COMPLETE = "action.rewardedvideo.complete";
-    public static final String ACTION_MRAID_PLAYFAIL = "action.mraid.playFail";
+    public static final String ACTION_REWARDED_VIDEO_PLAY = "action.reward.video.play";
+    public static final String ACTION_REWARDED_VIDEO_PLAY_FAIL = "action.reward.video.play.fail";
+    public static final String ACTION_REWARDED_VIDEO_CLOSE = "action.reward.video.close";
+    public static final String ACTION_REWARDED_VIDEO_CLICK = "action.reward.video.click";
+    public static final String ACTION_REWARDED_VIDEO_SKIP = "action.reward.video.skip";
+    public static final String ACTION_REWARDED_VIDEO_COMPLETE = "action.reward.video.complete";
 
     private IntentActions() {
 

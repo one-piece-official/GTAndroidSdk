@@ -57,7 +57,7 @@ public class AdsRequest extends SigmobRequest<BidResponse> {
 
             Imp.Builder impBuild = new Imp.Builder();
             impBuild.id(UUID.randomUUID().toString());//曝光标识 ID，只在多次曝光有意义，媒体生成，请确保全局唯一
-            impBuild.tagid(loadAdRequest.getPlacementId());
+            impBuild.tagid(loadAdRequest.getCodeId());
             impBuild.style(loadAdRequest.getAdType());
             impBuild.secure(0);
             impBuild.bidfloor(loadAdRequest.getBidFloor());

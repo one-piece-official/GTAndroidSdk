@@ -75,7 +75,7 @@ public class BaseAdActivity extends Activity {
         } catch (Throwable e) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("error", e.getMessage());
-            BaseBroadcastReceiver.broadcastAction(context, broadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAYFAIL);
+            BaseBroadcastReceiver.broadcastAction(context, broadcastIdentifier, map, IntentActions.ACTION_REWARDED_VIDEO_PLAY_FAIL);
         }
     }
 

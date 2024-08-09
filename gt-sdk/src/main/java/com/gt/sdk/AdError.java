@@ -47,6 +47,8 @@ public enum AdError {
 
     ERROR_AD_CONTAINER_IS_NULL(600907, "广告容器不能为NULL"),
 
+    ERROR_AD_ACTIVITY_IS_NULL(600908, "广告Activity不能为NULL"),
+
     ERROR_OTHER(600999, "未知错误"),
 
     //激励视频播放出错
