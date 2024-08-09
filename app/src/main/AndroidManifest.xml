@@ -43,7 +43,6 @@
             android:name="applovin.sdk.key"
             android:value="fTNcuplMNyleC9R7us1BW5DiU35-bBlQStDeRwCev6RNIIZGorznubcQz4NNvmqFwTgtlbVwm6T2cPT4x9_LAn" />
 
-
         <activity
             android:name=".DeviceInfoActivity"
             android:configChanges="orientation|screenSize"
@@ -77,12 +76,6 @@
             android:name=".InterstitialActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".RewardVideoActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="sensor" />
-
-
         <activity
             android:name=".SplashActivity"
             android:exported="true"

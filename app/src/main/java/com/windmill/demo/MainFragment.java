@@ -126,7 +126,6 @@ public class MainFragment extends Fragment implements SplashAdListener {
         super.onActivityCreated(savedInstanceState);
         bindButton(R.id.splash_button_load, null);
         bindButton(R.id.splash_button_show, null);
-        bindButton(R.id.reward_button, RewardVideoActivity.class);
         bindButton(R.id.interstitial_button, InterstitialActivity.class);
         bindButton(R.id.native_button, NativeAdActivity.class);
         bindButton(R.id.device_info, DeviceInfoActivity.class);
